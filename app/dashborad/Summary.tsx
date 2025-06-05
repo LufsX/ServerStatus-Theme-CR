@@ -81,7 +81,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
               .filter((server) => !isOnline(server))
               .map((server) => (
                 <Badge key={server.name} variant="danger">
-                  {server.alias || server.name}
+                  {server.host ? server.name : server.alias || server.name}
                 </Badge>
               ))}
           </div>
