@@ -6,7 +6,7 @@ import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
 import { Badge } from "../components/Badge";
 import { ProgressBar } from "../components/ProgressBar";
-import { formatLoad, getFormattedNetworkSpeed, formatBytes } from "@/lib/formatters";
+import { formatLoad, formatCPU, getFormattedNetworkSpeed, formatBytes } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
 
 interface ServerRowProps {
@@ -22,10 +22,10 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   const loadDisplay = formatLoad(server.load_1, server.load_5, server.load_15);
 
   // 格式化流量数据
-  const networkInDiff = formatBytes(server.network_in - server.last_network_in);
-  const networkInTotal = formatBytes(server.network_in);
-  const networkOutDiff = formatBytes(server.network_out - server.last_network_out);
-  const networkOutTotal = formatBytes(server.network_out);
+  const totalDownload = formatBytes(server.network_in);
+  const monthlyDownload = server.network_in ? formatBytes(server.network_in - server.last_network_in) : server.last_network_in ? formatBytes(server.last_network_in) : "0 B";
+  const totalUpload = formatBytes(server.network_out);
+  const monthlyUpload = server.network_out ? formatBytes(server.network_out - server.last_network_out) : server.last_network_out ? formatBytes(server.last_network_out) : "0 B";
 
   // 计算百分比
   const cpuPercentage = server.cpu;
@@ -74,7 +74,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                       <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={16} height={12} className="object-cover rounded-[1px]" />
                     </div>
                   ))}
-                <h3 className="font-medium text-sm truncate">{server.alias || server.name}</h3>
+                <h3 className="font-medium text-sm truncate">{server.host ? server.name : server.alias || server.name}</h3>
               </div>
             </div>
             {/* 系统图标 */}
@@ -85,7 +85,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           <div className="grid grid-cols-3 gap-2 text-xs">
             <div className="text-center">
               <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">CPU</div>
-              <div className="font-semibold">{cpuPercentage.toFixed(0)}%</div>
+              <div className="font-semibold">{formatCPU(cpuPercentage)}</div>
             </div>
             <div className="text-center">
               <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">内存</div>
@@ -145,7 +145,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                       <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={18} className="object-cover rounded-[1px]" />
                     </div>
                   ))}
-                <h3 className="font-medium text-lg truncate">{server.alias || server.name}</h3>
+                <h3 className="font-medium text-lg truncate">{server.host ? server.name : server.alias || server.name}</h3>
                 {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
@@ -160,7 +160,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           <div className="col-span-3">
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm font-medium">CPU</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{cpuPercentage.toFixed(1)}%</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{formatCPU(cpuPercentage)}</div>
             </div>
             <ProgressBar value={cpuPercentage} />
           </div>
@@ -191,7 +191,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                 <span className="font-medium whitespace-nowrap">{downloadSpeed}</span>
                 <span className="text-gray-300 dark:text-gray-600">•</span>
                 <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {networkInDiff}/{networkInTotal}
+                  {monthlyDownload}/{totalDownload}
                 </span>
               </div>
               <div className="grid grid-cols-[12px_auto_auto_1fr] gap-1 items-center text-xs min-w-0">
@@ -199,7 +199,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                 <span className="font-medium whitespace-nowrap">{uploadSpeed}</span>
                 <span className="text-gray-300 dark:text-gray-600">•</span>
                 <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {networkOutDiff}/{networkOutTotal}
+                  {monthlyUpload}/{totalUpload}
                 </span>
               </div>
             </div>

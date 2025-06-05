@@ -21,9 +21,9 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
 
   // 格式化网络流量数据
   const totalDownload = formatBytes(server.network_in);
-  const monthlyDownload = formatBytes(server.network_in - server.last_network_in);
+  const monthlyDownload = server.network_in ? formatBytes(server.network_in - server.last_network_in) : server.last_network_in ? formatBytes(server.last_network_in) : "0 B";
   const totalUpload = formatBytes(server.network_out);
-  const monthlyUpload = formatBytes(server.network_out - server.last_network_out);
+  const monthlyUpload = server.network_out ? formatBytes(server.network_out - server.last_network_out) : server.last_network_out ? formatBytes(server.last_network_out) : "0 B";
 
   // 计算百分比
   const cpuPercentage = server.cpu;
@@ -106,14 +106,12 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
         </div>
 
         <div className="col-span-2 flex flex-wrap gap-2 mt-1">
-          {server.online4 && <Badge variant="success">IPv4</Badge>}
-          {server.online6 && <Badge variant="success">IPv6</Badge>}
-          {!server.online4 && <Badge variant="danger">IPv4</Badge>}
-          {!server.online6 && <Badge variant="danger">IPv6</Badge>}
-          <Badge variant="info">TCP: {server.tcp_count}</Badge>
-          <Badge variant="info">UDP: {server.udp_count}</Badge>
-          <Badge variant="primary">进程: {server.process_count}</Badge>
-          <Badge variant="secondary">线程: {server.thread_count}</Badge>
+          <Badge variant={server.online4 ? "success" : "danger"}>IPv4</Badge>
+          <Badge variant={server.online6 ? "success" : "danger"}>IPv6</Badge>
+          <Badge variant="info">TCP: {server.tcp_count || 0}</Badge>
+          <Badge variant="info">UDP: {server.udp_count || 0}</Badge>
+          <Badge variant="primary">进程: {server.process_count || 0}</Badge>
+          <Badge variant="secondary">线程: {server.thread_count || 0}</Badge>
         </div>
       </div>
 
@@ -135,15 +133,13 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
           <ProgressBar value={memoryPercentage} />
         </div>
 
-        {server.swap_total >= 0 && (
-          <div className="space-y-1">
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-gray-500 dark:text-gray-400">交换</span>
-              <span className="text-xs font-medium">{formatMemory(server.swap_used, server.swap_total)}</span>
-            </div>
-            <ProgressBar value={swapPercentage} />
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500 dark:text-gray-400">交换</span>
+            <span className="text-xs font-medium">{formatMemory(server.swap_used, server.swap_total)}</span>
           </div>
-        )}
+          <ProgressBar value={swapPercentage} />
+        </div>
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
