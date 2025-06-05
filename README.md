@@ -16,6 +16,10 @@ The ServerStatus data source has been verified for normal use
 > 建议使用 [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) 作为数据源，展示的信息更多
 > Suggested to use [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) as the data source, which provides more information
 
+## 预览 Preview
+
+[在线预览](https://sstcr.isteed.cc) | [Online Preview](https://serverstatus-theme-cr.vercel.app)
+
 ## 特性 Features
 
 - 使用 Next.js 和 TailwindCSS 开发
@@ -40,7 +44,11 @@ The ServerStatus data source has been verified for normal use
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FLufsX%2FServerStatus-Theme-CR&env=NEXT_PUBLIC_API_BASE_URL)
 
-其它方式可见 [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
+---
+
+编译好的静态文件见 [Release 页面](https://github.com/LufsX/ServerStatus-Theme-CR)，下载并替换掉原有主题即可，或是可以通过反向代理挂载主题
+
+具体可见 [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
 
 ---
 
@@ -48,7 +56,11 @@ If the ServerStatus API address is publicly accessible and CORS is set up (if yo
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FLufsX%2FServerStatus-Theme-CR&env=NEXT_PUBLIC_API_BASE_URL)
 
-Other installation methods can be found in [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
+---
+
+The compiled static files can be found in the [Release page](https://github.com/LufsX/ServerStatus-Theme-CR), download and replace the original theme, or you can mount the theme through reverse proxy
+
+For details, see [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
 
 ## 其它 Other
 
