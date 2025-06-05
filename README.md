@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [ServerStatus Theme CR](https://github.com/LufsX/ServerStatus-Theme-CR)
 
-## Getting Started
+这是一个基于 Next.js 和 TailwindCSS 开发的 ServerStatus 主题
 
-First, run the development server:
+This is a ServerStatus theme developed using Next.js and TailwindCSS
+
+## 简介 Description
+
+已验证正常使用的 ServerStatus 数据源
+
+The ServerStatus data source has been verified for normal use
+
+- [zdz/ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust)
+- [cppla/ServerStatus](https://github.com/cppla/ServerStatus)
+
+> 建议使用 [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) 作为数据源，展示的信息更多
+> Suggested to use [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) as the data source, which provides more information
+
+## 特性 Features
+
+- 使用 Next.js 和 TailwindCSS 开发
+- 响应式设计，适配手机、平板和桌面设备
+- 支持基于节点和状态筛选服务器
+- 支持深色模式和浅色模式自动/手动切换
+- 支持卡片和列表布局切换
+- 支持通过环境变量设置 API 地址
+
+---
+
+- Used Next.js and TailwindCSS for development
+- Responsive design, compatible with mobile, tablet, and desktop devices
+- Supports filtering servers by node and status
+- Supports automatic/manual switching between dark mode and light mode
+- Supports switching between card and list layouts
+- Supports setting API address through environment variables
+
+## 使用 Usage
+
+若 ServerStatus API 地址公开访问且设置好了跨域访问（不在意地址暴露的话），可直接部署到 Vercel 平台
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FLufsX%2FServerStatus-Theme-CR&env=NEXT_PUBLIC_API_BASE_URL)
+
+其它方式可见 [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
+
+---
+
+If the ServerStatus API address is publicly accessible and CORS is set up (if you don't mind the address being exposed), you can deploy it directly to the Vercel platform
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/clone?repository-url=https%3A%2F%2Fgithub.com%2FLufsX%2FServerStatus-Theme-CR&env=NEXT_PUBLIC_API_BASE_URL)
+
+Other installation methods can be found in [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
+
+## 其它 Other
+
+### 开发 Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm i
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 构建 Build
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 待办 To-Do
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] 支持排序
+- [ ] 添加 i18n 支持

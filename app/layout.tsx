@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "Server Status",
   description: "实时监控各个服务器状态",
   icons: {
-    icon: "./favicon.png",
+    icon: "./favicon.ico",
   },
 };
 
