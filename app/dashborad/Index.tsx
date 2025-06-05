@@ -4,6 +4,7 @@ import React from "react";
 
 import { ServerData } from "@/lib/api";
 import { isOnline } from "@/lib/utils";
+import { useSettings } from "@/app/setting/settings";
 import { Summary } from "./Summary";
 import { Filters } from "./Filters";
 import { ServerGrid } from "./ServerGrid";
@@ -14,6 +15,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ servers, lastUpdated }: DashboardProps) {
+  const { settings } = useSettings();
   const [selectedLocation, setSelectedLocation] = React.useState<string | null>(null);
   const [selectedType, setSelectedType] = React.useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = React.useState<"all" | "online" | "offline" | null>(null);
@@ -70,17 +72,21 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
 
   return (
     <div>
-      <Summary servers={servers} lastUpdated={lastUpdated} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      {settings.showSummary && (
+        <Summary servers={servers} lastUpdated={lastUpdated} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      )}
 
-      <Filters
-        servers={servers}
-        selectedLocation={selectedLocation}
-        onLocationChange={setSelectedLocation}
-        selectedType={selectedType}
-        onTypeChange={setSelectedType}
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-      />
+      {settings.showFilters && (
+        <Filters
+          servers={servers}
+          selectedLocation={selectedLocation}
+          onLocationChange={setSelectedLocation}
+          selectedType={selectedType}
+          onTypeChange={setSelectedType}
+          selectedStatus={selectedStatus}
+          onStatusChange={setSelectedStatus}
+        />
+      )}
 
       <ServerGrid servers={sortedServers} />
     </div>

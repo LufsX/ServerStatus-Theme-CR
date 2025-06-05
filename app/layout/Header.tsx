@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export function Header({ title = "服务器状态", subtitle = "实时监控各服务器状态" }: HeaderProps) {
   return (
-    <header className="py-6">
+    <header className="pt-6">
       <div className="container mx-auto px-4 flex items-center justify-between">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>

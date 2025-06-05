@@ -60,6 +60,18 @@ const SettingsMenu = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
+  // 切换摘要显示
+  const handleShowSummaryChange = (showSummary: boolean) => {
+    updateSettings({ showSummary });
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  // 切换筛选器显示
+  const handleShowFiltersChange = (showFilters: boolean) => {
+    updateSettings({ showFilters });
+    window.dispatchEvent(new Event("storage"));
+  };
+
   if (!mounted) {
     return <div className="w-8 h-8"></div>;
   }
@@ -145,6 +157,30 @@ const SettingsMenu = () => {
   const renderDisplayTab = () => (
     <motion.div className="py-1" initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15, delay: 0.05 }}>
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.1 }}>
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">界面组件</div>
+        <div className="flex space-x-2">
+          <motion.button
+            onClick={() => handleShowSummaryChange(!settings.showSummary)}
+            className={`flex-1 px-2 py-1 text-sm rounded-sm transition-colors duration-150 ${
+              settings.showSummary ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            摘要
+          </motion.button>
+          <motion.button
+            onClick={() => handleShowFiltersChange(!settings.showFilters)}
+            className={`flex-1 px-2 py-1 text-sm rounded-sm transition-colors duration-150 ${
+              settings.showFilters ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "hover:bg-gray-100 dark:hover:bg-gray-800"
+            }`}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            筛选
+          </motion.button>
+        </div>
+      </motion.div>
+
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.12 }}>
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">显示模式</div>
         <div className="flex space-x-2">
           <motion.button
@@ -179,7 +215,7 @@ const SettingsMenu = () => {
         </div>
       </motion.div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.15 }}>
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.14 }}>
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">数据单位</div>
         <div className="flex space-x-2">
           <motion.button
@@ -203,7 +239,7 @@ const SettingsMenu = () => {
         </div>
       </motion.div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.2 }}>
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.16 }}>
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">刷新间隔</div>
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -224,7 +260,7 @@ const SettingsMenu = () => {
                 type: "spring",
                 stiffness: 400,
                 damping: 30,
-                delay: 0.25 + index * 0.05,
+                delay: 0.18 + index * 0.05,
               }}
             >
               {label}

@@ -8,6 +8,8 @@ export interface Settings {
   unitType: UnitType;
   refreshInterval: RefreshInterval;
   displayMode: DisplayMode;
+  showSummary: boolean;
+  showFilters: boolean;
 }
 
 // 默认设置
@@ -15,6 +17,8 @@ const DEFAULT_SETTINGS: Settings = {
   unitType: "binary",
   refreshInterval: 2000,
   displayMode: "card",
+  showSummary: false,
+  showFilters: false,
 };
 
 // 自定义事件名称
