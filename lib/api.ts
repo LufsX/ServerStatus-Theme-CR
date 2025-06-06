@@ -86,7 +86,7 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
     return data;
   } catch (error) {
     console.error("获取服务器状态出错:", error);
-    return { updated: 0, servers: [] };
+    throw error;
   }
 }
 
@@ -99,6 +99,7 @@ export function useServerStatus(customRefreshInterval?: number) {
   const [data, setData] = React.useState<ApiResponse | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<Error | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = React.useState(true);
 
   // 使用自定义刷新间隔或设置中的刷新间隔
   const refreshInterval = customRefreshInterval || settings.refreshInterval;
@@ -106,14 +107,24 @@ export function useServerStatus(customRefreshInterval?: number) {
   React.useEffect(() => {
     async function loadServerStatus() {
       try {
-        setLoading(true);
+        // 如果不是初次加载，则不显示 loading 状态
+        if (isInitialLoading) {
+          setLoading(true);
+        }
         const result = await fetchServerStatus();
         setData(result);
         setError(null);
+        setIsInitialLoading(false);
       } catch (err: unknown) {
-        setError(err instanceof Error ? err : new Error(String(err)));
+        const errorObj = err instanceof Error ? err : new Error(String(err));
+        setError(errorObj);
+        if (isInitialLoading) {
+          setIsInitialLoading(false);
+        }
       } finally {
-        setLoading(false);
+        if (isInitialLoading) {
+          setLoading(false);
+        }
       }
     }
 
@@ -124,7 +135,7 @@ export function useServerStatus(customRefreshInterval?: number) {
     const intervalId = setInterval(loadServerStatus, refreshInterval);
 
     return () => clearInterval(intervalId);
-  }, [refreshInterval]);
+  }, [refreshInterval, isInitialLoading]);
 
-  return { data, loading, error };
+  return { data, loading, error, isInitialLoading };
 }
