@@ -65,7 +65,7 @@ export function ServerGrid({ servers }: ServerGridProps) {
 
   // 默认卡片模式
   return (
-    <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" layout>
+    <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start" layout>
       <AnimatePresence mode="popLayout">
         {servers.map((server, index) => (
           <motion.div
@@ -97,9 +97,8 @@ export function ServerGrid({ servers }: ServerGridProps) {
                 damping: 30,
               },
             }}
-            className="h-full"
           >
-            <ServerCard server={server} className="h-full" />
+            <ServerCard server={server} />
           </motion.div>
         ))}
       </AnimatePresence>

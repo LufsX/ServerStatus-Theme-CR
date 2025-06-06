@@ -59,7 +59,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
   return (
     <div
       onClick={onClick}
-      className={`bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md p-4 transition-all ${
+      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md p-4 transition-all ${
         onClick ? "cursor-pointer hover:shadow-lg" : ""
       } ${className}`}
     >
@@ -91,8 +91,12 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="space-y-1">
           <div className="text-xs text-gray-500 dark:text-gray-400">运行时间</div>
-          <div className="text-sm font-medium">{server.online4 || server.online6 ? server.uptime : <span className="text-red-500">离线</span>}</div>
-          {!server.online4 && !server.online6 && server.latest_ts && <div className="text-xs text-gray-500">最后在线: {new Date(server.latest_ts * 1000).toLocaleString()}</div>}
+          <div className="text-sm font-medium">
+            {server.online4 || server.online6 ? server.uptime : <span className="text-red-500">离线</span>}
+            {!server.online4 && !server.online6 && server.latest_ts && (
+              <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>
+            )}
+          </div>
         </div>
 
         <div className="space-y-1">

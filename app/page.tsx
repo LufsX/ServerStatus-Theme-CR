@@ -85,7 +85,7 @@ export default function Home() {
                   {[0, 1, 2].map((index) => (
                     <motion.div
                       key={index}
-                      className="w-4 h-4 bg-gradient-to-r from-blue-200 to-blue-400 rounded-full"
+                      className="w-4 h-4 bg-gradient-to-r from-blue-200 to-blue-400 dark:from-blue-600 dark:to-blue-800 rounded-full"
                       animate={{
                         y: ["0%", "-20%", "0%"],
                         scale: [1, 1.1, 1],
@@ -102,7 +102,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">数据加载中，请稍候...</span>
+              <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">数据加载中...</span>
             </motion.div>
           ) : data ? (
             <Dashboard servers={data.servers} lastUpdated={data.updated} />
