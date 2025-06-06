@@ -21,9 +21,9 @@ export default function Footer() {
   const isDark = currentTheme === "dark";
 
   return (
-    <footer className="w-full bg-gray-100 dark:bg-gray-900 shadow-sm p-4 text-left text-gray-500 dark:text-gray-400">
+    <footer className="w-full bg-gray-100 dark:bg-gray-900 shadow-sm p-2 text-left text-gray-500 dark:text-gray-400">
       <div className="container px-4 mx-auto pl-1">
-        <div className="flex flex-col sm:flex-row gap-1">
+        <div className="flex flex-col sm:flex-row gap-1 text-xs sm:text-sm">
           <span className="flex items-center">
             <Link href="https://github.com/LufsX/ServerStatus-Theme">© 2025 - {new Date().getFullYear()} ServerStatus-Theme</Link>
           </span>
@@ -38,7 +38,7 @@ export default function Footer() {
           <span className="flex items-center">
             Powered by{" "}
             <Link href="https://nextjs.org">
-              <Image className="h-4 ml-1" src={isDark ? nextjsDark : nextjs} alt="Nextjs Logo" width={72} height={16} loading="lazy" />
+              <Image className="h-2.5 sm:h-3 sm:ml-1" src={isDark ? nextjsDark : nextjs} alt="Nextjs Logo" width={56} height={16} loading="lazy" />
             </Link>
           </span>
         </div>
