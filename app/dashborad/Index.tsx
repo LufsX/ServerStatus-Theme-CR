@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { ServerData } from "@/lib/api";
 import { isOnline } from "@/lib/utils";
@@ -70,25 +71,73 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
     });
   }, [filteredServers]);
 
+  // 动画配置
+  const springTransition = { type: "spring", stiffness: 300, damping: 30 };
+  const exitTransition = { type: "spring", stiffness: 600, damping: 40, duration: 0.15 };
+
   return (
-    <div>
-      {settings.showSummary && (
-        <Summary servers={servers} lastUpdated={lastUpdated} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
-      )}
+    <motion.div layout>
+      <AnimatePresence mode="sync">
+        {settings.showSummary && (
+          <motion.div
+            key="summary"
+            layout
+            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+            transition={{
+              ...springTransition,
+              delay: 0,
+              exit: exitTransition,
+              layout: springTransition,
+            }}
+          >
+            <Summary servers={servers} lastUpdated={lastUpdated} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+          </motion.div>
+        )}
 
-      {settings.showFilters && (
-        <Filters
-          servers={servers}
-          selectedLocation={selectedLocation}
-          onLocationChange={setSelectedLocation}
-          selectedType={selectedType}
-          onTypeChange={setSelectedType}
-          selectedStatus={selectedStatus}
-          onStatusChange={setSelectedStatus}
-        />
-      )}
+        {settings.showFilters && (
+          <motion.div
+            key="filters"
+            layout
+            initial={{ opacity: 0, scale: 0.95, y: -20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+            transition={{
+              ...springTransition,
+              delay: 0.05,
+              exit: exitTransition,
+              layout: springTransition,
+            }}
+          >
+            <Filters
+              servers={servers}
+              selectedLocation={selectedLocation}
+              onLocationChange={setSelectedLocation}
+              selectedType={selectedType}
+              onTypeChange={setSelectedType}
+              selectedStatus={selectedStatus}
+              onStatusChange={setSelectedStatus}
+            />
+          </motion.div>
+        )}
 
-      <ServerGrid servers={sortedServers} />
-    </div>
+        <motion.div
+          key="servergrid"
+          layout
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 10 }}
+          transition={{
+            ...springTransition,
+            delay: 0.1,
+            exit: exitTransition,
+            layout: springTransition,
+          }}
+        >
+          <ServerGrid servers={sortedServers} />
+        </motion.div>
+      </AnimatePresence>
+    </motion.div>
   );
 }
