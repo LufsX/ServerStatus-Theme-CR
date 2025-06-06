@@ -119,7 +119,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
       <div className="space-y-3 mb-4">
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500 dark:text-gray-400">CPU</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">CPU</span>
             <span className="text-xs font-medium">{formatCPU(server.cpu)}</span>
           </div>
           <ProgressBar value={cpuPercentage} />
@@ -127,7 +127,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500 dark:text-gray-400">内存</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">内存</span>
             <span className="text-xs font-medium">{formatMemory(server.memory_used, server.memory_total)}</span>
           </div>
           <ProgressBar value={memoryPercentage} />
@@ -135,7 +135,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500 dark:text-gray-400">交换</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">交换</span>
             <span className="text-xs font-medium">{formatMemory(server.swap_used, server.swap_total)}</span>
           </div>
           <ProgressBar value={swapPercentage} />
@@ -143,7 +143,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500 dark:text-gray-400">硬盘</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">硬盘</span>
             <span className="text-xs font-medium">{formatDisk(server.hdd_used, server.hdd_total)}</span>
           </div>
           <ProgressBar value={diskPercentage} />
