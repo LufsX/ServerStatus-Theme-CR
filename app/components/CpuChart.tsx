@@ -16,7 +16,7 @@ const COLORS = {
   low: "#10b981", // emerald-500
 } as const;
 
-const Y_AXIS_THRESHOLDS = [20, 50, 100] as const;
+const Y_AXIS_THRESHOLDS = [5, 10, 20, 40, 60, 80, 100] as const;
 
 interface CpuChartProps {
   data: CpuDataPoint[];
@@ -37,7 +37,7 @@ const getLineColor = (cpu: number): string => {
 };
 
 const calculateYAxisMax = (maxCpu: number): number => {
-  return Y_AXIS_THRESHOLDS.find((threshold) => maxCpu <= threshold) || 100;
+  return Y_AXIS_THRESHOLDS.find((threshold) => maxCpu < threshold) || 100;
 };
 
 export function CpuChart({ data, className = "" }: CpuChartProps) {
@@ -73,7 +73,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
           backgroundColor: lineColor + "20",
           borderWidth: 2,
           fill: true,
-          tension: 0.3,
+          tension: 0.1,
           pointRadius: 0,
           pointHoverRadius: 4,
           pointHoverBackgroundColor: lineColor,
@@ -117,7 +117,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
           },
           grid: { display: false },
           ticks: { display: false },
-          border: { display: false },
+          border: { display: true },
         },
         y: {
           min: 0,
@@ -158,20 +158,20 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
 
   if (!data || data.length < 2) {
     return (
-      <div className={`flex items-center justify-center w-full h-24 ${className}`}>
+      <div className={`flex items-center justify-center w-full h-26 ${className}`}>
         <span className="text-xs text-gray-400">暂无数据</span>
       </div>
     );
   }
 
   return (
-    <div className={`relative w-full h-24 ${className}`}>
+    <div className={`relative w-full h-26 ${className}`}>
       <div className="w-full h-full">
         <Line ref={chartRef} data={chartData} options={chartOptions} />
       </div>
 
       {/* 最大 CPU 值 */}
-      <div className="absolute top-1 right-1 text-xs text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 px-1 py-0.5 rounded shadow-sm opacity-75 hover:opacity-100 border border-gray-200 dark:border-gray-700 duration-200">
+      <div className="absolute top-1 right-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 hover:dark:text-gray-100 bg-white dark:bg-gray-800 px-1 py-0.5 rounded shadow-sm opacity-75 hover:opacity-100 border border-gray-200 dark:border-gray-700 duration-200">
         最大: {maxCpu.toFixed(1)}%
       </div>
     </div>

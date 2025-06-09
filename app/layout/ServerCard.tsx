@@ -146,7 +146,7 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
           </div>
           {settings.showCpuChart ? (
             <div className="mt-2">
-              <CpuChart data={cpuHistory} className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" />
+              <CpuChart data={cpuHistory} />
             </div>
           ) : (
             <ProgressBar value={cpuPercentage} />
