@@ -16,11 +16,7 @@ export function ServerGrid({ servers }: ServerGridProps) {
   const { settings } = useSettings();
 
   if (servers.length === 0) {
-    return (
-      <motion.div className="text-center py-8 text-gray-500 dark:text-gray-400" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-        没有找到符合条件的服务器
-      </motion.div>
-    );
+    return <div className="text-center py-8 text-gray-500 dark:text-gray-400">没有找到符合条件的服务器</div>;
   }
 
   // 根据显示模式选择不同的布局

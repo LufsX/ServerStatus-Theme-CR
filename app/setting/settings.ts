@@ -3,6 +3,7 @@
 export type UnitType = "binary" | "decimal"; // GiB | GB
 export type RefreshInterval = 1000 | 2000 | 5000 | 10000; // 1s, 2s, 5s, 10s
 export type DisplayMode = "card" | "row"; // 卡片模式 | 横排模式
+export type CpuChartDuration = 1 | 3 | 5; // 1min, 3min, 5min
 
 export interface Settings {
   unitType: UnitType;
@@ -10,6 +11,8 @@ export interface Settings {
   displayMode: DisplayMode;
   showSummary: boolean;
   showFilters: boolean;
+  showCpuChart: boolean;
+  cpuChartDuration: CpuChartDuration;
 }
 
 // 默认设置
@@ -19,6 +22,8 @@ const DEFAULT_SETTINGS: Settings = {
   displayMode: "card",
   showSummary: false,
   showFilters: false,
+  showCpuChart: false,
+  cpuChartDuration: 3,
 };
 
 // 自定义事件名称

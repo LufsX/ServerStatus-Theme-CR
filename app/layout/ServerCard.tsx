@@ -1,13 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
 import { Badge } from "../components/Badge";
 import { ProgressBar } from "../components/ProgressBar";
+import { CpuChart } from "../components/CpuChart";
 import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes, formatAllLatencies } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
+import { useSettings } from "../setting/settings";
+import { getCpuHistoryManager } from "@/lib/cpuHistory";
 
 interface ServerCardProps {
   server: ServerData;
@@ -16,8 +19,23 @@ interface ServerCardProps {
 }
 
 export function ServerCard({ server, onClick, className = "" }: ServerCardProps) {
+  const { settings } = useSettings();
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
+
+  // CPU历史数据管理
+  const cpuHistoryManager = getCpuHistoryManager();
+  const serverId = `${server.name}-${server.alias}`;
+
+  // 记录 CPU 数据点
+  useEffect(() => {
+    if (online) {
+      cpuHistoryManager.addDataPoint(serverId, server.cpu);
+    }
+  }, [server.cpu, online, serverId, cpuHistoryManager]);
+
+  // 获取CPU历史数据
+  const cpuHistory = settings.showCpuChart ? cpuHistoryManager.getHistory(serverId, settings.cpuChartDuration) : [];
 
   // 格式化网络流量数据
   const totalDownload = formatBytes(server.network_in);
@@ -126,7 +144,13 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
             <span className="text-xs font-medium text-gray-700 dark:text-gray-200">CPU</span>
             <span className="text-xs font-medium">{formatCPU(server.cpu)}</span>
           </div>
-          <ProgressBar value={cpuPercentage} />
+          {settings.showCpuChart ? (
+            <div className="mt-2">
+              <CpuChart data={cpuHistory} className="rounded border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800" />
+            </div>
+          ) : (
+            <ProgressBar value={cpuPercentage} />
+          )}
         </div>
 
         <div className="space-y-1">

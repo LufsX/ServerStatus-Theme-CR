@@ -25,6 +25,7 @@ The ServerStatus data source has been verified for normal use
 - 使用 Next.js 和 TailwindCSS 开发
 - 响应式设计，适配手机、平板和桌面设备
 - 支持基于节点和状态筛选服务器
+- 支持 CPU 占用率图表显示
 - 支持深色模式和浅色模式自动/手动切换
 - 支持卡片和列表布局切换
 - 支持通过环境变量设置 API 地址
@@ -34,6 +35,7 @@ The ServerStatus data source has been verified for normal use
 - Used Next.js and TailwindCSS for development
 - Responsive design, compatible with mobile, tablet, and desktop devices
 - Supports filtering servers by node and status
+- Supports CPU usage chart display
 - Supports automatic/manual switching between dark mode and light mode
 - Supports switching between card and list layouts
 - Supports setting API address through environment variables
@@ -81,5 +83,5 @@ pnpm build
 
 - [ ] 支持排序
 - [ ] 添加精简显示
-- [ ] 添加 CPU 图表
+- [x] 添加 CPU 图表
 - [ ] 添加 i18n 支持

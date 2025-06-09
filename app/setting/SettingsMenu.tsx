@@ -73,6 +73,18 @@ const SettingsMenu = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
+  // 切换 CPU 图表显示
+  const handleShowCpuChartChange = (showCpuChart: boolean) => {
+    updateSettings({ showCpuChart });
+    window.dispatchEvent(new Event("storage"));
+  };
+
+  // 切换 CPU 图表时长
+  const handleCpuChartDurationChange = (cpuChartDuration: 1 | 3 | 5) => {
+    updateSettings({ cpuChartDuration });
+    window.dispatchEvent(new Event("storage"));
+  };
+
   if (!mounted) {
     return <div className="w-8 h-8"></div>;
   }
@@ -275,6 +287,65 @@ const SettingsMenu = () => {
               }}
             >
               <SettingButton isActive={settings.refreshInterval === value} onClick={() => handleRefreshIntervalChange(value as 1000 | 2000 | 5000 | 10000)} className="w-full">
+                {label}
+              </SettingButton>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.35 }}>
+        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.38 }}>
+          CPU 图表
+        </motion.div>
+        <div className="flex space-x-2">
+          {[
+            { value: true, label: "开启" },
+            { value: false, label: "关闭" },
+          ].map(({ value, label }, index) => (
+            <motion.div
+              key={String(value)}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+                delay: 0.42 + index * 0.03,
+              }}
+              className="flex-1"
+            >
+              <SettingButton isActive={settings.showCpuChart === value} onClick={() => handleShowCpuChartChange(value)} className="w-full">
+                {label}
+              </SettingButton>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.48 }}>
+        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.52 }}>
+          记录时长
+        </motion.div>
+        <div className="flex space-x-2">
+          {[
+            { value: 1, label: "1min" },
+            { value: 3, label: "3min" },
+            { value: 5, label: "5min" },
+          ].map(({ value, label }, index) => (
+            <motion.div
+              key={value}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+                delay: 0.55 + index * 0.03,
+              }}
+              className="flex-1"
+            >
+              <SettingButton isActive={settings.cpuChartDuration === value} onClick={() => handleCpuChartDurationChange(value as 1 | 3 | 5)} className="w-full">
                 {label}
               </SettingButton>
             </motion.div>
