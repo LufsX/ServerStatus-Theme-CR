@@ -16,42 +16,42 @@ export function ServerGrid({ servers }: ServerGridProps) {
   const { settings } = useSettings();
 
   if (servers.length === 0) {
-    return <div className="text-center py-8 text-gray-500 dark:text-gray-400">没有找到符合条件的服务器</div>;
+    return (
+      <motion.div className="text-center py-8 text-gray-500 dark:text-gray-400" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+        没有找到符合条件的服务器
+      </motion.div>
+    );
   }
 
   // 根据显示模式选择不同的布局
   if (settings.displayMode === "row") {
     return (
-      <motion.div className="space-y-4" layout>
+      <motion.div
+        className="space-y-4"
+        layout
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 50,
+          duration: 0.4,
+        }}
+      >
         <AnimatePresence mode="popLayout">
           {servers.map((server, index) => (
             <motion.div
               key={`row-${server.name}-${server.alias}`}
-              layout
-              initial={{
-                opacity: 0,
-                scale: 0.95,
-                y: 20,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.95,
-                y: -20,
-              }}
+              layoutId={`server-row-${server.name}-${server.alias}`}
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 10 }}
               transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                delay: index * 0.03,
+                duration: 0.3,
+                delay: Math.min(index * 0.02, 0.2),
                 layout: {
                   type: "spring",
-                  stiffness: 300,
-                  damping: 30,
+                  stiffness: 400,
+                  damping: 50,
+                  duration: 0.4,
                 },
               }}
             >
@@ -65,36 +65,32 @@ export function ServerGrid({ servers }: ServerGridProps) {
 
   // 默认卡片模式
   return (
-    <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start" layout>
+    <motion.div
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start"
+      layout
+      transition={{
+        type: "spring",
+        stiffness: 400,
+        damping: 50,
+        duration: 0.4,
+      }}
+    >
       <AnimatePresence mode="popLayout">
         {servers.map((server, index) => (
           <motion.div
             key={`card-${server.name}-${server.alias}`}
-            layout
-            initial={{
-              opacity: 0,
-              scale: 0.8,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              scale: 0.8,
-              y: -20,
-            }}
+            layoutId={`server-card-${server.name}-${server.alias}`}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
             transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30,
-              delay: index * 0.05,
+              duration: 0.3,
+              delay: Math.min(index * 0.03, 0.3),
               layout: {
                 type: "spring",
-                stiffness: 300,
-                damping: 30,
+                stiffness: 400,
+                damping: 50,
+                duration: 0.4,
               },
             }}
           >

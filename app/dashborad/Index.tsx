@@ -72,25 +72,30 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
   }, [filteredServers]);
 
   // 动画配置
-  const springTransition = { type: "spring", stiffness: 300, damping: 30 };
-  const exitTransition = { type: "spring", stiffness: 600, damping: 40, duration: 0.15 };
+  const layoutTransition = {
+    type: "spring" as const,
+    stiffness: 500,
+    damping: 50,
+    mass: 1,
+  };
 
   return (
-    <motion.div layout>
-      <AnimatePresence mode="sync">
+    <>
+      <AnimatePresence>
         {settings.showSummary && (
           <motion.div
             key="summary"
-            layout
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{
-              ...springTransition,
-              delay: 0,
-              exit: exitTransition,
-              layout: springTransition,
+              type: "spring",
+              stiffness: 400,
+              damping: 30,
+              mass: 0.8,
+              opacity: { duration: 0.2 },
             }}
+            style={{ overflow: "hidden" }}
           >
             <Summary servers={servers} lastUpdated={lastUpdated} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
           </motion.div>
@@ -99,16 +104,17 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
         {settings.showFilters && (
           <motion.div
             key="filters"
-            layout
-            initial={{ opacity: 0, scale: 0.95, y: -20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: -10 }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
             transition={{
-              ...springTransition,
-              delay: 0.05,
-              exit: exitTransition,
-              layout: springTransition,
+              type: "spring",
+              stiffness: 400,
+              damping: 30,
+              mass: 0.8,
+              opacity: { duration: 0.2 },
             }}
+            style={{ overflow: "hidden" }}
           >
             <Filters
               servers={servers}
@@ -121,23 +127,11 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
             />
           </motion.div>
         )}
-
-        <motion.div
-          key="servergrid"
-          layout
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 10 }}
-          transition={{
-            ...springTransition,
-            delay: 0.1,
-            exit: exitTransition,
-            layout: springTransition,
-          }}
-        >
-          <ServerGrid servers={sortedServers} />
-        </motion.div>
       </AnimatePresence>
-    </motion.div>
+
+      <motion.div layout transition={layoutTransition} style={{ minHeight: "200px" }}>
+        <ServerGrid servers={sortedServers} />
+      </motion.div>
+    </>
   );
 }
