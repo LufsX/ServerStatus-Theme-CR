@@ -53,6 +53,7 @@ export interface ServerData {
 export interface ApiResponse {
   updated: number;
   servers: ServerData[];
+  fetchTime: number;
 }
 
 /**
@@ -83,7 +84,13 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
       });
     }
 
-    return data;
+    // fetchTime 优先使用获取到的数据的 updated 字段，如果不存在则使用当前时间戳
+    const fetchTime = data.updated ? data.updated * 1000 : Date.now();
+
+    return {
+      ...data,
+      fetchTime,
+    };
   } catch (error) {
     console.error("获取服务器状态出错:", error);
     throw error;

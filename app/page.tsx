@@ -105,7 +105,7 @@ export default function Home() {
               <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">数据加载中...</span>
             </motion.div>
           ) : data ? (
-            <Dashboard servers={data.servers} lastUpdated={data.updated} />
+            <Dashboard servers={data.servers} lastUpdated={data.updated} fetchTime={data.fetchTime} />
           ) : null}
         </AnimatePresence>
       </main>

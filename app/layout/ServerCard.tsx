@@ -16,9 +16,10 @@ interface ServerCardProps {
   server: ServerData;
   onClick?: () => void;
   className?: string;
+  fetchTime: number;
 }
 
-export function ServerCard({ server, onClick, className = "" }: ServerCardProps) {
+export function ServerCard({ server, onClick, className = "", fetchTime }: ServerCardProps) {
   const { settings } = useSettings();
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
@@ -30,9 +31,9 @@ export function ServerCard({ server, onClick, className = "" }: ServerCardProps)
   // 记录 CPU 数据点
   useEffect(() => {
     if (online) {
-      cpuHistoryManager.addDataPoint(serverId, server.cpu);
+      cpuHistoryManager.addDataPoint(serverId, server.cpu, fetchTime);
     }
-  }, [server.cpu, online, serverId, cpuHistoryManager]);
+  }, [server.cpu, online, serverId, cpuHistoryManager, fetchTime]);
 
   // 获取CPU历史数据
   const cpuHistory = settings.showCpuChart ? cpuHistoryManager.getHistory(serverId, settings.cpuChartDuration) : [];

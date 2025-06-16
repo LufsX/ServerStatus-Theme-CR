@@ -24,15 +24,18 @@ class CpuHistoryManager {
 
   /**
    * 添加CPU数据点
+   * @param serverId 服务器 ID
+   * @param cpu CPU 使用率
+   * @param timestamp 可选时间戳，默认使用当前时间
    */
-  addDataPoint(serverId: string, cpu: number): void {
-    const timestamp = Date.now();
+  addDataPoint(serverId: string, cpu: number, timestamp?: number): void {
+    const dataTimestamp = timestamp || Date.now();
 
     if (!this.history[serverId]) {
       this.history[serverId] = [];
     }
 
-    this.history[serverId].push({ timestamp, cpu });
+    this.history[serverId].push({ timestamp: dataTimestamp, cpu });
 
     // 清理过期数据
     this.cleanupOldData(serverId);

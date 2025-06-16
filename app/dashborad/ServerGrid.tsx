@@ -10,9 +10,10 @@ import { useSettings } from "../setting/settings";
 
 interface ServerGridProps {
   servers: ServerData[];
+  fetchTime: number;
 }
 
-export function ServerGrid({ servers }: ServerGridProps) {
+export function ServerGrid({ servers, fetchTime }: ServerGridProps) {
   const { settings } = useSettings();
 
   if (servers.length === 0) {
@@ -90,7 +91,7 @@ export function ServerGrid({ servers }: ServerGridProps) {
               },
             }}
           >
-            <ServerCard server={server} />
+            <ServerCard server={server} fetchTime={fetchTime} />
           </motion.div>
         ))}
       </AnimatePresence>

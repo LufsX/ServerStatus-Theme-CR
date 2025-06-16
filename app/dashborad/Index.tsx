@@ -13,9 +13,10 @@ import { ServerGrid } from "./ServerGrid";
 interface DashboardProps {
   servers: ServerData[];
   lastUpdated: number;
+  fetchTime: number;
 }
 
-export function Dashboard({ servers, lastUpdated }: DashboardProps) {
+export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
   const { settings } = useSettings();
   const [selectedLocation, setSelectedLocation] = React.useState<string | null>(null);
   const [selectedType, setSelectedType] = React.useState<string | null>(null);
@@ -130,7 +131,7 @@ export function Dashboard({ servers, lastUpdated }: DashboardProps) {
       </AnimatePresence>
 
       <motion.div layout transition={layoutTransition} style={{ minHeight: "200px" }}>
-        <ServerGrid servers={sortedServers} />
+        <ServerGrid servers={sortedServers} fetchTime={fetchTime} />
       </motion.div>
     </>
   );
