@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect } from "react";
 import { useSettings } from "../app/setting/settings";
 
 // API 基础路径
@@ -103,15 +103,15 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
 export function useServerStatus(customRefreshInterval?: number) {
   "use client";
   const { settings } = useSettings();
-  const [data, setData] = React.useState<ApiResponse | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<Error | null>(null);
-  const [isInitialLoading, setIsInitialLoading] = React.useState(true);
+  const [data, setData] = useState<ApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   // 使用自定义刷新间隔或设置中的刷新间隔
   const refreshInterval = customRefreshInterval || settings.refreshInterval;
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function loadServerStatus() {
       try {
         // 如果不是初次加载，则不显示 loading 状态

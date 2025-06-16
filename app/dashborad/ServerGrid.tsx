@@ -3,7 +3,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { ServerData } from "../../lib/api";
+import { ServerData } from "@/lib/api";
 import { ServerCard } from "../layout/ServerCard";
 import { ServerRow } from "../layout/ServerRow";
 import { useSettings } from "../setting/settings";

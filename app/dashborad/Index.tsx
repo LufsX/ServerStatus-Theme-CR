@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { ServerData } from "@/lib/api";
 import { isOnline } from "@/lib/utils";
+import { sortServers } from "@/lib/sorting";
 import { useSettings } from "@/app/setting/settings";
 import { Summary } from "./Summary";
-import { Filters } from "./Filters";
+import { Filters, SortOption, SortOrder } from "./Filters";
 import { ServerGrid } from "./ServerGrid";
 
 interface DashboardProps {
@@ -18,12 +19,14 @@ interface DashboardProps {
 
 export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
   const { settings } = useSettings();
-  const [selectedLocation, setSelectedLocation] = React.useState<string | null>(null);
-  const [selectedType, setSelectedType] = React.useState<string | null>(null);
-  const [selectedStatus, setSelectedStatus] = React.useState<"all" | "online" | "offline" | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<"all" | "online" | "offline" | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("default");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   // 根据筛选服务器
-  const filteredServers = React.useMemo(() => {
+  const filteredServers = useMemo(() => {
     return servers.filter((server) => {
       // 按位置筛选
       if (selectedLocation && server.location !== selectedLocation) {
@@ -51,26 +54,10 @@ export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
     });
   }, [servers, selectedLocation, selectedType, selectedStatus]);
 
-  // 服务器排序: 首先按权重排序, 然后在线的排在前面
-  const sortedServers = React.useMemo(() => {
-    return [...filteredServers].sort((a, b) => {
-      // 优先按权重排序，权重大的排在前面
-      if (a.weight !== b.weight) {
-        return b.weight - a.weight;
-      }
-
-      // 然后在线的排在前面
-      const aOnline = isOnline(a);
-      const bOnline = isOnline(b);
-
-      if (aOnline !== bOnline) {
-        return aOnline ? -1 : 1;
-      }
-
-      // 最后按名称排序
-      return (a.alias || a.name).localeCompare(b.alias || b.name);
-    });
-  }, [filteredServers]);
+  // 服务器排序
+  const sortedServers = useMemo(() => {
+    return sortServers(filteredServers, sortBy, sortOrder);
+  }, [filteredServers, sortBy, sortOrder]);
 
   // 动画配置
   const layoutTransition = {
@@ -106,7 +93,7 @@ export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
           <motion.div
             key="filters"
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
+            animate={{ opacity: 1, height: "56px" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{
               type: "spring",
@@ -115,7 +102,6 @@ export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
               mass: 0.8,
               opacity: { duration: 0.2 },
             }}
-            style={{ overflow: "hidden" }}
           >
             <Filters
               servers={servers}
@@ -125,6 +111,10 @@ export function Dashboard({ servers, lastUpdated, fetchTime }: DashboardProps) {
               onTypeChange={setSelectedType}
               selectedStatus={selectedStatus}
               onStatusChange={setSelectedStatus}
+              sortBy={sortBy}
+              onSortByChange={setSortBy}
+              sortOrder={sortOrder}
+              onSortOrderChange={setSortOrder}
             />
           </motion.div>
         )}

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 
 import { ServerData } from "@/lib/api";
 import { Badge } from "../components/Badge";
@@ -19,7 +19,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
   const offlineCount = servers.length - onlineCount;
 
   // 格式化最后更新时间
-  const formattedLastUpdated = React.useMemo(() => {
+  const formattedLastUpdated = useMemo(() => {
     if (!lastUpdated) return "未知";
     return formatTime(lastUpdated);
   }, [lastUpdated]);
