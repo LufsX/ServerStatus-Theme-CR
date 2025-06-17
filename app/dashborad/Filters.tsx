@@ -115,7 +115,7 @@ export const Filters = memo(function Filters({
               transition={{ duration: 0.15 }}
               className="absolute top-full left-0 mt-1 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[100px] transition-colors"
             >
-              <div className="p-1">
+              <div className="p-1 grid gap-y-0.5">
                 <button
                   onClick={() => {
                     onStatusChange(null);
@@ -181,7 +181,7 @@ export const Filters = memo(function Filters({
                 transition={{ duration: 0.15 }}
                 className="absolute top-full left-0 mt-1 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[100px] max-w-[250px] transition-colors"
               >
-                <div className="p-1 max-h-60 overflow-y-auto">
+                <div className="p-1 grid gap-y-0.5 max-h-60 overflow-y-auto">
                   {locations.length > 6 && (
                     <div className="px-1 pt-1 pb-2">
                       <input
@@ -253,7 +253,7 @@ export const Filters = memo(function Filters({
                 transition={{ duration: 0.15 }}
                 className="absolute top-full left-0 mt-1 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[80px] transition-colors"
               >
-                <div className="p-1">
+                <div className="p-1 grid gap-y-0.5">
                   <button
                     onClick={() => {
                       onTypeChange(null);
@@ -328,7 +328,7 @@ export const Filters = memo(function Filters({
               transition={{ duration: 0.15 }}
               className="absolute top-full left-0 mt-1 dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg z-50 min-w-[100px] transition-colors"
             >
-              <div className="p-1">
+              <div className="p-1 grid gap-y-0.5">
                 {sortOptions.map((option) => (
                   <button
                     key={option.value}
