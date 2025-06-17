@@ -84,6 +84,8 @@ export const Filters = memo(function Filters({
     { value: "memory" as SortOption, label: "内存" },
     { value: "uptime" as SortOption, label: "运行时长" },
     { value: "load" as SortOption, label: "负载" },
+    { value: "network_rx" as SortOption, label: "下载速度" },
+    { value: "network_tx" as SortOption, label: "上传速度" },
   ];
 
   return (

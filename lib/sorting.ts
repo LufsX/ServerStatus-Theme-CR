@@ -1,7 +1,7 @@
 import { ServerData } from "./api";
 import { isOnline } from "./utils";
 
-export type SortOption = "default" | "name" | "location" | "cpu" | "memory" | "uptime" | "load";
+export type SortOption = "default" | "name" | "location" | "cpu" | "memory" | "uptime" | "load" | "network_rx" | "network_tx";
 export type SortOrder = "asc" | "desc";
 
 /**
@@ -68,6 +68,26 @@ export function getLoadValue(server: ServerData): number {
     return -1; // 数据不存在时返回 -1，排序时放到最后
   }
   return server.load_1;
+}
+
+/**
+ * 获取下载速度值，处理不存在的情况
+ */
+export function getNetworkRxValue(server: ServerData): number {
+  if (server.network_rx === undefined || server.network_rx === null || isNaN(server.network_rx)) {
+    return -1; // 数据不存在时返回 -1，排序时放到最后
+  }
+  return server.network_rx;
+}
+
+/**
+ * 获取上传速度值，处理不存在的情况
+ */
+export function getNetworkTxValue(server: ServerData): number {
+  if (server.network_tx === undefined || server.network_tx === null || isNaN(server.network_tx)) {
+    return -1; // 数据不存在时返回 -1，排序时放到最后
+  }
+  return server.network_tx;
 }
 
 /**
@@ -144,6 +164,24 @@ export function customSort(a: ServerData, b: ServerData, sortBy: SortOption, sor
       else if (loadB === -1) comparison = -1; // B 没有数据，排到后面
       else comparison = loadA - loadB;
       break;
+    case "network_rx":
+      const networkRxA = getNetworkRxValue(a);
+      const networkRxB = getNetworkRxValue(b);
+      // 处理不存在的情况：-1 的值始终排到最后
+      if (networkRxA === -1 && networkRxB === -1) comparison = 0;
+      else if (networkRxA === -1) comparison = 1; // A 没有数据，排到后面
+      else if (networkRxB === -1) comparison = -1; // B 没有数据，排到后面
+      else comparison = networkRxA - networkRxB;
+      break;
+    case "network_tx":
+      const networkTxA = getNetworkTxValue(a);
+      const networkTxB = getNetworkTxValue(b);
+      // 处理不存在的情况：-1 的值始终排到最后
+      if (networkTxA === -1 && networkTxB === -1) comparison = 0;
+      else if (networkTxA === -1) comparison = 1; // A 没有数据，排到后面
+      else if (networkTxB === -1) comparison = -1; // B 没有数据，排到后面
+      else comparison = networkTxA - networkTxB;
+      break;
     default:
       return 0;
   }
@@ -153,7 +191,9 @@ export function customSort(a: ServerData, b: ServerData, sortBy: SortOption, sor
     (sortBy === "cpu" && (getCpuPercent(a) === -1 || getCpuPercent(b) === -1)) ||
     (sortBy === "memory" && (getMemoryPercent(a) === -1 || getMemoryPercent(b) === -1)) ||
     (sortBy === "uptime" && (parseUptime(a.uptime || "") === -1 || parseUptime(b.uptime || "") === -1)) ||
-    (sortBy === "load" && (getLoadValue(a) === -1 || getLoadValue(b) === -1))
+    (sortBy === "load" && (getLoadValue(a) === -1 || getLoadValue(b) === -1)) ||
+    (sortBy === "network_rx" && (getNetworkRxValue(a) === -1 || getNetworkRxValue(b) === -1)) ||
+    (sortBy === "network_tx" && (getNetworkTxValue(a) === -1 || getNetworkTxValue(b) === -1))
   ) {
     return comparison; // 缺失数据的排序不受升序/降序影响
   }
