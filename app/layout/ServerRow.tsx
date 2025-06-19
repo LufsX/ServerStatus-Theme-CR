@@ -75,6 +75,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                     </div>
                   ))}
                 <h3 className="font-medium text-sm truncate">{server.host ? server.name : server.alias || server.name}</h3>
+                {server.type && <span className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
               </div>
             </div>
             {/* 系统图标 */}

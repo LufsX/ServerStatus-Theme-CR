@@ -24,7 +24,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
 
-  // CPU历史数据管理
+  // CPU 历史数据管理
   const cpuHistoryManager = getCpuHistoryManager();
   const serverId = `${server.name}-${server.alias}`;
 
