@@ -103,7 +103,6 @@ export const Filters = memo(function Filters({
         const button = event.currentTarget as HTMLElement;
         const buttonRect = button.getBoundingClientRect();
         const containerRect = containerRef.current.getBoundingClientRect();
-        const scrollContainer = buttonScrollRef.current;
 
         // 计算按钮相对于组件容器的位置
         let left = buttonRect.left - containerRect.left;
