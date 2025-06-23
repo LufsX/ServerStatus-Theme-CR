@@ -11,6 +11,7 @@ import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpe
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useSettings } from "../setting/settings";
 import { getCpuHistoryManager } from "@/lib/cpuHistory";
+import { SpecIcon, HostIcon, CalendarIcon, TagIcon } from "../components/LabelIcons";
 
 interface ServerCardProps {
   server: ServerData;
@@ -55,6 +56,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   const os = labels.os ? labels.os.toLowerCase() : "";
   const expiryDate = labels.ndd || "";
   const spec = labels.spec || "";
+  const host = labels.host || "";
 
   // 只有这些有对应的 SVG 图标
   const osIcons: Record<string, string> = {
@@ -71,9 +73,25 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   };
   const osIcon = osIcons[os] || "linux";
 
+  // 标签图标映射
+  const getIconForLabel = (key: string) => {
+    const iconProps = { className: "text-current", size: 12 };
+
+    switch (key) {
+      case "spec":
+        return <SpecIcon {...iconProps} />;
+      case "host":
+        return <HostIcon {...iconProps} />;
+      case "ndd":
+        return <CalendarIcon {...iconProps} />;
+      default:
+        return <TagIcon {...iconProps} />;
+    }
+  };
+
   // 无标签判断
-  const hasOtherLabels = Object.entries(labels).some(([key, value]) => !["os", "ndd", "spec"].includes(key) && value);
-  const hasAnyLabels = os || spec || expiryDate || hasOtherLabels;
+  const hasOtherLabels = Object.entries(labels).some(([key, value]) => !["os", "ndd", "spec", "host"].includes(key) && value);
+  const hasAnyLabels = os || spec || expiryDate || host || hasOtherLabels;
 
   return (
     <div
@@ -211,20 +229,41 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
             )}
 
             {/* 规格信息 */}
-            {spec && <Badge variant="secondary">{spec}</Badge>}
+            {spec && (
+              <Badge variant="secondary" className="flex items-center space-x-1">
+                {getIconForLabel("spec")}
+                <span>{spec}</span>
+              </Badge>
+            )}
+
+            {/* 主机提供商 */}
+            {host && (
+              <Badge variant="info" className="flex items-center space-x-1">
+                {getIconForLabel("host")}
+                <span>{host}</span>
+              </Badge>
+            )}
 
             {/* 到期日期 */}
-            {expiryDate && <Badge variant={new Date(expiryDate) > new Date() ? "primary" : "danger"}>到期: {expiryDate}</Badge>}
+            {expiryDate && (
+              <Badge variant={new Date(expiryDate) > new Date() ? "primary" : "danger"} className="flex items-center space-x-1">
+                {getIconForLabel("ndd")}
+                <span>{expiryDate}</span>
+              </Badge>
+            )}
           </div>
 
           {/* 其他自定义标签 */}
           {Object.entries(labels).map(([key, value]) => {
             // 跳过上面的标签
-            if (["os", "ndd", "spec"].includes(key)) return null;
+            if (["os", "ndd", "spec", "host"].includes(key)) return null;
 
             return (
-              <Badge key={key} variant="default" className="mr-2 mt-2">
-                {key}: {value}
+              <Badge key={key} variant="default" className="mr-2 mt-2 flex items-center space-x-1">
+                {getIconForLabel(key)}
+                <span>
+                  {key.toUpperCase()}: {value.toUpperCase()}
+                </span>
               </Badge>
             );
           })}
