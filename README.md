@@ -29,6 +29,7 @@ The ServerStatus data source has been verified for normal use
 - 支持基于节点和状态筛选服务器
 - 支持通过环境变量设置 API 地址
 - 支持深色模式和浅色模式自动/手动切换
+- 支持生成一键部署命令（仅适用于 [zdz/ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) 实现）
 
 ---
 
@@ -39,6 +40,7 @@ The ServerStatus data source has been verified for normal use
 - Supports filtering servers by node and status
 - Supports setting API address through environment variables
 - Supports automatic/manual switching between dark mode and light mode
+- Supports generating one-click deployment commands (Only for [zdz/ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust))
 
 ## 使用 Usage
 

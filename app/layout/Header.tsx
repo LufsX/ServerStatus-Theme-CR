@@ -3,6 +3,7 @@
 import React from "react";
 
 import SettingsMenu from "../setting/SettingsMenu";
+import OneClickModal from "../setting/OneClickModal";
 
 interface HeaderProps {
   title?: string;
@@ -17,7 +18,10 @@ export function Header({ title = "服务器状态", subtitle = "实时监控各�
           <h1 className="text-2xl md:text-3xl font-bold">{title}</h1>
           {subtitle && <div className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-1">{subtitle}</div>}
         </div>
-        <SettingsMenu />
+        <div className="flex items-center gap-2">
+          <OneClickModal />
+          <SettingsMenu />
+        </div>
       </div>
     </header>
   );
