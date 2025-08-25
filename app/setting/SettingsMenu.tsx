@@ -98,9 +98,9 @@ const SettingsMenu = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       initial={{ opacity: 0, rotate: 0 }}
-      animate={{ opacity: 1, rotate: 0 }}
+      animate={{ opacity: 1, rotate: isOpen ? 90 : 0 }}
       exit={{ opacity: 0, rotate: 0 }}
-      transition={{ duration: 0.08, type: "spring", stiffness: 400, damping: 25 }}
+      transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 25 }}
       aria-hidden="true"
     >
       <path
