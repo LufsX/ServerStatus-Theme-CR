@@ -8,6 +8,7 @@ import { Badge } from "../components/Badge";
 import { ProgressBar } from "../components/ProgressBar";
 import { formatLoad, formatCPU, getFormattedNetworkSpeed, formatBytes } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
+import { useSettings } from "../setting/settings";
 
 interface ServerRowProps {
   server: ServerData;
@@ -16,6 +17,7 @@ interface ServerRowProps {
 }
 
 export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
+  const { settings } = useSettings();
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
 
@@ -135,7 +137,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           )}
 
           {/* 基本信息 */}
-          <div className={os ? "col-span-4" : "col-span-6"}>
+          <div className={os ? (settings.compactMode ? "col-span-6" : "col-span-4") : settings.compactMode ? "col-span-8" : "col-span-6"}>
             <div className="min-w-0">
               <div className="flex items-center space-x-1">
                 {server.location &&
@@ -151,14 +153,18 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
                 <span>{online ? server.uptime : <span className="text-red-500">离线</span>}</span>
-                <span className="mx-1 text-gray-300 dark:text-gray-600">•</span>
-                <span>负载: {loadDisplay}</span>
+                {!settings.compactMode && (
+                  <>
+                    <span className="mx-1 text-gray-300 dark:text-gray-600">•</span>
+                    <span>负载: {loadDisplay}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
 
           {/* CPU */}
-          <div className="col-span-3">
+          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm font-medium">CPU</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{formatCPU(cpuPercentage)}</div>
@@ -167,7 +173,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           </div>
 
           {/* 内存 */}
-          <div className="col-span-3">
+          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm font-medium">内存</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{memoryPercentage.toFixed(1)}%</div>
@@ -176,7 +182,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           </div>
 
           {/* 存储 */}
-          <div className="col-span-3">
+          <div className={settings.compactMode ? "col-span-4" : "col-span-3"}>
             <div className="flex items-center justify-between mb-1">
               <div className="text-sm font-medium">存储</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{diskPercentage.toFixed(1)}%</div>
@@ -185,23 +191,31 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           </div>
 
           {/* 网络速度和流量 */}
-          <div className="col-span-7">
+          <div className={settings.compactMode ? "col-span-4" : "col-span-7"}>
             <div className="space-y-0.5">
-              <div className="grid grid-cols-[12px_auto_auto_1fr] gap-1 items-center text-xs min-w-0">
+              <div className={`grid ${settings.compactMode ? "grid-cols-[12px_auto]" : "grid-cols-[12px_auto_auto_1fr]"} gap-1 items-center text-xs min-w-0`}>
                 <span className="text-green-600 dark:text-green-400 font-medium">↓</span>
                 <span className="font-medium whitespace-nowrap">{downloadSpeed}</span>
-                <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {monthlyDownload}/{totalDownload}
-                </span>
+                {!settings.compactMode && (
+                  <>
+                    <span className="text-gray-300 dark:text-gray-600">•</span>
+                    <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {monthlyDownload}/{totalDownload}
+                    </span>
+                  </>
+                )}
               </div>
-              <div className="grid grid-cols-[12px_auto_auto_1fr] gap-1 items-center text-xs min-w-0">
+              <div className={`grid ${settings.compactMode ? "grid-cols-[12px_auto]" : "grid-cols-[12px_auto_auto_1fr]"} gap-1 items-center text-xs min-w-0`}>
                 <span className="text-blue-600 dark:text-blue-400 font-medium">↑</span>
                 <span className="font-medium whitespace-nowrap">{uploadSpeed}</span>
-                <span className="text-gray-300 dark:text-gray-600">•</span>
-                <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                  {monthlyUpload}/{totalUpload}
-                </span>
+                {!settings.compactMode && (
+                  <>
+                    <span className="text-gray-300 dark:text-gray-600">•</span>
+                    <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {monthlyUpload}/{totalUpload}
+                    </span>
+                  </>
+                )}
               </div>
             </div>
           </div>

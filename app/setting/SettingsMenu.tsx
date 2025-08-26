@@ -73,6 +73,12 @@ const SettingsMenu = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
+  // 切换精简模式
+  const handleCompactModeChange = (compactMode: boolean) => {
+    updateSettings({ compactMode });
+    window.dispatchEvent(new Event("storage"));
+  };
+
   // 切换 CPU 图表显示
   const handleShowCpuChartChange = (showCpuChart: boolean) => {
     updateSettings({ showCpuChart });
@@ -155,10 +161,11 @@ const SettingsMenu = () => {
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.25 }}>
           界面组件
         </motion.div>
-        <div className="flex space-x-2">
+        <div className="grid grid-cols-3 gap-2">
           {[
             { key: "showSummary", label: "摘要", value: settings.showSummary, handler: handleShowSummaryChange },
             { key: "showFilters", label: "筛选", value: settings.showFilters, handler: handleShowFiltersChange },
+            { key: "compactMode", label: "精简", value: settings.compactMode, handler: handleCompactModeChange },
           ].map(({ key, label, value, handler }, index) => (
             <motion.div
               key={key}

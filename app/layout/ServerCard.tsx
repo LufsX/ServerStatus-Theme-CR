@@ -125,36 +125,44 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       </div>
 
       {/* Status Section */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="space-y-1">
-          <div className="text-xs text-gray-500 dark:text-gray-400">运行时间</div>
-          <div className="text-sm font-medium">
-            {server.online4 || server.online6 ? server.uptime : <span className="text-red-500">离线</span>}
-            {!server.online4 && !server.online6 && server.latest_ts && (
-              <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>
-            )}
+      {!settings.compactMode ? (
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400">运行时间</div>
+            <div className="text-sm font-medium">
+              {online ? server.uptime : <span className="text-red-500">离线</span>}
+              {!online && server.latest_ts && <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400">负载</div>
+            <div className="text-sm font-medium">{formatLoad(server.load_1, server.load_5, server.load_15)}</div>
+          </div>
+
+          <div className="space-y-1 col-span-2">
+            <div className="text-xs text-gray-500 dark:text-gray-400">网络延迟（联通/电信/移动）</div>
+            <div className="text-sm font-medium">{formatAllLatencies(server)}</div>
+          </div>
+
+          <div className="col-span-2 flex flex-wrap gap-2 mt-1">
+            <Badge variant={server.online4 ? "success" : "danger"}>IPv4</Badge>
+            <Badge variant={server.online6 ? "success" : "danger"}>IPv6</Badge>
+            <Badge variant="info">TCP: {server.tcp_count || 0}</Badge>
+            <Badge variant="info">UDP: {server.udp_count || 0}</Badge>
+            <Badge variant="primary">进程: {server.process_count || 0}</Badge>
+            <Badge variant="secondary">线程: {server.thread_count || 0}</Badge>
           </div>
         </div>
-
-        <div className="space-y-1">
-          <div className="text-xs text-gray-500 dark:text-gray-400">负载</div>
-          <div className="text-sm font-medium">{formatLoad(server.load_1, server.load_5, server.load_15)}</div>
-        </div>
-
-        <div className="space-y-1 col-span-2">
-          <div className="text-xs text-gray-500 dark:text-gray-400">网络延迟（联通/电信/移动）</div>
-          <div className="text-sm font-medium">{formatAllLatencies(server)}</div>
-        </div>
-
-        <div className="col-span-2 flex flex-wrap gap-2 mt-1">
-          <Badge variant={server.online4 ? "success" : "danger"}>IPv4</Badge>
-          <Badge variant={server.online6 ? "success" : "danger"}>IPv6</Badge>
-          <Badge variant="info">TCP: {server.tcp_count || 0}</Badge>
-          <Badge variant="info">UDP: {server.udp_count || 0}</Badge>
-          <Badge variant="primary">进程: {server.process_count || 0}</Badge>
-          <Badge variant="secondary">线程: {server.thread_count || 0}</Badge>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="text-sm font-medium mb-4">
+            <span className=" text-gray-500 dark:text-gray-400">运行时间: </span>
+            {online ? server.uptime : <span className="text-red-500">离线</span>}
+            {!online && server.latest_ts && <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>}
+          </div>
+        </>
+      )}
 
       {/* Resource Section */}
       <div className="space-y-3 mb-4">
@@ -198,26 +206,30 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       </div>
 
       {/* Network Section */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className={`grid grid-cols-2 gap-3 ${settings.compactMode ? "" : "mb-4"}`}>
         <div className="space-y-1">
           <div className="text-xs text-gray-500 dark:text-gray-400">下载 ↓</div>
           <div className="text-sm font-medium">{downloadSpeed}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            月/总: {monthlyDownload} / {totalDownload}
-          </div>
+          {!settings.compactMode && (
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              月/总: {monthlyDownload} / {totalDownload}
+            </div>
+          )}
         </div>
 
         <div className="space-y-1">
           <div className="text-xs text-gray-500 dark:text-gray-400">上传 ↑</div>
           <div className="text-sm font-medium">{uploadSpeed}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">
-            月/总: {monthlyUpload} / {totalUpload}
-          </div>
+          {!settings.compactMode && (
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              月/总: {monthlyUpload} / {totalUpload}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Info Section */}
-      {hasAnyLabels && (
+      {!settings.compactMode && hasAnyLabels && (
         <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap gap-2">
             {/* 操作系统标签 */}

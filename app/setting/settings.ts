@@ -13,6 +13,7 @@ export interface Settings {
   showFilters: boolean;
   showCpuChart: boolean;
   cpuChartDuration: CpuChartDuration;
+  compactMode: boolean;
 }
 
 // 默认设置
@@ -24,6 +25,7 @@ const DEFAULT_SETTINGS: Settings = {
   showFilters: false,
   showCpuChart: false,
   cpuChartDuration: 3,
+  compactMode: false,
 };
 
 // 自定义事件名称
