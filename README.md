@@ -25,6 +25,7 @@ The ServerStatus data source has been verified for normal use
 - 使用 Next.js 和 TailwindCSS 开发
 - 响应式设计，适配桌面和移动设备
 - 支持卡片和列表布局切换
+- 支持精简显示模式
 - 支持 CPU 占用率图表显示
 - 支持基于节点和状态筛选服务器
 - 支持通过环境变量设置 API 地址
@@ -36,6 +37,7 @@ The ServerStatus data source has been verified for normal use
 - Used Next.js and TailwindCSS for development
 - Responsive design, compatible with desktop and mobile devices
 - Supports switching between card and list layouts
+- Supports compact display mode
 - Supports CPU usage chart display
 - Supports filtering servers by node and status
 - Supports setting API address through environment variables
