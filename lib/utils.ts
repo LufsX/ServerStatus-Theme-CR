@@ -25,15 +25,6 @@ export function parseLabels(labelsString: string | undefined): Record<string, st
  * @param server 服务器数据
  * @returns 是否在线
  */
-export function isServerOnline(server: { online4: boolean; online6: boolean }): boolean {
-  return server.online4 || server.online6;
-}
-
-/**
- * 检查服务器是否在线（与isServerOnline相同功能，但更简短的名称）
- * @param server 服务器数据
- * @returns 是否在线
- */
 export function isOnline(server: { online4: boolean; online6: boolean }): boolean {
   return server.online4 || server.online6;
 }
