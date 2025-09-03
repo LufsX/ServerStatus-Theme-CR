@@ -51,7 +51,9 @@ const serverDefaults: OneClickForm = {
   ipSource: "ip-api.com",
 };
 
-export default function OneClickModal(): React.ReactElement {
+export default function OneClickModal(): React.ReactElement | null {
+  const hideOneClickDeploy = process.env.NEXT_PUBLIC_HIDE_ONE_CLICK_DEPLOY === "true";
+
   const [isOpen, setIsOpen] = useState(false);
   const [useSudo, setUseSudo] = useState(false);
   const [useCurl, setUseCurl] = useState(true);
@@ -201,6 +203,10 @@ export default function OneClickModal(): React.ReactElement {
       <path d="M14 4l-4 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </motion.svg>
   );
+
+  if (hideOneClickDeploy) {
+    return null;
+  }
 
   if (!mounted) {
     return <div className="w-8 h-8"></div>;

@@ -14,6 +14,7 @@ The ServerStatus data source has been verified for normal use
 - [cppla/ServerStatus](https://github.com/cppla/ServerStatus)
 
 > 建议使用 [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) 作为数据源，展示的信息更多
+>
 > Suggested to use [ServerStatus-Rust](https://github.com/zdz/ServerStatus-Rust) as the data source, which provides more information
 
 ## 预览 Preview
@@ -67,6 +68,33 @@ If the ServerStatus API address is publicly accessible and CORS is set up (if yo
 The compiled static files can be found in the [Release page](https://github.com/LufsX/ServerStatus-Theme-CR/releases), download and replace the original theme, or you can mount the theme through reverse proxy
 
 For details, see [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6-faq)
+
+## 环境变量 Environment Variables
+
+### NEXT_PUBLIC_API_BASE_URL
+
+设置对应的 ServerStatus API 地址
+
+---
+
+Set the corresponding ServerStatus API address.
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://your-serverstatus-api.com
+```
+
+### NEXT_PUBLIC_HIDE_ONE_CLICK_DEPLOY
+
+控制是否隐藏一键部署功能
+
+---
+
+Control whether to hide the one-click deployment feature.
+
+```bash
+# 隐藏一键部署功能
+NEXT_PUBLIC_HIDE_ONE_CLICK_DEPLOY=true
+```
 
 ## 其它 Other
 
