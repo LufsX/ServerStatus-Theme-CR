@@ -25,7 +25,7 @@ export default function Footer() {
       <div className="container px-4 mx-auto pl-1">
         <div className="flex flex-col sm:flex-row gap-1 text-xs sm:text-sm">
           <span className="flex items-center">
-            <Link href="https://github.com/LufsX/ServerStatus-Theme">© 2025 - {new Date().getFullYear()} ServerStatus-Theme</Link>
+            <Link href="https://github.com/LufsX/ServerStatus-Theme-CR">© 2025 - {new Date().getFullYear()} ServerStatus-Theme-CR</Link>
           </span>
           <span className="hidden sm:block"> · </span>
           <span className="flex items-center">
