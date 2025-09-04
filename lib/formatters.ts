@@ -138,23 +138,26 @@ export function formatLoad(load_1: number, load_5: number, load_15: number): str
 /**
  * 格式化网络延迟
  */
-export function formatLatency(ping: number): string {
+export function formatLatency(ping: number, t: (key: string) => string): string {
   // 处理 undefined 或 null 值
   const safePing = ping ?? 0;
 
   // 如果ping值为0，表示不可用或超时
-  if (safePing === 0) return "超时";
+  if (safePing === 0) return t("server.timeout");
   // 如果ping值为100，表示不可用
-  if (safePing === 100) return "不可用";
+  if (safePing === 100) return t("server.unavailable");
 
   return `${safePing.toFixed(0)}ms`;
 }
 
 /**
- * 格式化全部延迟
+ * 格式化全部延迟（国际化版本）
+ * @param server 服务器数据
+ * @param t 翻译函数
+ * @returns 格式化后的字符串
  */
-export function formatAllLatencies(server: ServerData): string {
-  const latencies = [formatLatency(server.ping_10010), formatLatency(server.ping_189), formatLatency(server.ping_10086)];
+export function formatAllLatencies(server: ServerData, t: (key: string) => string): string {
+  const latencies = [formatLatency(server.ping_10010, t), formatLatency(server.ping_189, t), formatLatency(server.ping_10086, t)];
 
   return latencies.join(" / ");
 }

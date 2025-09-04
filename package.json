@@ -11,7 +11,8 @@
     "chart.js": "4.5.0",
     "chartjs-adapter-date-fns": "3.0.0",
     "framer-motion": "12.23.12",
-    "next": "15.5.0",
+    "next": "15.5.2",
+    "next-intl": "4.3.5",
     "next-themes": "0.4.6",
     "react": "19.1.1",
     "react-chartjs-2": "5.3.0",
@@ -20,11 +21,11 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@tailwindcss/postcss": "4.1.12",
-    "@types/node": "22.17.2",
-    "@types/react": "19.1.11",
-    "@types/react-dom": "19.1.7",
+    "@types/node": "24.3.0",
+    "@types/react": "19.1.12",
+    "@types/react-dom": "19.1.9",
     "eslint": "9.34.0",
-    "eslint-config-next": "15.5.0",
+    "eslint-config-next": "15.5.2",
     "tailwindcss": "4.1.12",
     "typescript": "5.9.2"
   }

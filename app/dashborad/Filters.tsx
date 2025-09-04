@@ -2,6 +2,7 @@
 
 import React, { memo, useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { SortOption, SortOrder } from "@/lib/sorting";
 
@@ -34,6 +35,7 @@ export const Filters = memo(function Filters({
   sortOrder,
   onSortOrderChange,
 }: FiltersProps) {
+  const { t } = useI18n();
   const [searchLocation, setSearchLocation] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
@@ -127,15 +129,15 @@ export const Filters = memo(function Filters({
   };
 
   const sortOptions = [
-    { value: "default" as SortOption, label: "默认" },
-    { value: "name" as SortOption, label: "名称" },
-    { value: "location" as SortOption, label: "位置" },
-    { value: "cpu" as SortOption, label: "CPU" },
-    { value: "memory" as SortOption, label: "内存" },
-    { value: "uptime" as SortOption, label: "运行时长" },
-    { value: "load" as SortOption, label: "负载" },
-    { value: "network_rx" as SortOption, label: "下载速度" },
-    { value: "network_tx" as SortOption, label: "上传速度" },
+    { value: "default" as SortOption, label: t("dashboard.all") },
+    { value: "name" as SortOption, label: t("server.name") },
+    { value: "location" as SortOption, label: t("server.location") },
+    { value: "cpu" as SortOption, label: t("server.load") },
+    { value: "memory" as SortOption, label: t("server.memory") },
+    { value: "uptime" as SortOption, label: t("server.uptime") },
+    { value: "load" as SortOption, label: t("server.load") },
+    { value: "network_rx" as SortOption, label: t("server.network") },
+    { value: "network_tx" as SortOption, label: t("server.traffic") },
   ];
   return (
     <div className="relative mb-6" ref={containerRef}>
@@ -151,7 +153,7 @@ export const Filters = memo(function Filters({
                 : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
             }`}
           >
-            <span className="truncate">{selectedStatus === "online" ? "在线" : selectedStatus === "offline" ? "离线" : "状态"}</span>
+            <span className="truncate">{selectedStatus === "online" ? t("server.online") : selectedStatus === "offline" ? t("server.offline") : t("dashboard.status")}</span>
             <motion.span animate={{ rotate: openDropdown === "status" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
               ▼
             </motion.span>
@@ -169,7 +171,7 @@ export const Filters = memo(function Filters({
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
-              <span className="truncate">{selectedLocation ? `📍 ${selectedLocation}` : "位置"}</span>
+              <span className="truncate">{selectedLocation ? `📍 ${selectedLocation}` : t("server.location")}</span>
               <motion.span animate={{ rotate: openDropdown === "location" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
                 ▼
               </motion.span>
@@ -188,7 +190,7 @@ export const Filters = memo(function Filters({
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
-              <span className="truncate">{selectedType ? selectedType.toUpperCase() : "类型"}</span>
+              <span className="truncate">{selectedType ? selectedType.toUpperCase() : t("server.type")}</span>
               <motion.span animate={{ rotate: openDropdown === "type" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
                 ▼
               </motion.span>
@@ -207,7 +209,7 @@ export const Filters = memo(function Filters({
                 : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
             }`}
           >
-            <span className="truncate">{sortBy !== "default" ? sortOptions.find((opt) => opt.value === sortBy)?.label : "排序"}</span>
+            <span className="truncate">{sortBy !== "default" ? sortOptions.find((opt) => opt.value === sortBy)?.label : t("dashboard.sort")}</span>
             <motion.span animate={{ rotate: openDropdown === "sort" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
               ▼
             </motion.span>
@@ -221,7 +223,7 @@ export const Filters = memo(function Filters({
               exit={{ opacity: 0, scale: 1 }}
               onClick={() => onSortOrderChange(sortOrder === "asc" ? "desc" : "asc")}
               className="px-2 bg-blue-100 dark:bg-blue-800 hover:bg-blue-200 hover:dark:bg-blue-700 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-md text-xs font-medium transition-all duration-200 flex items-center justify-center min-w-[28px]"
-              title={`点击切换${sortOrder === "asc" ? "降序" : "升序"}`}
+              title={`${t("dashboard.clickToToggle")}${sortOrder === "asc" ? t("dashboard.desc") : t("dashboard.asc")}`}
             >
               <motion.span key={sortOrder} initial={{ rotateX: 90 }} animate={{ rotateX: 0 }} transition={{ duration: 0.2 }} className="text-sm">
                 {sortOrder === "asc" ? "↑" : "↓"}
@@ -239,13 +241,13 @@ export const Filters = memo(function Filters({
             onClick={clearAllFilters}
             className="px-3 py-1.5 bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-700 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 flex-shrink-0"
           >
-            <span>清除</span>
+            <span>{t("dashboard.clear")}</span>
             <span className="text-xs">({activeFiltersCount})</span>
           </motion.button>
         )}
       </div>
 
-      {/* 下拉菜单容器 - 独立于按钮容器 */}
+      {/* 下拉菜单容器 */}
       <div className="absolute top-full left-0 right-0 z-50">
         {/* 状态下拉菜单 */}
         <AnimatePresence>
@@ -268,7 +270,7 @@ export const Filters = memo(function Filters({
                     !selectedStatus || selectedStatus === "all" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
-                  全部
+                  {t("dashboard.all")}
                 </button>
                 <button
                   onClick={() => {
@@ -279,7 +281,8 @@ export const Filters = memo(function Filters({
                     selectedStatus === "online" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
-                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>在线
+                  <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                  {t("server.online")}
                 </button>
                 <button
                   onClick={() => {
@@ -290,7 +293,8 @@ export const Filters = memo(function Filters({
                     selectedStatus === "offline" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
-                  <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>离线
+                  <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
+                  {t("server.offline")}
                 </button>
               </div>
             </motion.div>
@@ -313,7 +317,7 @@ export const Filters = memo(function Filters({
                   <div className="px-1 pt-1 pb-2">
                     <input
                       type="text"
-                      placeholder="搜索位置..."
+                      placeholder={t("dashboard.searchLocation")}
                       value={searchLocation}
                       onChange={(e) => setSearchLocation(e.target.value)}
                       className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 min-w-0"
@@ -330,7 +334,7 @@ export const Filters = memo(function Filters({
                     !selectedLocation ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
-                  全部
+                  {t("dashboard.all")}
                 </button>
                 {filteredLocations.map((location) => (
                   <button
@@ -373,7 +377,7 @@ export const Filters = memo(function Filters({
                     !selectedType ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
-                  全部
+                  {t("dashboard.all")}
                 </button>
                 {types.map((type) => (
                   <button

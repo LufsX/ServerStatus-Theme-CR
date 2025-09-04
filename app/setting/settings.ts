@@ -4,6 +4,7 @@ export type UnitType = "binary" | "decimal"; // GiB | GB
 export type RefreshInterval = 1000 | 2000 | 5000 | 10000; // 1s, 2s, 5s, 10s
 export type DisplayMode = "card" | "row"; // 卡片模式 | 横排模式
 export type CpuChartDuration = 1 | 3 | 5; // 1min, 3min, 5min
+export type Locale = "zh-CN" | "en-US"; // 语言
 
 export interface Settings {
   unitType: UnitType;
@@ -14,6 +15,7 @@ export interface Settings {
   showCpuChart: boolean;
   cpuChartDuration: CpuChartDuration;
   compactMode: boolean;
+  locale: Locale;
 }
 
 // 默认设置
@@ -26,6 +28,7 @@ const DEFAULT_SETTINGS: Settings = {
   showCpuChart: false,
   cpuChartDuration: 3,
   compactMode: false,
+  locale: "zh-CN",
 };
 
 // 自定义事件名称

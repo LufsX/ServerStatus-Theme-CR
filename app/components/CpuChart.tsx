@@ -5,6 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { Line } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import { CpuDataPoint } from "@/lib/cpuHistory";
+import { useI18n } from "@/lib/i18n/hooks";
 
 // 注册 Chart.js 组件
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Filler);
@@ -42,6 +43,7 @@ const calculateYAxisMax = (maxCpu: number): number => {
 
 export function CpuChart({ data, className = "" }: CpuChartProps) {
   const chartRef = useRef<ChartJS<"line">>(null);
+  const { t } = useI18n();
 
   // 计算数据指标
   const { currentCpu, maxCpu, yMax } = useMemo(() => {
@@ -67,7 +69,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
       labels: data.map((point) => new Date(point.timestamp)),
       datasets: [
         {
-          label: "CPU 使用率",
+          label: t("server.cpuUsage"),
           data: data.map((point) => point.cpu),
           borderColor: lineColor,
           backgroundColor: lineColor + "20",
@@ -159,7 +161,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
   if (!data || data.length < 2) {
     return (
       <div className={`flex items-center justify-center w-full h-26 ${className}`}>
-        <span className="text-xs text-gray-400">暂无数据</span>
+        <span className="text-xs text-gray-400">{t("common.noData")}</span>
       </div>
     );
   }
@@ -172,7 +174,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
 
       {/* 最大 CPU 值 */}
       <div className="absolute top-1 right-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 hover:dark:text-gray-100 bg-white dark:bg-gray-800 px-1 py-0.5 rounded shadow-sm opacity-75 hover:opacity-100 border border-gray-200 dark:border-gray-700 duration-200">
-        最大: {maxCpu.toFixed(1)}%
+        {t("dashboard.max")}: {maxCpu.toFixed(1)}%
       </div>
     </div>
   );

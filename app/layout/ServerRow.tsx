@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
 import { Badge } from "../components/Badge";
@@ -17,6 +18,7 @@ interface ServerRowProps {
 }
 
 export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
+  const { t } = useI18n();
   const { settings } = useSettings();
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
@@ -28,6 +30,11 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   const monthlyDownload = server.network_in ? formatBytes(server.network_in - server.last_network_in) : server.last_network_in ? formatBytes(server.last_network_in) : "0 B";
   const totalUpload = formatBytes(server.network_out);
   const monthlyUpload = server.network_out ? formatBytes(server.network_out - server.last_network_out) : server.last_network_out ? formatBytes(server.last_network_out) : "0 B";
+
+  // 格式化运行时间
+  const formatUptime = (uptime: string) => {
+    return uptime.replace(/天/g, t("server.day"));
+  };
 
   // 计算百分比
   const cpuPercentage = server.cpu;
@@ -91,11 +98,11 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
               <div className="font-semibold">{formatCPU(cpuPercentage)}</div>
             </div>
             <div className="text-center">
-              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">内存</div>
+              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">{t("server.memory")}</div>
               <div className="font-semibold">{memoryPercentage.toFixed(0)}%</div>
             </div>
             <div className="text-center">
-              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">存储</div>
+              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">{t("server.disk")}</div>
               <div className="font-semibold">{diskPercentage.toFixed(0)}%</div>
             </div>
           </div>
@@ -152,11 +159,13 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                 {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-                <span>{online ? server.uptime : <span className="text-red-500">离线</span>}</span>
+                <span>{online ? formatUptime(server.uptime) : <span className="text-red-500">{t("server.offline")}</span>}</span>
                 {!settings.compactMode && (
                   <>
                     <span className="mx-1 text-gray-300 dark:text-gray-600">•</span>
-                    <span>负载: {loadDisplay}</span>
+                    <span>
+                      {t("server.load")}: {loadDisplay}
+                    </span>
                   </>
                 )}
               </div>
@@ -175,7 +184,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           {/* 内存 */}
           <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
             <div className="flex items-center justify-between mb-1">
-              <div className="text-sm font-medium">内存</div>
+              <div className="text-sm font-medium">{t("server.memory")}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{memoryPercentage.toFixed(1)}%</div>
             </div>
             <ProgressBar value={memoryPercentage} />
@@ -184,7 +193,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           {/* 存储 */}
           <div className={settings.compactMode ? "col-span-4" : "col-span-3"}>
             <div className="flex items-center justify-between mb-1">
-              <div className="text-sm font-medium">存储</div>
+              <div className="text-sm font-medium">{t("server.disk")}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{diskPercentage.toFixed(1)}%</div>
             </div>
             <ProgressBar value={diskPercentage} />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { I18nProvider } from "@/lib/i18n/context";
 
 export const metadata: Metadata = {
   title: "Server Status",
@@ -19,7 +20,7 @@ export default function RootLayout({
     <html lang="zh-CN" className="h-full" suppressHydrationWarning>
       <body className="antialiased min-h-full bg-gray-50 dark:bg-gray-900">
         <ThemeProvider attribute="class" defaultTheme="system">
-          {children}
+          <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>
       </body>
     </html>

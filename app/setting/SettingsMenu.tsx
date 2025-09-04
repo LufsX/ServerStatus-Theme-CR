@@ -5,8 +5,10 @@ import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSettings } from "./settings";
 import { SettingButton } from "./SettingButton";
+import { useI18n } from "@/lib/i18n/hooks";
 
 const SettingsMenu = () => {
+  const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   const { settings, updateSettings } = useSettings();
   const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +43,12 @@ const SettingsMenu = () => {
   // 切换主题
   const handleThemeChange = (newTheme: string) => {
     setTheme(newTheme);
+  };
+
+  // 切换语言
+  const handleLocaleChange = (locale: "zh-CN" | "en-US") => {
+    updateSettings({ locale });
+    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换单位类型
@@ -130,13 +138,13 @@ const SettingsMenu = () => {
     <motion.div className="py-1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.15, delay: 0.05 }} layout>
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.08 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.1 }}>
-          主题模式
+          {t("settings.theme")}
         </motion.div>
         <div className="grid grid-cols-3 gap-2">
           {[
-            { value: "system", label: "系统" },
-            { value: "light", label: "浅色" },
-            { value: "dark", label: "深色" },
+            { value: "system", label: t("settings.auto") },
+            { value: "light", label: t("settings.light") },
+            { value: "dark", label: t("settings.dark") },
           ].map(({ value, label }, index) => (
             <motion.div
               key={value}
@@ -159,13 +167,13 @@ const SettingsMenu = () => {
 
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.22 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.25 }}>
-          界面组件
+          {t("settings.interfaceComponents")}
         </motion.div>
         <div className="grid grid-cols-3 gap-2">
           {[
-            { key: "showSummary", label: "摘要", value: settings.showSummary, handler: handleShowSummaryChange },
-            { key: "showFilters", label: "筛选", value: settings.showFilters, handler: handleShowFiltersChange },
-            { key: "compactMode", label: "精简", value: settings.compactMode, handler: handleCompactModeChange },
+            { key: "showSummary", label: t("settings.summary"), value: settings.showSummary, handler: handleShowSummaryChange },
+            { key: "showFilters", label: t("settings.filters"), value: settings.showFilters, handler: handleShowFiltersChange },
+            { key: "compactMode", label: t("settings.compact"), value: settings.compactMode, handler: handleCompactModeChange },
           ].map(({ key, label, value, handler }, index) => (
             <motion.div
               key={key}
@@ -189,13 +197,13 @@ const SettingsMenu = () => {
 
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.35 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.38 }}>
-          显示模式
+          {t("settings.displayMode")}
         </motion.div>
         <div className="flex space-x-2">
           {[
             {
               value: "card",
-              label: "卡片",
+              label: t("settings.card"),
               icon: (
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
                   <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2" />
@@ -207,7 +215,7 @@ const SettingsMenu = () => {
             },
             {
               value: "row",
-              label: "横排",
+              label: t("settings.row"),
               icon: (
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
                   <rect x="3" y="4" width="18" height="2" rx="1" stroke="currentColor" strokeWidth="2" />
@@ -237,6 +245,36 @@ const SettingsMenu = () => {
           ))}
         </div>
       </motion.div>
+
+      {/* 语言切换选项 */}
+      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.45 }}>
+        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.48 }}>
+          {t("settings.language")}
+        </motion.div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { value: "zh-CN", label: t("settings.chinese"), flag: "🇨🇳" },
+            { value: "en-US", label: t("settings.english"), flag: "🇺🇸" },
+          ].map(({ value, label, flag }, index) => (
+            <motion.div
+              key={value}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 35,
+                delay: 0.5 + index * 0.03,
+              }}
+            >
+              <SettingButton isActive={settings.locale === value} onClick={() => handleLocaleChange(value as "zh-CN" | "en-US")} className="w-full flex items-center justify-center">
+                <span className="mr-1">{flag}</span>
+                {label}
+              </SettingButton>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   );
 
@@ -244,7 +282,7 @@ const SettingsMenu = () => {
     <motion.div className="py-1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15, delay: 0.05 }}>
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.08 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.1 }}>
-          数据单位
+          {t("settings.dataUnits")}
         </motion.div>
         <div className="flex space-x-2">
           {[
@@ -273,7 +311,7 @@ const SettingsMenu = () => {
 
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.22 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.25 }}>
-          刷新间隔
+          {t("settings.refreshInterval")}
         </motion.div>
         <div className="grid grid-cols-2 gap-2">
           {[
@@ -303,12 +341,12 @@ const SettingsMenu = () => {
 
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.35 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.38 }}>
-          CPU 图表
+          {t("settings.cpuChart")}
         </motion.div>
         <div className="flex space-x-2">
           {[
-            { value: true, label: "开启" },
-            { value: false, label: "关闭" },
+            { value: true, label: t("settings.on") },
+            { value: false, label: t("settings.off") },
           ].map(({ value, label }, index) => (
             <motion.div
               key={String(value)}
@@ -332,7 +370,7 @@ const SettingsMenu = () => {
 
       <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.48 }}>
         <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.52 }}>
-          记录时长
+          {t("settings.recordDuration")}
         </motion.div>
         <div className="flex space-x-2">
           {[
@@ -367,7 +405,7 @@ const SettingsMenu = () => {
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
-        aria-label="打开设置"
+        aria-label={t("settings.title")}
         aria-haspopup="true"
       >
         {mounted && (
@@ -410,7 +448,7 @@ const SettingsMenu = () => {
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
-                外观
+                {t("settings.appearance")}
               </motion.button>
               <motion.button
                 onClick={() => setActiveTab("performance")}
@@ -423,7 +461,7 @@ const SettingsMenu = () => {
                 initial={{ opacity: 0, x: 10 }}
                 animate={{ opacity: 1, x: 0 }}
               >
-                性能
+                {t("settings.performance")}
               </motion.button>
               {/* 活动选项卡指示器 */}
               <motion.div

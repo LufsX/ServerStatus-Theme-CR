@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n/hooks";
 
 interface OneClickForm {
   uid: string;
@@ -52,6 +53,7 @@ const serverDefaults: OneClickForm = {
 };
 
 export default function OneClickModal(): React.ReactElement | null {
+  const { t } = useI18n();
   const hideOneClickDeploy = process.env.NEXT_PUBLIC_HIDE_ONE_CLICK_DEPLOY === "true";
 
   const [isOpen, setIsOpen] = useState(false);
@@ -215,7 +217,7 @@ export default function OneClickModal(): React.ReactElement | null {
   return (
     <div className="relative" ref={dropdownRef}>
       <motion.button
-        aria-label="一键部署"
+        aria-label={t("oneClick.title")}
         onClick={() => setIsOpen((s) => !s)}
         className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         transition={{ duration: 0.15 }}
@@ -241,8 +243,8 @@ export default function OneClickModal(): React.ReactElement | null {
           >
             <motion.div className="flex flex-col gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.15 }}>
               <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.15 }}>
-                <h3 className="font-semibold text-lg">一键部署</h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400">填写信息生成可直接执行的一键部署命令</p>
+                <h3 className="font-semibold text-lg">{t("oneClick.title")}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t("oneClick.description")}</p>
               </motion.div>
 
               <motion.div className="grid grid-cols-1 gap-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12, duration: 0.15 }}>
@@ -254,13 +256,13 @@ export default function OneClickModal(): React.ReactElement | null {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.13, duration: 0.15 }}
                   >
-                    基础配置
+                    {t("oneClick.basicConfig")}
                   </motion.h4>
                   {[
-                    { key: "uid", label: "User ID", placeholder: "对应 hosts 的 name", type: "text" },
-                    { key: "gid", label: "Group ID", placeholder: "对应 hosts_group 的 gid", type: "text" },
-                    { key: "pass", label: "Password", placeholder: "uid/gid 对应密码", type: "text" },
-                    { key: "alias", label: "Alias", placeholder: "主机别名", type: "text" },
+                    { key: "uid", label: t("oneClick.userId"), placeholder: t("oneClick.userIdPlaceholder"), type: "text" },
+                    { key: "gid", label: t("oneClick.groupId"), placeholder: t("oneClick.groupIdPlaceholder"), type: "text" },
+                    { key: "pass", label: t("oneClick.password"), placeholder: t("oneClick.passwordPlaceholder"), type: "text" },
+                    { key: "alias", label: t("oneClick.alias"), placeholder: t("oneClick.aliasPlaceholder"), type: "text" },
                   ].map(({ key, label, placeholder, type }, index) => (
                     <motion.div
                       key={key}
@@ -298,7 +300,7 @@ export default function OneClickModal(): React.ReactElement | null {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.25, duration: 0.15 }}
                   >
-                    <span>高级配置</span>
+                    <span>{t("oneClick.advancedConfig")}</span>
                     <motion.svg width="16" height="16" viewBox="0 0 24 24" fill="none" animate={{ rotate: showAdvanced ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-gray-500">
                       <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </motion.svg>
@@ -315,15 +317,15 @@ export default function OneClickModal(): React.ReactElement | null {
                       >
                         {/* 基础高级配置 */}
                         <div className="space-y-2">
-                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">基础配置</h5>
+                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">{t("oneClick.basicConfig")}</h5>
 
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                             <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">Interval</label>
                             <input
-                              aria-label="Interval"
+                              aria-label={t("oneClick.interval")}
                               type="number"
                               min={1}
-                              placeholder="上报间隔 (秒)"
+                              placeholder={t("oneClick.interval")}
                               value={form.interval}
                               onChange={(e) => updateField("interval", Number(e.target.value))}
                               className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
@@ -335,11 +337,11 @@ export default function OneClickModal(): React.ReactElement | null {
                               vnstat-mr <span className="text-xs text-gray-500">(v1.5.7+)</span>
                             </label>
                             <input
-                              aria-label="vnstat month rotate"
+                              aria-label={t("oneClick.vnstatMr")}
                               type="number"
                               min={1}
                               max={28}
-                              placeholder="月度统计轮换日期 (1-28)"
+                              placeholder={t("oneClick.vnstatMr")}
                               value={form.vnstatMr || ""}
                               onChange={(e) => updateField("vnstatMr", Number(e.target.value) || 1)}
                               className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
@@ -351,12 +353,12 @@ export default function OneClickModal(): React.ReactElement | null {
                               IP Source <span className="text-xs text-gray-500">(v1.7.1+)</span>
                             </label>
                             <select
-                              aria-label="IP Source"
+                              aria-label={t("oneClick.ipSource")}
                               value={form.ipSource}
                               onChange={(e) => updateField("ipSource", e.target.value)}
                               className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             >
-                              <option value="ip-api.com">ip-api.com (默认)</option>
+                              <option value="ip-api.com">ip-api.com ({t("oneClick.ipSource")})</option>
                               <option value="ip.sb">ip.sb</option>
                               <option value="ipapi.co">ipapi.co</option>
                               <option value="myip.la">myip.la</option>
@@ -366,10 +368,10 @@ export default function OneClickModal(): React.ReactElement | null {
 
                         {/* 显示信息 */}
                         <div className="space-y-2">
-                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">显示信息</h5>
+                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">{t("dashboard.title")}</h5>
                           {[
-                            { key: "type", label: "Type", placeholder: "主机类型 (如: arm, x86)", type: "text" },
-                            { key: "loc", label: "Location", placeholder: "主机位置 (如: home, us)", type: "text" },
+                            { key: "type", label: "Type", placeholder: t("oneClick.type"), type: "text" },
+                            { key: "loc", label: "Location", placeholder: t("oneClick.location"), type: "text" },
                           ].map(({ key, label, placeholder, type }) => (
                             <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                               <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">{label}</label>
@@ -387,10 +389,10 @@ export default function OneClickModal(): React.ReactElement | null {
                           <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                             <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">Weight</label>
                             <input
-                              aria-label="Weight"
+                              aria-label={t("oneClick.weight")}
                               type="number"
                               min={0}
-                              placeholder="排序权重 (数值越大越靠前)"
+                              placeholder={t("oneClick.weight")}
                               value={form.weight || ""}
                               onChange={(e) => updateField("weight", Number(e.target.value) || 0)}
                               className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
@@ -401,14 +403,14 @@ export default function OneClickModal(): React.ReactElement | null {
                         {/* 网络配置 (v1.6.1+) */}
                         <div className="space-y-2">
                           <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">
-                            网络配置 <span className="text-xs text-gray-500">(v1.6.1+)</span>
+                            {t("server.network")} <span className="text-xs text-gray-500">(v1.6.1+)</span>
                           </h5>
                           {[
-                            { key: "cm", label: "移动探测", placeholder: "如: cm.example.com:80" },
-                            { key: "ct", label: "电信探测", placeholder: "如: ct.example.com:80" },
-                            { key: "cu", label: "联通探测", placeholder: "如: cu.example.com:80" },
-                            { key: "iface", label: "指定网口", placeholder: "网口名称" },
-                            { key: "excludeIface", label: "排除网口", placeholder: "要排除的网口名称" },
+                            { key: "cm", label: t("oneClick.cm"), placeholder: t("oneClick.cmPlaceholder") },
+                            { key: "ct", label: t("oneClick.ct"), placeholder: t("oneClick.ctPlaceholder") },
+                            { key: "cu", label: t("oneClick.cu"), placeholder: t("oneClick.cuPlaceholder") },
+                            { key: "iface", label: t("oneClick.iface"), placeholder: t("oneClick.ifacePlaceholder") },
+                            { key: "excludeIface", label: t("oneClick.excludeIface"), placeholder: t("oneClick.excludeIfacePlaceholder") },
                           ].map(({ key, label, placeholder }) => (
                             <div key={key} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
                               <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">{label}</label>
@@ -427,14 +429,14 @@ export default function OneClickModal(): React.ReactElement | null {
                         {/* 数据收集 (v1.5.1+) */}
                         <div className="space-y-2">
                           <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">
-                            数据收集 <span className="text-xs text-gray-500">(v1.5.1+)</span>
+                            {t("oneClick.dataCollection")} <span className="text-xs text-gray-500">(v1.5.1+)</span>
                           </h5>
                           {[
-                            { key: "ping", label: "Ping 监测" },
-                            { key: "tupd", label: "T/UPD 信息" },
-                            { key: "extra", label: "OS & IP" },
-                            { key: "vnstat", label: "vnstat 流量" },
-                            { key: "notify", label: "通知推送" },
+                            { key: "ping", label: t("oneClick.ping") },
+                            { key: "tupd", label: t("oneClick.tupd") },
+                            { key: "extra", label: t("oneClick.extra") },
+                            { key: "vnstat", label: t("oneClick.vnstat") },
+                            { key: "notify", label: t("oneClick.notify") },
                           ].map(({ key, label }) => (
                             <div key={key} className="flex flex-row sm:items-center gap-1 sm:gap-3">
                               <label className="w-24 text-sm text-gray-700 dark:text-gray-300">{label}</label>
@@ -447,7 +449,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                     onChange={(e) => updateField(key as keyof OneClickForm, e.target.checked)}
                                     className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
                                   />
-                                  启用
+                                  {t("oneClick.enable")}
                                 </label>
                               </div>
                             </div>
@@ -456,19 +458,19 @@ export default function OneClickModal(): React.ReactElement | null {
 
                         {/* 特殊配置 */}
                         <div className="space-y-2">
-                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">特殊配置</h5>
+                          <h5 className="text-xs font-medium text-gray-700 dark:text-gray-400 uppercase tracking-wide">{t("oneClick.specialConfig")}</h5>
                           <div className="flex flex-row sm:items-center gap-1 sm:gap-3">
-                            <label className="w-24 text-sm text-gray-700 dark:text-gray-300">CN 加速</label>
+                            <label className="w-24 text-sm text-gray-700 dark:text-gray-300">{t("oneClick.acceleration")}</label>
                             <div className="flex-1">
                               <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                 <input
                                   type="checkbox"
-                                  aria-label="CN 加速"
+                                  aria-label={t("oneClick.cn")}
                                   checked={form.cn}
                                   onChange={(e) => updateField("cn", e.target.checked)}
                                   className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
                                 />
-                                启用 CODING 加速
+                                {t("oneClick.cn")}
                               </label>
                             </div>
                           </div>
@@ -486,7 +488,7 @@ export default function OneClickModal(): React.ReactElement | null {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.31, duration: 0.15 }}
                   >
-                    执行配置
+                    {t("oneClick.executionConfig")}
                   </motion.h4>
 
                   <motion.div
@@ -495,7 +497,7 @@ export default function OneClickModal(): React.ReactElement | null {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.33, duration: 0.15 }}
                   >
-                    <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">下载工具</label>
+                    <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">{t("oneClick.downloadTool")}</label>
                     <div className="flex items-center gap-4">
                       <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                         <input
@@ -528,11 +530,11 @@ export default function OneClickModal(): React.ReactElement | null {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.35, duration: 0.15 }}
                   >
-                    <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">执行权限</label>
+                    <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300">{t("oneClick.executionPrivilege")}</label>
                     <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                       <input
                         type="checkbox"
-                        aria-label="Use sudo for execution"
+                        aria-label={t("oneClick.sudo")}
                         checked={useSudo}
                         onChange={(e) => setUseSudo(e.target.checked)}
                         className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
@@ -555,7 +557,7 @@ export default function OneClickModal(): React.ReactElement | null {
                       {generateCommand()}
                     </motion.pre>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <p className="text-gray-400 dark:text-gray-500 text-xs">请在运行前检查命令是否正确</p>
+                      <p className="text-gray-400 dark:text-gray-500 text-xs">{t("oneClick.commandCheck")}</p>
                       <div className="flex items-center gap-2">
                         <button
                           onClick={copyToClipboard}
@@ -571,24 +573,24 @@ export default function OneClickModal(): React.ReactElement | null {
                                 transition={{ duration: 0.15 }}
                                 className="text-green-600 dark:text-green-400"
                               >
-                                已复制
+                                {t("oneClick.copied")}
                               </motion.span>
                             ) : (
                               <motion.span key="copy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }}>
-                                复制
+                                {t("oneClick.copy")}
                               </motion.span>
                             )}
                           </AnimatePresence>
                         </button>
                         <button onClick={() => setIsOpen(false)} className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
-                          关闭
+                          {t("oneClick.close")}
                         </button>
                       </div>
                     </div>
                   </motion.div>
                 ) : (
                   <motion.p className="text-amber-500 text-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.15 }}>
-                    无法生成命令，请填写必要字段。
+                    {t("oneClick.invalidForm")}
                   </motion.p>
                 )}
               </motion.div>

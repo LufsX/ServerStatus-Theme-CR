@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
+import { useI18n } from "@/lib/i18n/hooks";
 
 import { ServerData } from "@/lib/api";
 import { Badge } from "../components/Badge";
@@ -14,20 +15,22 @@ interface SummaryProps {
 }
 
 export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }: SummaryProps) {
+  const { t } = useI18n();
+
   // 计算在线和离线的服务器数量
   const onlineCount = servers.filter((server) => isOnline(server)).length;
   const offlineCount = servers.length - onlineCount;
 
   // 格式化最后更新时间
   const formattedLastUpdated = useMemo(() => {
-    if (!lastUpdated) return "未知";
+    if (!lastUpdated) return t("common.loading");
     return formatTime(lastUpdated);
-  }, [lastUpdated]);
+  }, [lastUpdated, t]);
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md p-4 mb-6 transition-all">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-medium">服务器状态摘要</h2>
+        <h2 className="text-lg font-medium">{t("dashboard.title")}</h2>
         <div className="text-sm text-gray-500 dark:text-gray-400">
           <code className="text-sm">{formattedLastUpdated}</code>
         </div>
@@ -42,7 +45,9 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
           }`}
           onClick={() => onStatusChange(selectedStatus === "all" ? null : "all")}
         >
-          <div className={`text-sm mb-1 ${selectedStatus === "all" || selectedStatus === null ? "text-blue-600 dark:text-blue-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>总服务器数</div>
+          <div className={`text-sm mb-1 ${selectedStatus === "all" || selectedStatus === null ? "text-blue-600 dark:text-blue-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>
+            {t("dashboard.all")}
+          </div>
           <div className={`text-2xl font-semibold ${selectedStatus === "all" || selectedStatus === null ? "text-blue-600 dark:text-blue-400" : "text-gray-900 dark:text-gray-100"}`}>
             {servers.length}
           </div>
@@ -56,7 +61,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
           }`}
           onClick={() => onStatusChange(selectedStatus === "online" ? null : "online")}
         >
-          <div className={`text-sm mb-1 ${selectedStatus === "online" ? "text-green-600 dark:text-green-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>在线</div>
+          <div className={`text-sm mb-1 ${selectedStatus === "online" ? "text-green-600 dark:text-green-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>{t("dashboard.online")}</div>
           <div className={`text-2xl font-semibold ${selectedStatus === "online" ? "text-green-600 dark:text-green-400" : "text-gray-900 dark:text-gray-100"}`}>{onlineCount}</div>
         </div>
 
@@ -68,14 +73,14 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
           }`}
           onClick={() => onStatusChange(selectedStatus === "offline" ? null : "offline")}
         >
-          <div className={`text-sm mb-1 ${selectedStatus === "offline" ? "text-red-600 dark:text-red-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>离线</div>
+          <div className={`text-sm mb-1 ${selectedStatus === "offline" ? "text-red-600 dark:text-red-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>{t("dashboard.offline")}</div>
           <div className={`text-2xl font-semibold ${selectedStatus === "offline" ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-gray-100"}`}>{offlineCount}</div>
         </div>
       </div>
 
       {offlineCount > 0 && (
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="text-sm font-medium mb-2">离线服务器</div>
+          <div className="text-sm font-medium mb-2">{t("dashboard.offline")}</div>
           <div className="flex flex-wrap gap-2">
             {servers
               .filter((server) => !isOnline(server))

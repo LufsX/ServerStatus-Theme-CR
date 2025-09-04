@@ -2,12 +2,14 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
+import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
 import { Badge } from "../components/Badge";
 import { ProgressBar } from "../components/ProgressBar";
 import { CpuChart } from "../components/CpuChart";
-import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes, formatAllLatencies } from "@/lib/formatters";
+import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes } from "@/lib/formatters";
+import { formatAllLatencies } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useSettings } from "../setting/settings";
 import { getCpuHistoryManager } from "@/lib/cpuHistory";
@@ -21,6 +23,7 @@ interface ServerCardProps {
 }
 
 export function ServerCard({ server, onClick, className = "", fetchTime }: ServerCardProps) {
+  const { t } = useI18n();
   const { settings } = useSettings();
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
@@ -57,6 +60,11 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   const expiryDate = labels.ndd || "";
   const spec = labels.spec || "";
   const host = labels.host || "";
+
+  // 格式化运行时间
+  const formatUptime = (uptime: string) => {
+    return uptime.replace(/天/g, t("server.day"));
+  };
 
   // 只有这些有对应的 SVG 图标
   const osIcons: Record<string, string> = {
@@ -128,21 +136,21 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       {!settings.compactMode ? (
         <div className="grid grid-cols-2 gap-3 mb-4">
           <div className="space-y-1">
-            <div className="text-xs text-gray-500 dark:text-gray-400">运行时间</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.uptime")}</div>
             <div className="text-sm font-medium">
-              {online ? server.uptime : <span className="text-red-500">离线</span>}
+              {online ? formatUptime(server.uptime) : <span className="text-red-500">{t("server.offline")}</span>}
               {!online && server.latest_ts && <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>}
             </div>
           </div>
 
           <div className="space-y-1">
-            <div className="text-xs text-gray-500 dark:text-gray-400">负载</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.load")}</div>
             <div className="text-sm font-medium">{formatLoad(server.load_1, server.load_5, server.load_15)}</div>
           </div>
 
           <div className="space-y-1 col-span-2">
-            <div className="text-xs text-gray-500 dark:text-gray-400">网络延迟（联通/电信/移动）</div>
-            <div className="text-sm font-medium">{formatAllLatencies(server)}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.networkLatency")}</div>
+            <div className="text-sm font-medium">{formatAllLatencies(server, t)}</div>
           </div>
 
           <div className="col-span-2 flex flex-wrap gap-2 mt-1">
@@ -150,15 +158,19 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
             <Badge variant={server.online6 ? "success" : "danger"}>IPv6</Badge>
             <Badge variant="info">TCP: {server.tcp_count || 0}</Badge>
             <Badge variant="info">UDP: {server.udp_count || 0}</Badge>
-            <Badge variant="primary">进程: {server.process_count || 0}</Badge>
-            <Badge variant="secondary">线程: {server.thread_count || 0}</Badge>
+            <Badge variant="primary">
+              {t("server.process")}: {server.process_count || 0}
+            </Badge>
+            <Badge variant="secondary">
+              {t("server.thread")}: {server.thread_count || 0}
+            </Badge>
           </div>
         </div>
       ) : (
         <>
           <div className="text-sm font-medium mb-4">
-            <span className=" text-gray-500 dark:text-gray-400">运行时间: </span>
-            {online ? server.uptime : <span className="text-red-500">离线</span>}
+            <span className=" text-gray-500 dark:text-gray-400">{t("server.uptime")}: </span>
+            {online ? formatUptime(server.uptime) : <span className="text-red-500">{t("server.offline")}</span>}
             {!online && server.latest_ts && <code className="text-[10px] text-red-500 ml-1">{new Date(server.latest_ts * 1000).toLocaleString(undefined, { hour12: false })}</code>}
           </div>
         </>
@@ -182,7 +194,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">内存</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{t("server.memory")}</span>
             <span className="text-xs font-medium">{formatMemory(server.memory_used, server.memory_total)}</span>
           </div>
           <ProgressBar value={memoryPercentage} />
@@ -190,7 +202,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">交换</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{t("server.swap")}</span>
             <span className="text-xs font-medium">{formatMemory(server.swap_used, server.swap_total)}</span>
           </div>
           <ProgressBar value={swapPercentage} />
@@ -198,7 +210,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
 
         <div className="space-y-1">
           <div className="flex justify-between items-center">
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">硬盘</span>
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{t("server.disk")}</span>
             <span className="text-xs font-medium">{formatDisk(server.hdd_used, server.hdd_total)}</span>
           </div>
           <ProgressBar value={diskPercentage} />
@@ -208,21 +220,21 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       {/* Network Section */}
       <div className={`grid grid-cols-2 gap-3 ${settings.compactMode ? "" : "mb-4"}`}>
         <div className="space-y-1">
-          <div className="text-xs text-gray-500 dark:text-gray-400">下载 ↓</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.download")}</div>
           <div className="text-sm font-medium">{downloadSpeed}</div>
           {!settings.compactMode && (
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              月/总: {monthlyDownload} / {totalDownload}
+              {t("server.monthTotal")}: {monthlyDownload} / {totalDownload}
             </div>
           )}
         </div>
 
         <div className="space-y-1">
-          <div className="text-xs text-gray-500 dark:text-gray-400">上传 ↑</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.upload")}</div>
           <div className="text-sm font-medium">{uploadSpeed}</div>
           {!settings.compactMode && (
             <div className="text-xs text-gray-500 dark:text-gray-400">
-              月/总: {monthlyUpload} / {totalUpload}
+              {t("server.monthTotal")}: {monthlyUpload} / {totalUpload}
             </div>
           )}
         </div>

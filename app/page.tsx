@@ -5,8 +5,10 @@ import Footer from "./layout/Footer";
 import { useServerStatus } from "@/lib/api";
 import { Dashboard } from "./dashborad/Index";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n/hooks";
 
 export default function Home() {
+  const { t } = useI18n();
   const { data, error, isInitialLoading } = useServerStatus();
 
   return (
@@ -31,11 +33,11 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-red-700 dark:text-red-300 text-sm font-medium">数据刷新失败</span>
+                  <span className="text-red-700 dark:text-red-300 text-sm font-medium">{t("common.error")}</span>
                   <span className="text-red-600 dark:text-red-400 text-xs">{error.message}</span>
                 </div>
                 <button onClick={() => window.location.reload()} className="px-4 py-2 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-all">
-                  手动刷新
+                  {t("dashboard.refresh")}
                 </button>
               </div>
             </motion.div>
@@ -60,11 +62,11 @@ export default function Home() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  <span className="text-red-700 dark:text-red-300 text-sm font-medium">获取数据出错</span>
+                  <span className="text-red-700 dark:text-red-300 text-sm font-medium">{t("common.error")}</span>
                   <span className="text-red-600 dark:text-red-400 text-xs">{error.message}</span>
                 </div>
                 <button onClick={() => window.location.reload()} className="px-4 py-2 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-all">
-                  重试
+                  {t("dashboard.retry")}
                 </button>
               </div>
             </motion.div>
@@ -102,7 +104,7 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-              <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">数据加载中...</span>
+              <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">{t("common.loading")}</span>
             </motion.div>
           ) : data ? (
             <Dashboard servers={data.servers} lastUpdated={data.updated} fetchTime={data.fetchTime} />
