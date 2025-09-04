@@ -61,7 +61,7 @@
     "name": "Name",
     "status": "Status",
     "uptime": "Uptime",
-    "day": "day",
+    "day": "Day",
     "load": "Load",
     "location": "Location",
     "network": "Network",
