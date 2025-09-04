@@ -18,17 +18,17 @@ export interface Settings {
   locale: Locale;
 }
 
-// 默认设置
+// 默认设置 Default Settings
 const DEFAULT_SETTINGS: Settings = {
-  unitType: "binary",
-  refreshInterval: 2000,
-  displayMode: "card",
-  showSummary: false,
-  showFilters: false,
-  showCpuChart: false,
-  cpuChartDuration: 3,
-  compactMode: false,
-  locale: "zh-CN",
+  unitType: "binary", // "binary" | "decimal"; // GiB | GB
+  refreshInterval: 2000, // 1000 | 2000 | 5000 | 10000; // 刷新间隔 1s, 2s, 5s, 10s
+  displayMode: "card", // "card" | "row"; // 卡片模式 | 横排模式
+  showSummary: false, // "true" | "false"; // 是否显示摘要
+  showFilters: false, // "true" | "false"; // 是否显示过滤器
+  showCpuChart: false, // "true" | "false"; // 是否显示 CPU 图表
+  cpuChartDuration: 3, // 1 | 3 | 5; // CPU 图表记录时长 1min, 3min, 5min
+  compactMode: false, // "true" | "false"; // 是否启用紧凑模式
+  locale: "zh-CN", // "zh-CN" | "en-US"; // 语言
 };
 
 // 自定义事件名称

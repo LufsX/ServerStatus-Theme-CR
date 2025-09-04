@@ -79,7 +79,7 @@ For details, see [ServerStatus#6.FAQ](https://github.com/zdz/ServerStatus-Rust#6
 
 ---
 
-Set the corresponding ServerStatus API address.
+Set the corresponding ServerStatus API address
 
 ```bash
 NEXT_PUBLIC_API_BASE_URL=https://your-serverstatus-api.com
@@ -91,12 +91,20 @@ NEXT_PUBLIC_API_BASE_URL=https://your-serverstatus-api.com
 
 ---
 
-Control whether to hide the one-click deployment feature.
+Control whether to hide the one-click deployment feature
 
 ```bash
 # 隐藏一键部署功能
 NEXT_PUBLIC_HIDE_ONE_CLICK_DEPLOY=true
 ```
+
+## 默认设置 Default Settings
+
+可以通过修改 [`settings.ts`](https://github.com/LufsX/ServerStatus-Theme-CR/blob/main/app/setting/settings.ts)中的 `DEFAULT_SETTINGS` 来自定义默认设置
+
+---
+
+You can customize the default settings by modifying the `DEFAULT_SETTINGS` object in [`settings.ts`](https://github.com/LufsX/ServerStatus-Theme-CR/blob/main/app/setting/settings.ts)
 
 ## 其它 Other
 
