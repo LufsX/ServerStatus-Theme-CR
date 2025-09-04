@@ -55,7 +55,8 @@
     "status": "Status",
     "type": "Type",
     "max": "Max",
-    "monthTotal": "Month/Total"
+    "monthTotal": "Month/Total",
+    "noFilterServers": "No servers match the filtering criteria"
   },
   "server": {
     "name": "Name",
@@ -79,8 +80,9 @@
     "monthTotal": "Mo/T",
     "timeout": "Timeout",
     "unavailable": "Unavailable",
-    "type": "Arch",
-    "cpuUsage": "CPU Usage"
+    "arch": "Arch",
+    "cpuUsage": "CPU Usage",
+    "cpu": "CPU"
   },
   "oneClick": {
     "title": "One-Click Deployment",

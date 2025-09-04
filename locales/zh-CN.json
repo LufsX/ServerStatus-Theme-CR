@@ -55,7 +55,8 @@
     "status": "状态",
     "type": "类型",
     "max": "最大",
-    "monthTotal": "月/总"
+    "monthTotal": "月/总",
+    "noFilterServers": "没有找到符合筛选条件的服务器"
   },
   "server": {
     "name": "名称",
@@ -79,8 +80,9 @@
     "monthTotal": "月/总",
     "timeout": "超时",
     "unavailable": "不可用",
-    "type": "架构",
-    "cpuUsage": "CPU 使用率"
+    "arch": "架构",
+    "cpuUsage": "CPU 使用率",
+    "cpu": "CPU"
   },
   "oneClick": {
     "title": "一键部署",

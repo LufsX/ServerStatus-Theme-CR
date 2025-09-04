@@ -132,7 +132,7 @@ export const Filters = memo(function Filters({
     { value: "default" as SortOption, label: t("dashboard.all") },
     { value: "name" as SortOption, label: t("server.name") },
     { value: "location" as SortOption, label: t("server.location") },
-    { value: "cpu" as SortOption, label: t("server.load") },
+    { value: "cpu" as SortOption, label: t("server.cpu") },
     { value: "memory" as SortOption, label: t("server.memory") },
     { value: "uptime" as SortOption, label: t("server.uptime") },
     { value: "load" as SortOption, label: t("server.load") },
@@ -190,7 +190,7 @@ export const Filters = memo(function Filters({
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
-              <span className="truncate">{selectedType ? selectedType.toUpperCase() : t("server.type")}</span>
+              <span className="truncate">{selectedType ? selectedType.toUpperCase() : t("server.arch")}</span>
               <motion.span animate={{ rotate: openDropdown === "type" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
                 ▼
               </motion.span>

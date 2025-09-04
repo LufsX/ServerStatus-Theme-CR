@@ -84,7 +84,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
         },
       ],
     };
-  }, [data, lineColor]);
+  }, [data, lineColor, t]);
 
   // 图表配置选项
   const chartOptions = useMemo(

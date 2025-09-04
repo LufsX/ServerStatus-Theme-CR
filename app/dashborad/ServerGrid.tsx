@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useI18n } from "@/lib/i18n/context";
 
 import { ServerData } from "@/lib/api";
 import { ServerCard } from "../layout/ServerCard";
@@ -15,9 +16,10 @@ interface ServerGridProps {
 
 export function ServerGrid({ servers, fetchTime }: ServerGridProps) {
   const { settings } = useSettings();
+  const { t } = useI18n();
 
   if (servers.length === 0) {
-    return <div className="text-center py-8 text-gray-500 dark:text-gray-400">没有找到符合条件的服务器</div>;
+    return <div className="text-center py-8 text-gray-500 dark:text-gray-400">{t("dashboard.noFilterServers")}</div>;
   }
 
   // 根据显示模式选择不同的布局
