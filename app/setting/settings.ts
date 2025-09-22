@@ -19,7 +19,7 @@ export interface Settings {
 }
 
 // 默认设置 Default Settings
-const DEFAULT_SETTINGS: Settings = {
+export const DEFAULT_SETTINGS: Settings = {
   unitType: "binary", // "binary" | "decimal"; // GiB | GB
   refreshInterval: 2000, // 1000 | 2000 | 5000 | 10000; // 刷新间隔 1s, 2s, 5s, 10s
   displayMode: "card", // "card" | "row"; // 卡片模式 | 横排模式

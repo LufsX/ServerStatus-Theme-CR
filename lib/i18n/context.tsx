@@ -1,15 +1,17 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getSettingsManager, type Locale } from "@/app/setting/settings";
-import defaultMessages from "@/locales/zh-CN.json";
+import { getSettingsManager, DEFAULT_SETTINGS, type Locale } from "@/app/setting/settings";
+import zhCNMessages from "../../locales/zh-CN.json";
+import enUSMessages from "../../locales/en-US.json";
 
 export { type Locale } from "@/app/setting/settings";
-export const locales: Locale[] = ["zh-CN", "en-US"];
 
-// 从设置管理器获取默认语言
-const getDefaultLocale = (): Locale => {
-  return getSettingsManager().getSettings().locale;
+// 语言列表和映射
+const LOCALES: Locale[] = ["zh-CN", "en-US"];
+const MESSAGES_MAP: Record<Locale, Record<string, unknown>> = {
+  "zh-CN": zhCNMessages,
+  "en-US": enUSMessages,
 };
 
 export const localeInfo: Record<Locale, { name: string; flag: string }> = {
@@ -26,75 +28,51 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(getDefaultLocale());
-  const [messages, setMessages] = useState<Record<string, unknown>>(defaultMessages);
+  const [locale, setLocale] = useState<Locale>(DEFAULT_SETTINGS.locale);
 
-  // 初始化时从设置管理器获取语言设置
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const getBrowserLocale = (): Locale => {
+      if (typeof window === "undefined") return DEFAULT_SETTINGS.locale;
 
-    const settings = getSettingsManager().getSettings();
-    if (settings.locale && locales.includes(settings.locale as Locale)) {
-      setLocale(settings.locale as Locale);
+      const browserLang = navigator.language || navigator.languages?.[0];
+      // 完全匹配或前缀匹配
+      return LOCALES.find((locale) => browserLang === locale || browserLang?.startsWith(locale.split("-")[0])) || DEFAULT_SETTINGS.locale;
+    };
+
+    const hasSavedSettings = typeof window !== "undefined" && localStorage.getItem("appSettings") !== null;
+
+    // 有设置用设置，无设置用浏览器语言
+    const targetLocale = hasSavedSettings ? getSettingsManager().getSettings().locale : getBrowserLocale();
+
+    // 首次访问时保存浏览器语言到设置
+    if (!hasSavedSettings) {
+      getSettingsManager().updateSettings({ locale: targetLocale });
     }
-  }, []);
 
-  // 监听设置变化
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
+    setLocale(targetLocale);
+    // 监听设置变更
     const handleSettingsChange = () => {
-      const settings = getSettingsManager().getSettings();
-      if (settings.locale && locales.includes(settings.locale as Locale)) {
-        setLocale(settings.locale as Locale);
-      }
+      setLocale(getSettingsManager().getSettings().locale);
     };
-
-    window.addEventListener("settingsChange", handleSettingsChange);
-
-    return () => {
-      window.removeEventListener("settingsChange", handleSettingsChange);
-    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("settingsChange", handleSettingsChange);
+      return () => window.removeEventListener("settingsChange", handleSettingsChange);
+    }
   }, []);
 
-  // 加载语言包
-  useEffect(() => {
-    const loadMessages = async () => {
-      if (locale === "zh-CN") {
-        setMessages(defaultMessages);
-        return;
-      }
+  const messages = MESSAGES_MAP[locale] || MESSAGES_MAP[DEFAULT_SETTINGS.locale];
 
-      try {
-        const msgs = await import(`../../locales/${locale}.json`);
-        setMessages(msgs.default);
-      } catch {
-        setMessages(defaultMessages);
-        setLocale("zh-CN");
-      }
-    };
-
-    loadMessages();
-  }, [locale]);
-
+  // 文本翻译方法
   const t = (key: string): string => {
-    const keys = key.split(".");
-    let result: unknown = messages;
-
-    for (const k of keys) {
-      if (result && typeof result === "object" && result !== null && k in result) {
-        result = (result as Record<string, unknown>)[k];
-      } else {
-        return key;
-      }
-    }
-
-    return result as string;
+    const result = key.split(".").reduce<unknown>((obj, k) => {
+      return obj && typeof obj === "object" && k in obj ? (obj as Record<string, unknown>)[k] : key;
+    }, messages);
+    return typeof result === "string" ? result : key;
   };
 
+  // 更新语言设置
   const updateLocale = (newLocale: Locale) => {
-    if (locales.includes(newLocale)) {
-      setLocale(newLocale);
+    if (LOCALES.includes(newLocale)) {
       getSettingsManager().updateSettings({ locale: newLocale });
     }
   };
