@@ -67,7 +67,7 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
     });
 
     if (!response.ok) {
-      throw new Error(`获取服务器状态失败: ${response.status}`);
+      throw new Error(`${response.status}: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -92,7 +92,7 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
       fetchTime,
     };
   } catch (error) {
-    console.error("获取服务器状态出错:", error);
+    console.error(error);
     throw error;
   }
 }
