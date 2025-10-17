@@ -135,70 +135,39 @@ const SettingsMenu = () => {
   );
 
   const renderAppearanceTab = () => (
-    <motion.div className="py-1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.15, delay: 0.05 }} layout>
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.08 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.1 }}>
-          {t("settings.theme")}
-        </motion.div>
+    <div className="py-1">
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.theme")}</div>
         <div className="grid grid-cols-3 gap-2">
           {[
             { value: "system", label: t("settings.auto") },
             { value: "light", label: t("settings.light") },
             { value: "dark", label: t("settings.dark") },
-          ].map(({ value, label }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.12 + index * 0.03,
-              }}
-            >
-              <SettingButton isActive={theme === value} onClick={() => handleThemeChange(value)} className="w-full">
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ value, label }) => (
+            <SettingButton key={value} isActive={theme === value} onClick={() => handleThemeChange(value)} className="w-full">
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.22 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.25 }}>
-          {t("settings.interfaceComponents")}
-        </motion.div>
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.interfaceComponents")}</div>
         <div className="grid grid-cols-3 gap-2">
           {[
             { key: "showSummary", label: t("settings.summary"), value: settings.showSummary, handler: handleShowSummaryChange },
             { key: "showFilters", label: t("settings.filters"), value: settings.showFilters, handler: handleShowFiltersChange },
             { key: "compactMode", label: t("settings.compact"), value: settings.compactMode, handler: handleCompactModeChange },
-          ].map(({ key, label, value, handler }, index) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.28 + index * 0.03,
-              }}
-              className="flex-1"
-            >
-              <SettingButton isActive={value} onClick={() => handler(!value)} className="w-full">
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ key, label, value, handler }) => (
+            <SettingButton key={key} isActive={value} onClick={() => handler(!value)} className="w-full">
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.35 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.38 }}>
-          {t("settings.displayMode")}
-        </motion.div>
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.displayMode")}</div>
         <div className="flex space-x-2">
           {[
             {
@@ -224,180 +193,97 @@ const SettingsMenu = () => {
                 </svg>
               ),
             },
-          ].map(({ value, label, icon }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.4 + index * 0.03,
-              }}
-              className="flex-1"
-            >
-              <SettingButton isActive={settings.displayMode === value} onClick={() => handleDisplayModeChange(value as "card" | "row")} className="w-full flex items-center justify-center">
-                {icon}
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ value, label, icon }) => (
+            <SettingButton key={value} isActive={settings.displayMode === value} onClick={() => handleDisplayModeChange(value as "card" | "row")} className="w-full flex items-center justify-center">
+              {icon}
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
       {/* 语言切换选项 */}
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.45 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.48 }}>
-          {t("settings.language")}
-        </motion.div>
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.language")}</div>
         <div className="grid grid-cols-2 gap-2">
           {[
             { value: "zh-CN", label: t("settings.chinese"), flag: "🇨🇳" },
             { value: "en-US", label: t("settings.english"), flag: "🇺🇸" },
-          ].map(({ value, label, flag }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.5 + index * 0.03,
-              }}
-            >
-              <SettingButton isActive={settings.locale === value} onClick={() => handleLocaleChange(value as "zh-CN" | "en-US")} className="w-full flex items-center justify-center">
-                <span className="mr-1">{flag}</span>
-                {label}
-              </SettingButton>
-            </motion.div>
+            { value: "en-US", label: t("settings.english"), flag: "🇺🇸" },
+          ].map(({ value, label, flag }) => (
+            <SettingButton key={value} isActive={settings.locale === value} onClick={() => handleLocaleChange(value as "zh-CN" | "en-US")} className="w-full flex items-center justify-center">
+              <span className="mr-1">{flag}</span>
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 
   const renderPerformanceTab = () => (
-    <motion.div className="py-1" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15, delay: 0.05 }}>
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.08 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.1 }}>
-          {t("settings.dataUnits")}
-        </motion.div>
+    <div className="py-1">
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.dataUnits")}</div>
         <div className="flex space-x-2">
           {[
             { value: "binary", label: "GiB" },
             { value: "decimal", label: "GB" },
-          ].map(({ value, label }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.12 + index * 0.03,
-              }}
-              className="flex-1"
-            >
-              <SettingButton isActive={settings.unitType === value} onClick={() => handleUnitTypeChange(value as "binary" | "decimal")} className="w-full flex items-center justify-center">
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ value, label }) => (
+            <SettingButton key={value} isActive={settings.unitType === value} onClick={() => handleUnitTypeChange(value as "binary" | "decimal")} className="w-full flex items-center justify-center">
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.22 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.25 }}>
-          {t("settings.refreshInterval")}
-        </motion.div>
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.refreshInterval")}</div>
         <div className="grid grid-cols-2 gap-2">
           {[
             { value: 1000, label: "1s" },
             { value: 2000, label: "2s" },
             { value: 5000, label: "5s" },
             { value: 10000, label: "10s" },
-          ].map(({ value, label }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.28 + index * 0.03,
-              }}
-            >
-              <SettingButton isActive={settings.refreshInterval === value} onClick={() => handleRefreshIntervalChange(value as 1000 | 2000 | 5000 | 10000)} className="w-full">
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ value, label }) => (
+            <SettingButton key={value} isActive={settings.refreshInterval === value} onClick={() => handleRefreshIntervalChange(value as 1000 | 2000 | 5000 | 10000)} className="w-full">
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.35 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.38 }}>
-          {t("settings.cpuChart")}
-        </motion.div>
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.cpuChart")}</div>
         <div className="flex space-x-2">
           {[
             { value: true, label: t("settings.on") },
             { value: false, label: t("settings.off") },
-          ].map(({ value, label }, index) => (
-            <motion.div
-              key={String(value)}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.42 + index * 0.03,
-              }}
-              className="flex-1"
-            >
-              <SettingButton isActive={settings.showCpuChart === value} onClick={() => handleShowCpuChartChange(value)} className="w-full">
-                {label}
-              </SettingButton>
-            </motion.div>
+          ].map(({ value, label }) => (
+            <SettingButton key={String(value)} isActive={settings.showCpuChart === value} onClick={() => handleShowCpuChartChange(value)} className="w-full">
+              {label}
+            </SettingButton>
           ))}
         </div>
-      </motion.div>
+      </div>
 
-      <motion.div className="px-3 py-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.15, delay: 0.48 }}>
-        <motion.div className="text-xs text-gray-500 dark:text-gray-400 mb-2" initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.1, delay: 0.52 }}>
-          {t("settings.recordDuration")}
-        </motion.div>
-        <div className="flex space-x-2">
-          {[
-            { value: 1, label: "1min" },
-            { value: 3, label: "3min" },
-            { value: 5, label: "5min" },
-          ].map(({ value, label }, index) => (
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 35,
-                delay: 0.55 + index * 0.03,
-              }}
-              className="flex-1"
-            >
-              <SettingButton isActive={settings.cpuChartDuration === value} onClick={() => handleCpuChartDurationChange(value as 1 | 3 | 5)} className="w-full">
+      {settings.showCpuChart && (
+        <div className="px-3 py-2">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.recordDuration")}</div>
+          <div className="flex space-x-2">
+            {[
+              { value: 1, label: "1min" },
+              { value: 3, label: "3min" },
+              { value: 5, label: "5min" },
+            ].map(({ value, label }) => (
+              <SettingButton key={value} isActive={settings.cpuChartDuration === value} onClick={() => handleCpuChartDurationChange(value as 1 | 3 | 5)} className="w-full">
                 {label}
               </SettingButton>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
-      </motion.div>
-    </motion.div>
+      )}
+    </div>
   );
 
   return (
@@ -419,103 +305,73 @@ const SettingsMenu = () => {
         {isOpen && (
           <motion.div
             id="settings-dropdown"
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
+            initial={{ opacity: 0, y: -8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{
-              duration: 0.18,
-              ease: [0.25, 0.46, 0.45, 0.94],
-              scale: { type: "spring", stiffness: 400, damping: 30 },
+              type: "spring",
+              stiffness: 400,
+              damping: 30,
+              duration: 0.2,
             }}
-            layout
             className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1a1a1a] rounded-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50"
           >
             {/* 选项卡切换 */}
-            <motion.div
-              className="flex border-b border-gray-200 dark:border-gray-700 relative"
-              initial={{ opacity: 0, y: -8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.15, delay: 0.03 }}
-            >
-              <motion.button
+            <div className="flex border-b border-gray-200 dark:border-gray-700 relative">
+              <button
                 onClick={() => setActiveTab("appearance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
                   activeTab === "appearance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
-                whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.05)" }}
-                whileTap={{}}
-                transition={{ duration: 0.1 }}
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
               >
                 {t("settings.appearance")}
-              </motion.button>
-              <motion.button
+              </button>
+              <button
                 onClick={() => setActiveTab("performance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
                   activeTab === "performance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
-                whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.05)" }}
-                whileTap={{}}
-                transition={{ duration: 0.1 }}
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
               >
                 {t("settings.performance")}
-              </motion.button>
+              </button>
               {/* 活动选项卡指示器 */}
               <motion.div
                 className="absolute bottom-0 h-0.5 bg-blue-500 dark:bg-blue-400"
-                initial={{ opacity: 0, scaleX: 0 }}
+                initial={false}
                 animate={{
-                  opacity: 1,
-                  scaleX: 1,
                   x: activeTab === "appearance" ? "0%" : "100%",
                   width: "50%",
                 }}
                 transition={{
-                  opacity: { duration: 0.15, delay: 0.05 },
-                  scaleX: { duration: 0.2, delay: 0.05 },
-                  x: {
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 35,
-                    duration: 0.2,
-                  },
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 35,
+                  duration: 0.3,
                 }}
                 style={{
                   left: 0,
-                  transformOrigin: "left",
                 }}
               />
-            </motion.div>
+            </div>
 
             {/* 选项卡内容 */}
-            <motion.div
-              role="tabpanel"
-              className="relative overflow-hidden"
-              layout
-              transition={{
-                duration: 0.2,
-                ease: "easeInOut",
-                layout: { duration: 0.2 },
-              }}
-            >
-              <AnimatePresence mode="wait">
+            <div role="tabpanel" className="relative overflow-hidden">
+              <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={activeTab}
-                  initial={{ opacity: 0, x: activeTab === "appearance" ? 20 : -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: activeTab === "appearance" ? -20 : 20 }}
-                  transition={{ duration: 0.15, ease: "easeInOut" }}
-                  layout
-                  style={{ minHeight: "auto" }}
-                  layoutId="tab-content"
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{
+                    duration: 0.15,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
+                  className="w-full"
                 >
                   {activeTab === "appearance" ? renderAppearanceTab() : renderPerformanceTab()}
                 </motion.div>
               </AnimatePresence>
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
