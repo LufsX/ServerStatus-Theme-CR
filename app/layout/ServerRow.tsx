@@ -62,11 +62,13 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   return (
     <div
       onClick={onClick}
-      className={`bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg p-3 hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${className}`}
+      className={`bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
+        settings.compactMode ? "p-2" : "p-3"
+      } ${className}`}
     >
       {/* 小屏幕布局 */}
       <div className="block md:hidden">
-        <div className="space-y-2">
+        <div className={settings.compactMode ? "space-y-1.5" : "space-y-2"}>
           {/* 第一行：基本信息 */}
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2 min-w-0 flex-1">
@@ -123,39 +125,45 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
 
       {/* 大屏幕布局 */}
       <div className="hidden md:block">
-        <div className="grid grid-cols-24 gap-3 items-center text-sm">
+        <div className={`grid grid-cols-24 items-center text-sm ${settings.compactMode ? "gap-2" : "gap-3"}`}>
           {/* IPv4/IPv6 状态 */}
-          <div className="col-span-2">
-            <div className="flex flex-col gap-0.5 items-center">
-              <Badge variant={server.online4 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
-                IPv4
-              </Badge>
-              <Badge variant={server.online6 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
-                IPv6
-              </Badge>
-            </div>
+          <div className="col-span-1 ml-3">
+            {settings.compactMode ? (
+              <div className="flex flex-col gap-1 items-center">
+                <StatusIndicator status={online ? "online" : "offline"} />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-0.5 items-center">
+                <Badge variant={server.online4 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
+                  IPv4
+                </Badge>
+                <Badge variant={server.online6 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
+                  IPv6
+                </Badge>
+              </div>
+            )}
           </div>
 
           {/* 系统图标 */}
           {os && (
-            <div className="col-span-2 flex justify-center">
-              <Image src={`/image/os/${osIcon}.svg`} alt={os} width={20} height={20} className="w-9 h-9 rounded-sm" />
+            <div className={`flex justify-center ${settings.compactMode ? "col-span-1" : "col-span-2"}`}>
+              <Image src={`/image/os/${osIcon}.svg`} alt={os} width={20} height={20} className={settings.compactMode ? "w-6 h-6 rounded-sm" : "w-9 h-9 rounded-sm"} />
             </div>
           )}
 
           {/* 基本信息 */}
-          <div className={os ? (settings.compactMode ? "col-span-6" : "col-span-4") : settings.compactMode ? "col-span-8" : "col-span-6"}>
+          <div className={os ? (settings.compactMode ? "col-span-10" : "col-span-7") : settings.compactMode ? "col-span-8" : "col-span-6"}>
             <div className="min-w-0">
               <div className="flex items-center space-x-1">
                 {server.location &&
                   (isCountryFlagEmoji(server.location) ? (
-                    <span className="text-lg flex-shrink-0">{server.location}</span>
+                    <span className={settings.compactMode ? "text-base flex-shrink-0" : "text-lg flex-shrink-0"}>{server.location}</span>
                   ) : (
-                    <div className="relative h-4 w-6 items-center overflow-hidden flex-shrink-0">
+                    <div className={`relative items-center overflow-hidden flex-shrink-0 ${settings.compactMode ? "h-3 w-5" : "h-4 w-6"}`}>
                       <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={18} className="object-cover rounded-[1px]" />
                     </div>
                   ))}
-                <h3 className="font-medium text-lg truncate">{server.host ? server.name : server.alias || server.name}</h3>
+                <h3 className={`font-medium truncate ${settings.compactMode ? "text-base" : "text-lg"}`}>{server.host ? server.name : server.alias || server.name}</h3>
                 {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
@@ -174,8 +182,8 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
 
           {/* CPU */}
           <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
-            <div className="flex items-center justify-between mb-1">
-              <div className="text-sm font-medium">CPU</div>
+            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
+              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>CPU</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{formatCPU(cpuPercentage)}</div>
             </div>
             <ProgressBar value={cpuPercentage} />
@@ -183,24 +191,24 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
 
           {/* 内存 */}
           <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
-            <div className="flex items-center justify-between mb-1">
-              <div className="text-sm font-medium">{t("server.memory")}</div>
+            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
+              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>{t("server.memory")}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{memoryPercentage.toFixed(1)}%</div>
             </div>
             <ProgressBar value={memoryPercentage} />
           </div>
 
           {/* 存储 */}
-          <div className={settings.compactMode ? "col-span-4" : "col-span-3"}>
-            <div className="flex items-center justify-between mb-1">
-              <div className="text-sm font-medium">{t("server.disk")}</div>
+          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
+            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
+              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>{t("server.disk")}</div>
               <div className="text-xs text-gray-500 dark:text-gray-400">{diskPercentage.toFixed(1)}%</div>
             </div>
             <ProgressBar value={diskPercentage} />
           </div>
 
           {/* 网络速度和流量 */}
-          <div className={settings.compactMode ? "col-span-4" : "col-span-7"}>
+          <div className={settings.compactMode ? "col-span-3" : "col-span-5"}>
             <div className="space-y-0.5">
               <div className={`grid ${settings.compactMode ? "grid-cols-[12px_auto]" : "grid-cols-[12px_auto_auto_1fr]"} gap-1 items-center text-xs min-w-0`}>
                 <span className="text-green-600 dark:text-green-400 font-medium">↓</span>

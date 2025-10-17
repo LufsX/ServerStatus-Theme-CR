@@ -104,12 +104,12 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md p-4 transition-all ${
-        onClick ? "cursor-pointer hover:shadow-lg" : ""
-      } ${className}`}
+      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md transition-all ${
+        settings.compactMode ? "p-3" : "p-4"
+      } ${onClick ? "cursor-pointer hover:shadow-lg" : ""} ${className}`}
     >
       {/* Header Section */}
-      <div className="flex items-center justify-between mb-3">
+      <div className={`flex items-center justify-between ${settings.compactMode ? "mb-2" : "mb-3"}`}>
         <div className="flex items-center">
           <StatusIndicator status={online ? "online" : "offline"} className="mr-2" />
           <div>
@@ -177,7 +177,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       )}
 
       {/* Resource Section */}
-      <div className="space-y-3 mb-4">
+      <div className={`${settings.compactMode ? "space-y-2 mb-2" : "space-y-3 mb-4"}`}>
         <div className="space-y-1">
           <div className="flex justify-between items-center">
             <span className="text-xs font-medium text-gray-700 dark:text-gray-200">CPU</span>

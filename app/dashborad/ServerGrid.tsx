@@ -26,7 +26,7 @@ export function ServerGrid({ servers, fetchTime }: ServerGridProps) {
   if (settings.displayMode === "row") {
     return (
       <motion.div
-        className="space-y-4"
+        className={settings.compactMode ? "space-y-2" : "space-y-4"}
         layout
         transition={{
           type: "spring",
@@ -65,7 +65,7 @@ export function ServerGrid({ servers, fetchTime }: ServerGridProps) {
   // 默认卡片模式
   return (
     <motion.div
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start"
+      className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${settings.compactMode ? "xl:grid-cols-4 gap-4" : "gap-6"} items-start`}
       layout
       transition={{
         type: "spring",
