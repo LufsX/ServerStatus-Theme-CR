@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useEffect, useRef } from "react";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Filler } from "chart.js";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Filler, TooltipItem } from "chart.js";
 import { Line } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import { CpuDataPoint } from "@/lib/cpuHistory";
@@ -103,8 +103,14 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
           borderWidth: 1,
           displayColors: false,
           callbacks: {
-            title: (context: { parsed: { x: number } }[]) => formatTime(context[0].parsed.x),
-            label: (context: { parsed: { y: number } }) => `CPU: ${context.parsed.y.toFixed(1)}%`,
+            title: (context: TooltipItem<"line">[]) => {
+              const x = context[0]?.parsed?.x;
+              return x !== null && x !== undefined ? formatTime(x) : "";
+            },
+            label: (context: TooltipItem<"line">) => {
+              const y = context.parsed?.y;
+              return y !== null && y !== undefined ? `CPU: ${y.toFixed(1)}%` : "";
+            },
           },
         },
       },
