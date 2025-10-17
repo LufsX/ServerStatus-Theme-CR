@@ -67,7 +67,7 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
     });
 
     if (!response.ok) {
-      throw new Error(`${response.status}: ${response.statusText}`);
+      throw new Error(`HTTP STATUS CODE: ${response.status}`);
     }
 
     const data = await response.json();
