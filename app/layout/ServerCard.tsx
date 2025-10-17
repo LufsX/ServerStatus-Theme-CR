@@ -123,10 +123,10 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
         <div className="flex items-center space-x-2">
           {server.location &&
             (isCountryFlagEmoji(server.location) ? (
-              <span className="h-6 text-2xl">{server.location}</span>
+              <span className="h-7 w-7 text-2xl">{server.location}</span>
             ) : (
-              <div className="relative h-6 w-6 overflow-hidden">
-                <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={24} height={16} className="object-cover" />
+              <div className="relative h-7 w-7 overflow-hidden">
+                <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={28} height={28} className="object-cover" />
               </div>
             ))}
         </div>

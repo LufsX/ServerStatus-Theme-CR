@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSettings } from "./settings";
 import { SettingButton } from "./SettingButton";
 import { useI18n } from "@/lib/i18n/hooks";
+import Image from "next/image";
 
 const SettingsMenu = () => {
   const { t } = useI18n();
@@ -46,7 +47,7 @@ const SettingsMenu = () => {
   };
 
   // 切换语言
-  const handleLocaleChange = (locale: "zh-CN" | "en-US") => {
+  const handleLocaleChange = (locale: "zh-CN" | "zh-TW" | "en-US") => {
     updateSettings({ locale });
     window.dispatchEvent(new Event("storage"));
   };
@@ -207,12 +208,16 @@ const SettingsMenu = () => {
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.language")}</div>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { value: "zh-CN", label: t("settings.chinese"), flag: "🇨🇳" },
-            { value: "en-US", label: t("settings.english"), flag: "🇺🇸" },
-            { value: "en-US", label: t("settings.english"), flag: "🇺🇸" },
+            { value: "zh-CN", label: t("settings.chinese"), flag: "cn" },
+            { value: "en-US", label: t("settings.english"), flag: "us" },
           ].map(({ value, label, flag }) => (
-            <SettingButton key={value} isActive={settings.locale === value} onClick={() => handleLocaleChange(value as "zh-CN" | "en-US")} className="w-full flex items-center justify-center">
-              <span className="mr-1">{flag}</span>
+            <SettingButton
+              key={value}
+              isActive={settings.locale === value}
+              onClick={() => handleLocaleChange(value as "zh-CN" | "zh-TW" | "en-US")}
+              className="w-full flex items-center justify-center"
+            >
+              <Image src={`/image/flags/${flag}.svg`} alt={`${flag} flag`} width={16} height={16} className="object-cover mr-1" />
               {label}
             </SettingButton>
           ))}

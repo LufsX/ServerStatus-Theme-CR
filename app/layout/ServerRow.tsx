@@ -81,8 +81,8 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                   (isCountryFlagEmoji(server.location) ? (
                     <span className="text-sm flex-shrink-0">{server.location}</span>
                   ) : (
-                    <div className="relative h-3 w-5 items-center overflow-hidden flex-shrink-0">
-                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={16} height={12} className="object-cover" />
+                    <div className="relative h4.5 w-4.5 items-center overflow-hidden flex-shrink-0">
+                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={18} height={18} className="object-bottom" />
                     </div>
                   ))}
                 <h3 className="font-medium text-sm truncate">{server.host ? server.name : server.alias || server.name}</h3>
@@ -159,8 +159,8 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                   (isCountryFlagEmoji(server.location) ? (
                     <span className={settings.compactMode ? "text-base flex-shrink-0" : "text-lg flex-shrink-0"}>{server.location}</span>
                   ) : (
-                    <div className={`relative items-center overflow-hidden flex-shrink-0 ${settings.compactMode ? "h-3 w-5" : "h-4 w-6"}`}>
-                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={18} className="object-cover" />
+                    <div className={`relative items-center overflow-hidden flex-shrink-0 ${settings.compactMode ? "w-5" : "w-6"}`}>
+                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={20} className="object-cover" />
                     </div>
                   ))}
                 <h3 className={`font-medium truncate ${settings.compactMode ? "text-base" : "text-lg"}`}>{server.host ? server.name : server.alias || server.name}</h3>
