@@ -4,7 +4,7 @@ export type UnitType = "binary" | "decimal"; // GiB | GB
 export type RefreshInterval = 1000 | 2000 | 5000 | 10000; // 1s, 2s, 5s, 10s
 export type DisplayMode = "card" | "row"; // 卡片模式 | 横排模式
 export type CpuChartDuration = 1 | 3 | 5; // 1min, 3min, 5min
-export type Locale = "zh-CN" | "en-US"; // 语言
+export type Locale = "zh-CN" | "zh-TW" | "en-US"; // 语言
 
 export interface Settings {
   unitType: UnitType;
@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showCpuChart: false, // "true" | "false"; // 是否显示 CPU 图表
   cpuChartDuration: 3, // 1 | 3 | 5; // CPU 图表记录时长 1min, 3min, 5min
   compactMode: false, // "true" | "false"; // 是否启用紧凑模式
-  locale: "zh-CN", // "zh-CN" | "en-US"; // 语言
+  locale: "zh-CN", // "zh-CN" | "zh-TW" | "en-US"; // 语言
 };
 
 // 自定义事件名称

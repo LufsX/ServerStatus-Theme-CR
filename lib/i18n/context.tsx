@@ -3,19 +3,22 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { getSettingsManager, DEFAULT_SETTINGS, type Locale } from "@/app/setting/settings";
 import zhCNMessages from "../../locales/zh-CN.json";
+import zhTWMessages from "../../locales/zh-TW.json";
 import enUSMessages from "../../locales/en-US.json";
 
 export { type Locale } from "@/app/setting/settings";
 
 // 语言列表和映射
-const LOCALES: Locale[] = ["zh-CN", "en-US"];
+const LOCALES: Locale[] = ["zh-CN", "zh-TW", "en-US"];
 const MESSAGES_MAP: Record<Locale, Record<string, unknown>> = {
   "zh-CN": zhCNMessages,
+  "zh-TW": zhTWMessages,
   "en-US": enUSMessages,
 };
 
 export const localeInfo: Record<Locale, { name: string; flag: string }> = {
   "zh-CN": { name: "简体中文", flag: "🇨🇳" },
+  "zh-TW": { name: "繁體中文", flag: "🇹🇼" },
   "en-US": { name: "English", flag: "🇺🇸" },
 };
 

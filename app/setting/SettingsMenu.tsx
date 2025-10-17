@@ -209,6 +209,7 @@ const SettingsMenu = () => {
         <div className="grid grid-cols-2 gap-2">
           {[
             { value: "zh-CN", label: t("settings.chinese"), flag: "cn" },
+            { value: "zh-TW", label: t("settings.traditionalChinese"), flag: "tw" },
             { value: "en-US", label: t("settings.english"), flag: "us" },
           ].map(({ value, label, flag }) => (
             <SettingButton
