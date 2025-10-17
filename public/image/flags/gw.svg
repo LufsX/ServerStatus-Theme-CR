@@ -1,13 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="flag-icons-gw" viewBox="0 0 640 480">
-  <path fill="#ce1126" d="M0 0h220v480H0z"/>
-  <path fill="#fcd116" d="M220 0h420v240H220z"/>
-  <path fill="#009e49" d="M220 240h420v240H220z"/>
-  <g id="b" transform="matrix(80 0 0 80 110 240)">
-    <path id="a" d="M0-1v1h.5" transform="rotate(18 0 -1)"/>
-    <use xlink:href="#a" width="100%" height="100%" transform="scale(-1 1)"/>
-  </g>
-  <use xlink:href="#b" width="100%" height="100%" transform="rotate(72 110 240)"/>
-  <use xlink:href="#b" width="100%" height="100%" transform="rotate(144 110 240)"/>
-  <use xlink:href="#b" width="100%" height="100%" transform="rotate(-144 110 240)"/>
-  <use xlink:href="#b" width="100%" height="100%" transform="rotate(-72 110 240)"/>
-</svg>
+<svg height="800" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36" width="800" xmlns="http://www.w3.org/2000/svg"><path d="m32 5h-17v13h21v-9a4 4 0 0 0 -4-4z" fill="#fcd116"/><path d="m15 31h17a4 4 0 0 0 4-4v-9h-21z" fill="#009e49"/><path d="m15 5h-11a4 4 0 0 0 -4 4v18a4 4 0 0 0 4 4h11zm-5 17-2.547-1.851-2.547 1.851.973-2.994-2.547-1.851h3.148l.973-2.994.973 2.994h3.148l-2.547 1.851z" fill="#ce1126"/><path d="m8.426 17.155-.973-2.994-.973 2.994h-3.148l2.547 1.851-.973 2.994 2.547-1.851 2.547 1.851-.973-2.994 2.547-1.851z"/></svg>

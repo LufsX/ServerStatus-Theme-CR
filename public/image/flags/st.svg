@@ -1,16 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="flag-icons-st" viewBox="0 0 640 480">
-  <path fill="#12ad2b" d="M0 0h640v480H0z"/>
-  <path fill="#ffce00" d="M0 137.1h640V343H0z"/>
-  <path fill="#d21034" d="M0 0v480l240-240"/>
-  <g id="c" transform="translate(351.6 240) scale(.34286)">
-    <g id="b">
-      <path id="a" d="M0-200V0h100" transform="rotate(18 0 -200)"/>
-      <use xlink:href="#a" width="100%" height="100%" transform="scale(-1 1)"/>
-    </g>
-    <use xlink:href="#b" width="100%" height="100%" transform="rotate(72)"/>
-    <use xlink:href="#b" width="100%" height="100%" transform="rotate(144)"/>
-    <use xlink:href="#b" width="100%" height="100%" transform="rotate(-144)"/>
-    <use xlink:href="#b" width="100%" height="100%" transform="rotate(-72)"/>
-  </g>
-  <use xlink:href="#c" width="100%" height="100%" x="700" transform="translate(-523.2)"/>
-</svg>
+<svg height="800" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36" width="800" xmlns="http://www.w3.org/2000/svg"><path d="m32 5h-28a4 4 0 0 0 -4 4v18a4 4 0 0 0 4 4h28a4 4 0 0 0 4-4v-18a4 4 0 0 0 -4-4z" fill="#12ad2b"/><path d="m8.173 13.5h27.827v9h-27.827z" fill="#ffce00"/><path d="m1.149 6.195a3.984 3.984 0 0 0 -1.149 2.805v18c0 1.093.438 2.083 1.148 2.805l11.352-11.805z" fill="#d21034"/><path d="m18.004 20.36 1.625-1.181 1.624 1.181-.62-1.91 1.624-1.181h-2.008l-.62-1.909-.621 1.909h-2.008l1.625 1.181zm9.5 0 1.625-1.181 1.624 1.181-.62-1.91 1.624-1.181h-2.008l-.62-1.909-.621 1.909h-2.008l1.625 1.181z"/></svg>
