@@ -1,10 +1,12 @@
 "use client";
 
 import React, { memo, useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { SortOption, SortOrder } from "@/lib/sorting";
+import { isCountryFlagEmoji } from "@/lib/utils";
 
 export type { SortOption, SortOrder };
 
@@ -36,7 +38,6 @@ export const Filters = memo(function Filters({
   onSortOrderChange,
 }: FiltersProps) {
   const { t } = useI18n();
-  const [searchLocation, setSearchLocation] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
   const [types, setTypes] = useState<string[]>([]);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -83,8 +84,6 @@ export const Filters = memo(function Filters({
     };
   }, [openDropdown]);
 
-  const filteredLocations = searchLocation ? locations.filter((loc) => loc.toLowerCase().includes(searchLocation.toLowerCase())) : locations;
-
   const activeFiltersCount = (selectedStatus && selectedStatus !== "all" ? 1 : 0) + (selectedLocation ? 1 : 0) + (selectedType ? 1 : 0) + (sortBy !== "default" ? 1 : 0);
 
   const clearAllFilters = () => {
@@ -93,7 +92,6 @@ export const Filters = memo(function Filters({
     onTypeChange(null);
     onSortByChange("default");
     onSortOrderChange("desc");
-    setSearchLocation("");
     setOpenDropdown(null);
   };
 
@@ -128,6 +126,24 @@ export const Filters = memo(function Filters({
     }
   };
 
+  const renderLocationLabel = (location: string) => {
+    const flagText = location.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, "").trim();
+    const showText = flagText.length > 0 || !isCountryFlagEmoji(location);
+
+    return (
+      <span className="flex items-center gap-1.5 min-w-0">
+        {isCountryFlagEmoji(location) ? (
+          <span className="text-base leading-none">{location}</span>
+        ) : (
+          <span className="relative h-4 w-4 overflow-hidden rounded-sm">
+            <Image src={`/image/flags/${location.toLowerCase()}.svg`} alt={`${location} flag`} width={16} height={16} className="object-cover" />
+          </span>
+        )}
+        {showText && <span className="truncate">{flagText.toUpperCase() || location}</span>}
+      </span>
+    );
+  };
+
   const sortOptions = [
     { value: "default" as SortOption, label: t("dashboard.all") },
     { value: "name" as SortOption, label: t("server.name") },
@@ -144,7 +160,7 @@ export const Filters = memo(function Filters({
       {/* 按钮容器 */}
       <div className="flex items-center gap-2 h-8 overflow-x-auto overflow-y-visible" ref={buttonScrollRef}>
         {/* 状态筛选按钮 */}
-        <div className="dropdown-container relative flex-shrink-0">
+        <div className="dropdown-container relative shrink-0">
           <button
             onClick={(e) => toggleDropdown("status", e)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
@@ -162,7 +178,7 @@ export const Filters = memo(function Filters({
 
         {/* 位置筛选按钮 */}
         {locations.length > 0 && (
-          <div className="dropdown-container relative flex-shrink-0">
+          <div className="dropdown-container relative shrink-0">
             <button
               onClick={(e) => toggleDropdown("location", e)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
@@ -171,7 +187,7 @@ export const Filters = memo(function Filters({
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
-              <span className="truncate">{selectedLocation ? `📍 ${selectedLocation}` : t("server.location")}</span>
+              {selectedLocation ? renderLocationLabel(selectedLocation) : <span className="truncate">{t("server.location")}</span>}
               <motion.span animate={{ rotate: openDropdown === "location" ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-xs">
                 ▼
               </motion.span>
@@ -181,7 +197,7 @@ export const Filters = memo(function Filters({
 
         {/* 类型筛选按钮 */}
         {types.length > 0 && (
-          <div className="dropdown-container relative flex-shrink-0">
+          <div className="dropdown-container relative shrink-0">
             <button
               onClick={(e) => toggleDropdown("type", e)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
@@ -199,7 +215,7 @@ export const Filters = memo(function Filters({
         )}
 
         {/* 排序筛选按钮 */}
-        <div className="dropdown-container relative flex gap-1 flex-shrink-0">
+        <div className="dropdown-container relative flex gap-1 shrink-0">
           {/* 排序字段选择按钮 */}
           <button
             onClick={(e) => toggleDropdown("sort", e)}
@@ -222,7 +238,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1 }}
               onClick={() => onSortOrderChange(sortOrder === "asc" ? "desc" : "asc")}
-              className="px-2 bg-blue-100 dark:bg-blue-800 hover:bg-blue-200 hover:dark:bg-blue-700 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-md text-xs font-medium transition-all duration-200 flex items-center justify-center min-w-[28px]"
+              className="px-2 bg-blue-100 dark:bg-blue-800 hover:bg-blue-200 hover:dark:bg-blue-700 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-md text-xs font-medium transition-all duration-200 flex items-center justify-center min-w-7"
               title={`${t("dashboard.clickToToggle")}${sortOrder === "asc" ? t("dashboard.desc") : t("dashboard.asc")}`}
             >
               <motion.span key={sortOrder} initial={{ rotateX: 90 }} animate={{ rotateX: 0 }} transition={{ duration: 0.2 }} className="text-sm">
@@ -239,7 +255,7 @@ export const Filters = memo(function Filters({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1 }}
             onClick={clearAllFilters}
-            className="px-3 py-1.5 bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-700 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 flex-shrink-0"
+            className="px-3 py-1.5 bg-red-100 dark:bg-red-800 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 hover:bg-red-200 dark:hover:bg-red-700 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1 shrink-0"
           >
             <span>{t("dashboard.clear")}</span>
             <span className="text-xs">({activeFiltersCount})</span>
@@ -257,7 +273,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-[100px] transition-colors whitespace-nowrap"
+              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 transition-colors whitespace-nowrap"
               style={{ left: dropdownPosition.left, top: dropdownPosition.top }}
             >
               <div className="p-1 grid gap-y-0.5">
@@ -266,7 +282,7 @@ export const Filters = memo(function Filters({
                     onStatusChange(null);
                     setOpenDropdown(null);
                   }}
-                  className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                  className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                     !selectedStatus || selectedStatus === "all" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
@@ -277,7 +293,7 @@ export const Filters = memo(function Filters({
                     onStatusChange("online");
                     setOpenDropdown(null);
                   }}
-                  className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
+                  className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
                     selectedStatus === "online" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
@@ -289,7 +305,7 @@ export const Filters = memo(function Filters({
                     onStatusChange("offline");
                     setOpenDropdown(null);
                   }}
-                  className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
+                  className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
                     selectedStatus === "offline" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
@@ -309,46 +325,34 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-[100px] max-w-[250px] transition-colors whitespace-nowrap"
+              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 max-w-[250px] transition-colors whitespace-nowrap"
               style={{ left: dropdownPosition.left, top: dropdownPosition.top }}
             >
               <div className="p-1 grid gap-y-0.5 max-h-60 overflow-y-auto">
-                {locations.length > 6 && (
-                  <div className="px-1 pt-1 pb-2">
-                    <input
-                      type="text"
-                      placeholder={t("dashboard.searchLocation")}
-                      value={searchLocation}
-                      onChange={(e) => setSearchLocation(e.target.value)}
-                      className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 min-w-0"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  </div>
-                )}
                 <button
                   onClick={() => {
                     onLocationChange(null);
                     setOpenDropdown(null);
                   }}
-                  className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                  className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                     !selectedLocation ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   {t("dashboard.all")}
                 </button>
-                {filteredLocations.map((location) => (
+                {locations.map((location) => (
                   <button
                     key={location}
                     onClick={() => {
                       onLocationChange(location);
                       setOpenDropdown(null);
                     }}
-                    className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors truncate ${
+                    className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
                       selectedLocation === location ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                     title={location}
                   >
-                    {location}
+                    {renderLocationLabel(location)}
                   </button>
                 ))}
               </div>
@@ -364,7 +368,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-[80px] transition-colors whitespace-nowrap"
+              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 transition-colors whitespace-nowrap"
               style={{ left: dropdownPosition.left, top: dropdownPosition.top }}
             >
               <div className="p-1 grid gap-y-0.5">
@@ -373,7 +377,7 @@ export const Filters = memo(function Filters({
                     onTypeChange(null);
                     setOpenDropdown(null);
                   }}
-                  className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                  className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                     !selectedType ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
@@ -386,7 +390,7 @@ export const Filters = memo(function Filters({
                       onTypeChange(type);
                       setOpenDropdown(null);
                     }}
-                    className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                    className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                       selectedType === type ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                   >
@@ -406,7 +410,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-[100px] transition-colors whitespace-nowrap"
+              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 transition-colors whitespace-nowrap"
               style={{ left: dropdownPosition.left, top: dropdownPosition.top }}
             >
               <div className="p-1 grid gap-y-0.5">
@@ -420,7 +424,7 @@ export const Filters = memo(function Filters({
                       }
                       setOpenDropdown(null);
                     }}
-                    className={`w-full px-3 py-2 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
+                    className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
                       sortBy === option.value ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                   >

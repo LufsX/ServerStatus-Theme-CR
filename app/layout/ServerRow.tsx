@@ -79,18 +79,18 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
               <div className="flex items-center space-x-1 min-w-0 flex-1">
                 {server.location &&
                   (isCountryFlagEmoji(server.location) ? (
-                    <span className="text-sm flex-shrink-0">{server.location}</span>
+                    <span className="text-sm shrink-0">{server.location}</span>
                   ) : (
-                    <div className="relative h4.5 w-4.5 items-center overflow-hidden flex-shrink-0">
+                    <div className="relative h4.5 w-4.5 items-center overflow-hidden shrink-0">
                       <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={18} height={18} className="object-bottom" />
                     </div>
                   ))}
                 <h3 className="font-medium text-sm truncate">{server.host ? server.name : server.alias || server.name}</h3>
-                {server.type && <span className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
+                {server.type && <span className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] shrink-0">{server.type.toUpperCase()}</span>}
               </div>
             </div>
             {/* 系统图标 */}
-            {os && <Image src={`/image/os/${osIcon}.svg`} alt={os} width={16} height={16} className="w-4 h-4 rounded-full flex-shrink-0" />}
+            {os && <Image src={`/image/os/${osIcon}.svg`} alt={os} width={16} height={16} className="w-4 h-4 rounded-full shrink-0" />}
           </div>
 
           {/* 第二行：资源使用情况 */}
@@ -157,14 +157,14 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
               <div className="flex items-center space-x-1">
                 {server.location &&
                   (isCountryFlagEmoji(server.location) ? (
-                    <span className={settings.compactMode ? "text-base flex-shrink-0" : "text-lg flex-shrink-0"}>{server.location}</span>
+                    <span className={settings.compactMode ? "text-base shrink-0" : "text-lg shrink-0"}>{server.location}</span>
                   ) : (
-                    <div className={`relative items-center overflow-hidden flex-shrink-0 ${settings.compactMode ? "w-5" : "w-6"}`}>
+                    <div className={`relative items-center overflow-hidden shrink-0 ${settings.compactMode ? "w-5" : "w-6"}`}>
                       <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={20} className="object-cover" />
                     </div>
                   ))}
                 <h3 className={`font-medium truncate ${settings.compactMode ? "text-base" : "text-lg"}`}>{server.host ? server.name : server.alias || server.name}</h3>
-                {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] flex-shrink-0">{server.type.toUpperCase()}</span>}
+                {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] shrink-0">{server.type.toUpperCase()}</span>}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
                 <span>{online ? formatUptime(server.uptime) : <span className="text-red-500">{t("server.offline")}</span>}</span>
