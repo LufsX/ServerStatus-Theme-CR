@@ -57,7 +57,8 @@
     "type": "類型",
     "max": "最大",
     "monthTotal": "月/總",
-    "noFilterServers": "沒有找到符合篩選條件的伺服器"
+    "noFilterServers": "沒有找到符合篩選條件的伺服器",
+    "monthlyTraffic": "月總流量"
   },
   "server": {
     "name": "名稱",

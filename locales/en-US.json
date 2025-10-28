@@ -57,7 +57,8 @@
     "type": "Type",
     "max": "Max",
     "monthTotal": "Month/Total",
-    "noFilterServers": "No servers match the filtering criteria"
+    "noFilterServers": "No servers match the filtering criteria",
+    "monthlyTraffic": "Mth usage"
   },
   "server": {
     "name": "Name",

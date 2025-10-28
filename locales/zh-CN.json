@@ -57,7 +57,8 @@
     "type": "类型",
     "max": "最大",
     "monthTotal": "月/总",
-    "noFilterServers": "没有找到符合筛选条件的服务器"
+    "noFilterServers": "没有找到符合筛选条件的服务器",
+    "monthlyTraffic": "月总流量"
   },
   "server": {
     "name": "名称",
