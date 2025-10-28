@@ -87,7 +87,7 @@ export default function Home() {
                   {[0, 1, 2].map((index) => (
                     <motion.div
                       key={index}
-                      className="w-4 h-4 bg-gradient-to-r from-blue-200 to-blue-400 dark:from-blue-600 dark:to-blue-800 rounded-full"
+                      className="w-4 h-4 bg-linear-to-r from-blue-200 to-blue-400 dark:from-blue-600 dark:to-blue-800 rounded-full"
                       animate={{
                         y: ["0%", "-20%", "0%"],
                         scale: [1, 1.1, 1],
