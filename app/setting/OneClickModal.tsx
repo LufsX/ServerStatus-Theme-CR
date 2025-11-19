@@ -271,7 +271,7 @@ export default function OneClickModal(): React.ReactElement | null {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.15 + index * 0.02, duration: 0.15 }}
                     >
-                      <label className="w-full sm:w-24 text-sm text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                      <label className="w-full sm:w-24 text-base text-gray-700 dark:text-gray-300 flex items-center gap-1">
                         {label}
                         {(() => {
                           const m = getRequiredMark(key as keyof OneClickForm);
@@ -283,7 +283,7 @@ export default function OneClickModal(): React.ReactElement | null {
                         aria-label={label}
                         placeholder={placeholder}
                         type={type}
-                        className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                        className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                         value={form[key as keyof OneClickForm] as string}
                         onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                       />
@@ -328,7 +328,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.interval")}
                               value={form.interval}
                               onChange={(e) => updateField("interval", Number(e.target.value))}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
 
@@ -344,7 +344,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.vnstatMr")}
                               value={form.vnstatMr || ""}
                               onChange={(e) => updateField("vnstatMr", Number(e.target.value) || 1)}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
 
@@ -379,7 +379,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                 aria-label={label}
                                 placeholder={placeholder}
                                 type={type}
-                                className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                                className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                                 value={form[key as keyof OneClickForm] as string}
                                 onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                               />
@@ -395,7 +395,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.weight")}
                               value={form.weight || ""}
                               onChange={(e) => updateField("weight", Number(e.target.value) || 0)}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
                         </div>
@@ -418,7 +418,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                 aria-label={label}
                                 placeholder={placeholder}
                                 type="text"
-                                className="flex-1 bg-gray-100 border border-gray-300 text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                                className="flex-1 bg-gray-100 border border-gray-300 text-base rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                                 value={form[key as keyof OneClickForm] as string}
                                 onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                               />
