@@ -161,3 +161,18 @@ export function formatAllLatencies(server: ServerData, t: (key: string) => strin
 
   return latencies.join(" / ");
 }
+
+/**
+ * 格式化丢包率
+ */
+export function formatPacketLoss(server: Pick<ServerData, "ping_10010" | "ping_189" | "ping_10086">): string {
+  const losses = [server.ping_10010, server.ping_189, server.ping_10086];
+
+  return losses
+    .map((loss) => {
+      const safeLoss = loss ?? 0;
+      if (safeLoss < 0) return "N/A";
+      return `${safeLoss}%`;
+    })
+    .join(" / ");
+}

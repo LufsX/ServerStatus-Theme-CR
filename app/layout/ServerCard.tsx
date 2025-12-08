@@ -8,8 +8,7 @@ import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "
 import { Badge } from "../components/Badge";
 import { ProgressBar } from "../components/ProgressBar";
 import { CpuChart } from "../components/CpuChart";
-import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes } from "@/lib/formatters";
-import { formatAllLatencies } from "@/lib/formatters";
+import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes, formatAllLatencies, formatPacketLoss } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useSettings } from "../setting/settings";
 import { getCpuHistoryManager } from "@/lib/cpuHistory";
@@ -148,9 +147,18 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
             <div className="text-sm font-medium">{formatLoad(server.load_1, server.load_5, server.load_15)}</div>
           </div>
 
-          <div className="space-y-1 col-span-2">
-            <div className="text-xs text-gray-500 dark:text-gray-400">{t("server.networkLatency")}</div>
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              {t("server.networkLatency")} <span className="text-[0.8em] text-gray-400 dark:text-gray-500">({t("server.cu_ct_cm")})</span>
+            </div>
             <div className="text-sm font-medium">{formatAllLatencies(server, t)}</div>
+          </div>
+
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500 dark:text-gray-400">
+              {t("server.packetLoss")} <span className="text-[0.8em] text-gray-400 dark:text-gray-500">({t("server.cu_ct_cm")})</span>
+            </div>
+            <div className="text-sm font-medium">{formatPacketLoss(server)}</div>
           </div>
 
           <div className="col-span-2 flex flex-wrap gap-2 mt-1">

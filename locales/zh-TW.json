@@ -78,13 +78,15 @@
     "swap": "交換",
     "process": "程序",
     "thread": "執行緒",
-    "networkLatency": "網路延遲（聯通/電信/移動）",
+    "networkLatency": "網路延遲",
+    "packetLoss": "封包遺失率",
     "monthTotal": "月/總",
     "timeout": "逾時",
     "unavailable": "不可用",
     "arch": "架構",
     "cpuUsage": "CPU 使用率",
-    "cpu": "CPU"
+    "cpu": "CPU",
+    "cu_ct_cm": "聯通/電信/移動"
   },
   "oneClick": {
     "title": "一鍵部署",

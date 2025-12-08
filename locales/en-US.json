@@ -78,13 +78,15 @@
     "swap": "Swap",
     "process": "Process",
     "thread": "Thread",
-    "networkLatency": "Network Latency (CU/CT/CM)",
+    "networkLatency": "Network Latency",
+    "packetLoss": "Packet Loss",
     "monthTotal": "Mo/T",
     "timeout": "Timeout",
     "unavailable": "Unavailable",
     "arch": "Arch",
     "cpuUsage": "CPU Usage",
-    "cpu": "CPU"
+    "cpu": "CPU",
+    "cu_ct_cm": "CU/CT/CM"
   },
   "oneClick": {
     "title": "One-Click Deployment",

@@ -78,13 +78,15 @@
     "swap": "交换",
     "process": "进程",
     "thread": "线程",
-    "networkLatency": "网络延迟（联通/电信/移动）",
+    "networkLatency": "网络延迟",
+    "packetLoss": "丢包率",
     "monthTotal": "月/总",
     "timeout": "超时",
     "unavailable": "不可用",
     "arch": "架构",
     "cpuUsage": "CPU 使用率",
-    "cpu": "CPU"
+    "cpu": "CPU",
+    "cu_ct_cm": "联通/电信/移动"
   },
   "oneClick": {
     "title": "一键部署",
