@@ -142,10 +142,10 @@ export function formatLatency(ping: number, t: (key: string) => string): string 
   // 处理 undefined 或 null 值
   const safePing = ping ?? 0;
 
-  // 如果ping值为0，表示不可用或超时
-  if (safePing === 0) return t("server.timeout");
-  // 如果ping值为100，表示不可用
-  if (safePing === 100) return t("server.unavailable");
+  // 如果ping值为0，表示不可用
+  if (safePing === 0) return t("server.unavailable");
+  // 如果ping值大于999，表示超时
+  if (safePing >= 999) return t("server.timeout");
 
   return `${safePing.toFixed(0)}ms`;
 }
@@ -157,7 +157,7 @@ export function formatLatency(ping: number, t: (key: string) => string): string 
  * @returns 格式化后的字符串
  */
 export function formatAllLatencies(server: ServerData, t: (key: string) => string): string {
-  const latencies = [formatLatency(server.ping_10010, t), formatLatency(server.ping_189, t), formatLatency(server.ping_10086, t)];
+  const latencies = [formatLatency(server.time_10010, t), formatLatency(server.time_189, t), formatLatency(server.time_10086, t)];
 
   return latencies.join(" / ");
 }
