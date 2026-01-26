@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";

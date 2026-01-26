@@ -1,6 +1,3 @@
-import React from "react";
-
-
 type StatusType = 'online' | 'offline' | 'warning' | 'unknown';
 
 interface StatusIndicatorProps {

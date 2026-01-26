@@ -325,7 +325,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 max-w-[250px] transition-colors whitespace-nowrap"
+              className="absolute dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 bg-white hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-lg min-w-20 max-w-62.5 transition-colors whitespace-nowrap"
               style={{ left: dropdownPosition.left, top: dropdownPosition.top }}
             >
               <div className="p-1 grid gap-y-0.5 max-h-60 overflow-y-auto">

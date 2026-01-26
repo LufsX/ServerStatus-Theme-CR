@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
