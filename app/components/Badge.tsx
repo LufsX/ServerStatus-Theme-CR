@@ -11,7 +11,7 @@ interface BadgeProps {
 
 const variantClasses: Record<BadgeVariant, string> = {
   default: "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300",
-  primary: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+  primary: "", // Uses CSS variables via inline style
   secondary: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
   success: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
   warning: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
@@ -20,9 +20,18 @@ const variantClasses: Record<BadgeVariant, string> = {
 };
 
 export function Badge({ children, variant = "default", className = "", onClick }: BadgeProps) {
+  const isPrimary = variant === "primary";
+  
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${variantClasses[variant]} ${onClick ? "cursor-pointer hover:opacity-80" : ""} ${className}`}
+      className={`inline-flex items-center px-2.5 py-0.5 text-xs font-medium ${variantClasses[variant]} ${onClick ? "cursor-pointer hover:opacity-80" : ""} ${className}`}
+      style={{
+        borderRadius: "var(--radius-full)",
+        ...(isPrimary && {
+          backgroundColor: "var(--color-primary-light)",
+          color: "var(--color-primary)",
+        }),
+      }}
       onClick={onClick}
     >
       {children}

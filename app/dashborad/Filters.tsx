@@ -165,7 +165,7 @@ export const Filters = memo(function Filters({
             onClick={(e) => toggleDropdown("status", e)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
               selectedStatus !== null && selectedStatus !== "all"
-                ? "bg-blue-100 dark:bg-blue-800 border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400"
+                ? "bg-[var(--color-primary-light)] border-[var(--color-primary)] text-[var(--color-primary)]"
                 : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
             }`}
           >
@@ -183,7 +183,7 @@ export const Filters = memo(function Filters({
               onClick={(e) => toggleDropdown("location", e)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
                 selectedLocation !== null
-                  ? "bg-blue-100 dark:bg-blue-800 border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400"
+                  ? "bg-[var(--color-primary-light)] border-[var(--color-primary)] text-[var(--color-primary)]"
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
@@ -202,7 +202,7 @@ export const Filters = memo(function Filters({
               onClick={(e) => toggleDropdown("type", e)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
                 selectedType !== null
-                  ? "bg-blue-100 dark:bg-blue-800 border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400"
+                  ? "bg-[var(--color-primary-light)] border-[var(--color-primary)] text-[var(--color-primary)]"
                   : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
               }`}
             >
@@ -221,7 +221,7 @@ export const Filters = memo(function Filters({
             onClick={(e) => toggleDropdown("sort", e)}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 border ${
               sortBy !== "default"
-                ? "bg-blue-100 dark:bg-blue-800 border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400"
+                ? "bg-[var(--color-primary-light)] border-[var(--color-primary)] text-[var(--color-primary)]"
                 : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 hover:dark:bg-gray-800"
             }`}
           >
@@ -238,7 +238,7 @@ export const Filters = memo(function Filters({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1 }}
               onClick={() => onSortOrderChange(sortOrder === "asc" ? "desc" : "asc")}
-              className="px-2 bg-blue-100 dark:bg-blue-800 hover:bg-blue-200 hover:dark:bg-blue-700 border border-blue-300 dark:border-blue-600 text-blue-600 dark:text-blue-400 rounded-md text-xs font-medium transition-all duration-200 flex items-center justify-center min-w-7"
+              className="px-2 bg-[var(--color-primary-light)] hover:opacity-80 border border-[var(--color-primary)] text-[var(--color-primary)] rounded-md text-xs font-medium transition-all duration-200 flex items-center justify-center min-w-7"
               title={`${t("dashboard.clickToToggle")}${sortOrder === "asc" ? t("dashboard.desc") : t("dashboard.asc")}`}
             >
               <motion.span key={sortOrder} initial={{ rotateX: 90 }} animate={{ rotateX: 0 }} transition={{ duration: 0.2 }} className="text-sm">
@@ -283,7 +283,7 @@ export const Filters = memo(function Filters({
                     setOpenDropdown(null);
                   }}
                   className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                    !selectedStatus || selectedStatus === "all" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                    !selectedStatus || selectedStatus === "all" ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   {t("dashboard.all")}
@@ -294,7 +294,7 @@ export const Filters = memo(function Filters({
                     setOpenDropdown(null);
                   }}
                   className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
-                    selectedStatus === "online" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                    selectedStatus === "online" ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   <span className="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
@@ -306,7 +306,7 @@ export const Filters = memo(function Filters({
                     setOpenDropdown(null);
                   }}
                   className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
-                    selectedStatus === "offline" ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                    selectedStatus === "offline" ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
@@ -335,7 +335,7 @@ export const Filters = memo(function Filters({
                     setOpenDropdown(null);
                   }}
                   className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                    !selectedLocation ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                    !selectedLocation ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   {t("dashboard.all")}
@@ -348,7 +348,7 @@ export const Filters = memo(function Filters({
                       setOpenDropdown(null);
                     }}
                     className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 ${
-                      selectedLocation === location ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                      selectedLocation === location ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                     title={location}
                   >
@@ -378,7 +378,7 @@ export const Filters = memo(function Filters({
                     setOpenDropdown(null);
                   }}
                   className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                    !selectedType ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                    !selectedType ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                   }`}
                 >
                   {t("dashboard.all")}
@@ -391,7 +391,7 @@ export const Filters = memo(function Filters({
                       setOpenDropdown(null);
                     }}
                     className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      selectedType === type ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                      selectedType === type ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                   >
                     {type.toUpperCase()}
@@ -425,7 +425,7 @@ export const Filters = memo(function Filters({
                       setOpenDropdown(null);
                     }}
                     className={`w-full pl-2.5 py-1.5 rounded-md text-left text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors ${
-                      sortBy === option.value ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium" : "text-gray-700 dark:text-gray-300"
+                      sortBy === option.value ? "bg-[var(--color-primary-light)] text-[var(--color-primary)] font-medium" : "text-gray-700 dark:text-gray-300"
                     }`}
                   >
                     {option.label}

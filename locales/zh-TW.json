@@ -36,7 +36,16 @@
     "recordDuration": "記錄時長",
     "chinese": "简体中文",
     "traditionalChinese": "繁體中文",
-    "english": "English"
+    "english": "English",
+    "colorScheme": "主題色調",
+    "borderStyle": "介面風格",
+    "rounded": "默認",
+    "sharp": "硬朗",
+    "blue": "藍色",
+    "green": "綠色",
+    "purple": "紫色",
+    "orange": "橙色",
+    "rose": "玫紅"
   },
   "dashboard": {
     "title": "伺服器狀態",

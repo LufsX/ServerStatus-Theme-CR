@@ -103,9 +103,19 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md transition-all ${
+      className={`flex flex-col h-auto border border-gray-200 dark:border-gray-800 hover:border-gray-400 hover:dark:border-gray-600 shadow-md transition-all ${
         settings.compactMode ? "p-3" : "p-4"
       } ${onClick ? "cursor-pointer hover:shadow-lg" : ""} ${className}`}
+      style={{
+        borderRadius: "var(--radius-lg)",
+        backgroundColor: "var(--color-card-bg)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "var(--color-card-bg-hover)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "var(--color-card-bg)";
+      }}
     >
       {/* Header Section */}
       <div className={`flex items-center justify-between ${settings.compactMode ? "mb-2" : "mb-3"}`}>

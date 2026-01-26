@@ -12,11 +12,19 @@ export function SettingButton({ isActive, onClick, children, className = "" }: S
   return (
     <motion.button
       onClick={onClick}
-      className={`${className} py-1 text-sm text-center truncate rounded-sm border transition-colors duration-150 ${
+      className={`${className} py-1 text-sm text-center truncate border transition-colors duration-150 ${
         isActive
-          ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-medium border-blue-300 dark:border-blue-600"
+          ? "font-medium"
           : "hover:bg-gray-100 dark:hover:bg-gray-800 border-gray-200 dark:border-gray-800"
       }`}
+      style={{
+        borderRadius: "var(--radius-sm)",
+        ...(isActive && {
+          backgroundColor: "var(--color-primary-light)",
+          color: "var(--color-primary)",
+          borderColor: "var(--color-primary)",
+        }),
+      }}
       transition={{ type: "spring", stiffness: 500, damping: 35 }}
     >
       {children}

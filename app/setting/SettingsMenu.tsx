@@ -3,15 +3,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSettings } from "./settings";
+import { useSettings, type ColorScheme, type BorderStyle } from "./settings";
 import { SettingButton } from "./SettingButton";
 import { useI18n } from "@/lib/i18n/hooks";
 import Image from "next/image";
+import { useThemeCustomization, COLOR_SCHEMES } from "@/lib/theme";
 
 const SettingsMenu = () => {
   const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   const { settings, updateSettings } = useSettings();
+  const { colorScheme, borderStyle, setColorScheme, setBorderStyle } = useThemeCustomization();
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"appearance" | "performance">("appearance");
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -100,6 +102,16 @@ const SettingsMenu = () => {
     window.dispatchEvent(new Event("storage"));
   };
 
+  // 切换色调方案
+  const handleColorSchemeChange = (scheme: ColorScheme) => {
+    setColorScheme(scheme);
+  };
+
+  // 切换边框风格
+  const handleBorderStyleChange = (style: BorderStyle) => {
+    setBorderStyle(style);
+  };
+
   if (!mounted) {
     return <div className="w-8 h-8"></div>;
   }
@@ -146,6 +158,51 @@ const SettingsMenu = () => {
             { value: "dark", label: t("settings.dark") },
           ].map(({ value, label }) => (
             <SettingButton key={value} isActive={theme === value} onClick={() => handleThemeChange(value)} className="w-full">
+              {label}
+            </SettingButton>
+          ))}
+        </div>
+      </div>
+
+      {/* 色调选择 Color Scheme Selection */}
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.colorScheme")}</div>
+        <div className="grid grid-cols-5 gap-2">
+          {(["blue", "green", "purple", "orange", "rose"] as ColorScheme[]).map((scheme) => (
+            <button
+              key={scheme}
+              onClick={() => handleColorSchemeChange(scheme)}
+              className={`flex items-center justify-center p-2 rounded-md transition-all duration-200 ${
+                colorScheme === scheme
+                  ? "ring-1 ring-offset-1 ring-gray-400 dark:ring-gray-500 bg-gray-100 dark:bg-gray-700"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-700"
+              }`}
+              title={t(`settings.${scheme}`)}
+              aria-label={t(`settings.${scheme}`)}
+            >
+              <span
+                className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600"
+                style={{ backgroundColor: COLOR_SCHEMES[scheme].primary }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 边框风格选择 Border Style Selection */}
+      <div className="px-3 py-2">
+        <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.borderStyle")}</div>
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { value: "rounded" as BorderStyle, label: t("settings.rounded") },
+            { value: "sharp" as BorderStyle, label: t("settings.sharp") },
+          ].map(({ value, label }) => (
+            <SettingButton
+              key={value}
+              isActive={borderStyle === value}
+              onClick={() => handleBorderStyleChange(value)}
+              className="w-full"
+            >
               {label}
             </SettingButton>
           ))}
@@ -296,7 +353,7 @@ const SettingsMenu = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
+        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         aria-label={t("settings.title")}
         aria-haspopup="true"
       >
@@ -327,7 +384,7 @@ const SettingsMenu = () => {
               <button
                 onClick={() => setActiveTab("appearance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
-                  activeTab === "appearance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  activeTab === "appearance" ? "text-[var(--color-primary)]" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
                 {t("settings.appearance")}
@@ -335,14 +392,14 @@ const SettingsMenu = () => {
               <button
                 onClick={() => setActiveTab("performance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
-                  activeTab === "performance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  activeTab === "performance" ? "text-[var(--color-primary)]" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
                 {t("settings.performance")}
               </button>
               {/* 活动选项卡指示器 */}
               <motion.div
-                className="absolute bottom-0 h-0.5 bg-blue-500 dark:bg-blue-400"
+                className="absolute bottom-0 h-0.5 bg-[var(--color-primary)]"
                 initial={false}
                 animate={{
                   x: activeTab === "appearance" ? "0%" : "100%",

@@ -22,7 +22,7 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  default: "bg-blue-500 dark:bg-blue-700",
+  default: "", // Uses CSS variable --color-primary via inline style
   success: "bg-green-500 dark:bg-green-700",
   warning: "bg-yellow-500 dark:bg-yellow-700",
   danger: "bg-red-500 dark:bg-red-700",
@@ -59,14 +59,24 @@ export function ProgressBar({
 
   // 使用自定义颜色或从变体中选择
   const finalBarColor = barColor || variantClasses[autoVariant];
+  
+  // 检查是否使用默认变体（需要应用 CSS 变量颜色）
+  const isDefaultVariant = autoVariant === "default" && !barColor;
 
   // 格式化显示的值
   const displayValue = valueFormat ? valueFormat(clampedValue) : `${percentage.toFixed(0)}%`;
 
   return (
-    <div className={`w-full ${backgroundColor} rounded-full overflow-hidden ${sizeClasses[size]} ${className}`}>
+    <div 
+      className={`w-full ${backgroundColor} overflow-hidden ${sizeClasses[size]} ${className}`}
+      style={{ borderRadius: "var(--radius-full)" }}
+    >
       <motion.div
-        className={`${finalBarColor} rounded-full ${sizeClasses[size]} ${barClassName}`}
+        className={`${finalBarColor} ${sizeClasses[size]} ${barClassName}`}
+        style={{ 
+          borderRadius: "var(--radius-full)",
+          ...(isDefaultVariant && { backgroundColor: "var(--color-primary)" }),
+        }}
         initial={{ width: 0 }}
         animate={{ width: `${percentage}%` }}
         transition={{

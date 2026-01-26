@@ -62,9 +62,19 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   return (
     <div
       onClick={onClick}
-      className={`bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
+      className={`border border-gray-200 dark:border-gray-800 hover:border-gray-400 hover:dark:border-gray-600 hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
         settings.compactMode ? "p-2" : "p-3"
       } ${className}`}
+      style={{
+        borderRadius: "var(--radius-lg)",
+        backgroundColor: "var(--color-card-bg)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = "var(--color-card-bg-hover)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = "var(--color-card-bg)";
+      }}
     >
       {/* 小屏幕布局 */}
       <div className="block md:hidden">

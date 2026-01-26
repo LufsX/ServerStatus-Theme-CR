@@ -5,6 +5,8 @@ export type RefreshInterval = 1000 | 2000 | 5000 | 10000; // 1s, 2s, 5s, 10s
 export type DisplayMode = "card" | "row"; // 卡片模式 | 横排模式
 export type CpuChartDuration = 1 | 3 | 5; // 1min, 3min, 5min
 export type Locale = "zh-CN" | "zh-TW" | "en-US"; // 语言
+export type ColorScheme = "blue" | "green" | "purple" | "orange" | "rose"; // 主题色调
+export type BorderStyle = "rounded" | "sharp"; // 边框风格：圆润 | 硬朗
 
 export interface Settings {
   unitType: UnitType;
@@ -16,6 +18,8 @@ export interface Settings {
   cpuChartDuration: CpuChartDuration;
   compactMode: boolean;
   locale: Locale;
+  colorScheme: ColorScheme;
+  borderStyle: BorderStyle;
 }
 
 // 默认设置 Default Settings
@@ -29,6 +33,8 @@ export const DEFAULT_SETTINGS: Settings = {
   cpuChartDuration: 3, // 1 | 3 | 5; // CPU 图表记录时长 1min, 3min, 5min
   compactMode: false, // "true" | "false"; // 是否启用紧凑模式
   locale: "zh-CN", // "zh-CN" | "zh-TW" | "en-US"; // 语言
+  colorScheme: "blue", // "blue" | "green" | "purple" | "orange" | "rose"; // 主题色调
+  borderStyle: "rounded", // "rounded" | "sharp"; // 边框风格：圆润 | 硬朗
 };
 
 // 自定义事件名称
