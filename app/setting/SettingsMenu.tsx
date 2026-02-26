@@ -47,7 +47,7 @@ const SettingsMenu = () => {
   };
 
   // 切换语言
-  const handleLocaleChange = (locale: "zh-CN" | "zh-TW" | "en-US") => {
+  const handleLocaleChange = (locale: "zh-CN" | "zh-TW" | "en-US" | "ja-JP") => {
     updateSettings({ locale });
     window.dispatchEvent(new Event("storage"));
   };
@@ -211,11 +211,12 @@ const SettingsMenu = () => {
             { value: "zh-CN", label: t("settings.chinese"), flag: "cn" },
             { value: "zh-TW", label: t("settings.traditionalChinese"), flag: "tw" },
             { value: "en-US", label: t("settings.english"), flag: "us" },
+            { value: "ja-JP", label: t("settings.japanese"), flag: "jp" },
           ].map(({ value, label, flag }) => (
             <SettingButton
               key={value}
               isActive={settings.locale === value}
-              onClick={() => handleLocaleChange(value as "zh-CN" | "zh-TW" | "en-US")}
+              onClick={() => handleLocaleChange(value as "zh-CN" | "zh-TW" | "en-US" | "ja-JP")}
               className="w-full flex items-center justify-center"
             >
               <Image src={`/image/flags/${flag}.svg`} alt={`${flag} flag`} width={16} height={16} className="object-cover mr-1" />

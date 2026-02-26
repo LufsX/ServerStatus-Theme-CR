@@ -5,6 +5,7 @@ import { getSettingsManager, DEFAULT_SETTINGS, type Locale } from "@/app/setting
 import zhCNMessages from "../../locales/zh-CN.json";
 import zhTWMessages from "../../locales/zh-TW.json";
 import enUSMessages from "../../locales/en-US.json";
+import jaJPMessages from "../../locales/ja-JP.json";
 
 export { type Locale } from "@/app/setting/settings";
 
@@ -14,12 +15,14 @@ const MESSAGES_MAP: Record<Locale, Record<string, unknown>> = {
   "zh-CN": zhCNMessages,
   "zh-TW": zhTWMessages,
   "en-US": enUSMessages,
+  "ja-JP": jaJPMessages,
 };
 
 export const localeInfo: Record<Locale, { name: string; flag: string }> = {
   "zh-CN": { name: "简体中文", flag: "🇨🇳" },
   "zh-TW": { name: "繁體中文", flag: "🇹🇼" },
   "en-US": { name: "English", flag: "🇺🇸" },
+  "ja-JP": { name: "日本語", flag: "🇯🇵" },
 };
 
 interface I18nContextType {
