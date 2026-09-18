@@ -2,7 +2,7 @@
   "name": "serverstatus-theme-cr",
   "version": "1.5.0",
   "scripts": {
-    "dev": "next dev --turbopack -p 3000",
+    "dev": "NODE_ENV=development next dev --turbopack -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@fortawesome/free-brands-svg-icons": "^7.3.1",
     "chart.js": "4.5.1",
     "framer-motion": "13.4.0",
     "lucide-react": "1.47.0",
@@ -18,7 +19,8 @@
     "next-themes": "0.4.6",
     "react": "19.3.0",
     "react-chartjs-2": "5.3.1",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "simple-icons": "^16.31.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
