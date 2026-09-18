@@ -46,7 +46,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
   }, [lastUpdated, t]);
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-sm p-4 mb-6 transition-all">
+    <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-panel shadow-sm p-4 mb-6 transition-all">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-medium">{t("dashboard.title")}</h2>
         <div className="text-sm text-gray-500 dark:text-gray-400">
@@ -56,23 +56,23 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <div
-          className={`p-3 rounded-md border cursor-pointer transition-all ${
+          className={`p-3 rounded-panel-md border cursor-pointer transition-all ${
             selectedStatus === "all" || selectedStatus === null
-              ? "bg-blue-100 dark:bg-blue-800 border-blue-300 dark:border-blue-600"
+              ? "bg-accent-100 dark:bg-accent-800 border-accent-300 dark:border-accent-600"
               : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800"
           }`}
           onClick={() => onStatusChange(selectedStatus === "all" ? null : "all")}
         >
-          <div className={`text-sm mb-1 ${selectedStatus === "all" || selectedStatus === null ? "text-blue-600 dark:text-blue-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>
+          <div className={`text-sm mb-1 ${selectedStatus === "all" || selectedStatus === null ? "text-accent-600 dark:text-accent-400 font-medium" : "text-gray-500 dark:text-gray-400"}`}>
             {t("dashboard.all")}
           </div>
-          <div className={`text-3xl font-semibold ${selectedStatus === "all" || selectedStatus === null ? "text-blue-600 dark:text-blue-400" : "text-gray-900 dark:text-gray-100"}`}>
+          <div className={`text-3xl font-semibold ${selectedStatus === "all" || selectedStatus === null ? "text-accent-600 dark:text-accent-400" : "text-gray-900 dark:text-gray-100"}`}>
             {servers.length}
           </div>
         </div>
 
         <div
-          className={`p-3 rounded-md border cursor-pointer transition-all ${
+          className={`p-3 rounded-panel-md border cursor-pointer transition-all ${
             selectedStatus === "online"
               ? "bg-green-100 dark:bg-green-800 border-green-300 dark:border-green-600"
               : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800"
@@ -84,7 +84,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
         </div>
 
         <div
-          className={`p-3 rounded-md border cursor-pointer transition-all ${
+          className={`p-3 rounded-panel-md border cursor-pointer transition-all ${
             selectedStatus === "offline"
               ? "bg-red-100 dark:bg-red-800 border-red-300 dark:border-red-600"
               : "bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800"
@@ -95,7 +95,7 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
           <div className={`text-3xl font-semibold ${selectedStatus === "offline" ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-gray-100"}`}>{offlineCount}</div>
         </div>
 
-        <div className="p-3 pb-2 rounded-md border bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800 transition-all">
+        <div className="p-3 pb-2 rounded-panel-md border bg-gray-100 dark:bg-gray-700 border-gray-200 dark:border-gray-800 hover:bg-gray-200 hover:dark:bg-gray-800 transition-all">
           <div className="flex items-baseline gap-1 md:gap-2">
             <span className="text-sm text-gray-500 dark:text-gray-400">{t("dashboard.monthlyTraffic")}</span>
             <span className="text-xs text-gray-900 dark:text-gray-100">{formatBytes(totalTraffic.monthlyTotal)}</span>

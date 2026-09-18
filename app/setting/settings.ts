@@ -1,12 +1,14 @@
 "use client";
 
+import { DEFAULT_APPEARANCE, normalizeAppearance, type AppearanceSettings } from "../../lib/appearance";
+
 export type UnitType = "binary" | "decimal"; // GiB | GB
 export type RefreshInterval = 1000 | 2000 | 5000 | 10000; // 1s, 2s, 5s, 10s
 export type DisplayMode = "card" | "row"; // 卡片模式 | 横排模式
 export type CpuChartDuration = 1 | 3 | 5; // 1min, 3min, 5min
 export type Locale = "zh-CN" | "zh-TW" | "en-US" | "ja-JP"; // 语言
 
-export interface Settings {
+export interface Settings extends AppearanceSettings {
   unitType: UnitType;
   refreshInterval: RefreshInterval;
   displayMode: DisplayMode;
@@ -20,6 +22,7 @@ export interface Settings {
 
 // 默认设置 Default Settings
 export const DEFAULT_SETTINGS: Settings = {
+  ...DEFAULT_APPEARANCE,
   unitType: "binary", // "binary" | "decimal"; // GiB | GB
   refreshInterval: 2000, // 1000 | 2000 | 5000 | 10000; // 刷新间隔 1s, 2s, 5s, 10s
   displayMode: "card", // "card" | "row"; // 卡片模式 | 横排模式
@@ -54,7 +57,8 @@ class SettingsManager {
 
     try {
       const savedSettings = localStorage.getItem("appSettings");
-      return savedSettings ? { ...DEFAULT_SETTINGS, ...JSON.parse(savedSettings) } : DEFAULT_SETTINGS;
+      const parsed = savedSettings ? JSON.parse(savedSettings) : {};
+      return { ...DEFAULT_SETTINGS, ...parsed, ...normalizeAppearance(parsed) };
     } catch (error) {
       console.error("加载设置失败:", error);
       return DEFAULT_SETTINGS;
@@ -92,7 +96,8 @@ class SettingsManager {
    * 更新设置
    */
   updateSettings(newSettings: Partial<Settings>): void {
-    this.settings = { ...this.settings, ...newSettings };
+    const merged = { ...this.settings, ...newSettings };
+    this.settings = { ...merged, ...normalizeAppearance(merged) };
     this.saveSettings();
   }
 

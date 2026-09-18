@@ -1,3 +1,5 @@
+import { appearanceInitScript } from "@/lib/appearance";
+import { AppearanceSync } from "./setting/AppearanceSync";
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
@@ -19,8 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" className="h-full" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: appearanceInitScript }} /></head>
       <body className="antialiased min-h-full bg-gray-50 dark:bg-gray-900">
         <ThemeProvider attribute="class" defaultTheme="system">
+          <AppearanceSync />
           <I18nProvider>{children}</I18nProvider>
         </ThemeProvider>
       </body>

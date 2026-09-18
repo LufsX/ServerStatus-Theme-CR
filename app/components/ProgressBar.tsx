@@ -21,7 +21,7 @@ const sizeClasses = {
 };
 
 const variantClasses = {
-  default: "bg-blue-500 dark:bg-blue-700",
+  default: "bg-accent-500 dark:bg-accent-700",
   success: "bg-green-500 dark:bg-green-700",
   warning: "bg-yellow-500 dark:bg-yellow-700",
   danger: "bg-red-500 dark:bg-red-700",
@@ -63,9 +63,9 @@ export function ProgressBar({
   const displayValue = valueFormat ? valueFormat(clampedValue) : `${percentage.toFixed(0)}%`;
 
   return (
-    <div className={`w-full ${backgroundColor} rounded-full overflow-hidden ${sizeClasses[size]} ${className}`}>
+    <div className={`w-full ${backgroundColor} rounded-track overflow-hidden ${sizeClasses[size]} ${className}`}>
       <motion.div
-        className={`${finalBarColor} rounded-full ${sizeClasses[size]} ${barClassName}`}
+        className={`${finalBarColor} rounded-track ${sizeClasses[size]} ${barClassName}`}
         initial={{ width: 0 }}
         animate={{ width: `${percentage}%` }}
         transition={{

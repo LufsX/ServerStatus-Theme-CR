@@ -60,7 +60,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   return (
     <div
       onClick={onClick}
-      className={`@container/server-row min-w-0 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
+      className={`@container/server-row min-w-0 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-panel hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
         compact ? "p-2" : "p-3"
       } ${className}`}
     >
@@ -76,7 +76,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                 <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={18} height={18} className="shrink-0 object-contain" />
               ))}
             <h3 title={name} className="min-w-0 truncate text-sm font-medium">{name}</h3>
-            {server.type && <span title={server.type} className="max-w-16 shrink-0 truncate rounded bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
+            {server.type && <span title={server.type} className="max-w-16 shrink-0 truncate rounded-badge bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
           </div>
           {os && <OSIcon os={os} size={16} className="shrink-0" />}
         </div>
@@ -100,7 +100,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
             {downloadSpeed}
           </span>
           <span className="flex items-center gap-1 font-medium">
-            <ArrowUp size={12} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />
+            <ArrowUp size={12} className="text-accent-600 dark:text-accent-400" aria-hidden="true" />
             {uploadSpeed}
           </span>
         </div>
@@ -119,7 +119,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
                 <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={20} className="shrink-0 object-contain" />
               ))}
             <h3 title={name} className={`min-w-0 flex-1 truncate font-medium ${compact ? "text-sm" : "text-base"}`}>{name}</h3>
-            {server.type && <span title={server.type} className="max-w-20 truncate rounded bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
+            {server.type && <span title={server.type} className="max-w-20 truncate rounded-badge bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
           </div>
           <div className={`flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400 ${compact ? "mt-1" : "mt-1.5"}`}>
             <div className="flex shrink-0 gap-1">
@@ -147,7 +147,7 @@ export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
           </div>
           <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5">
             <span className="flex min-w-0 items-center gap-1">
-              <ArrowUp size={12} className="shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              <ArrowUp size={12} className="shrink-0 text-accent-600 dark:text-accent-400" aria-hidden="true" />
               <span className="min-w-0 break-words font-medium">{uploadSpeed}</span>
             </span>
             {!compact && <span className="min-w-0 break-words text-[10px] text-gray-600 dark:text-gray-300">{monthlyUpload}/{totalUpload}</span>}

@@ -7,6 +7,7 @@ import { useHydrated, useSettings } from "./settings";
 import { SettingButton } from "./SettingButton";
 import { useI18n } from "@/lib/i18n/hooks";
 import Image from "next/image";
+import { RADIUS_STYLES, COLOR_STYLES, FONT_STYLES } from "@/lib/appearance";
 import { Grid2X2, List, Settings } from "lucide-react";
 
 const SettingsMenu = () => {
@@ -119,6 +120,40 @@ const SettingsMenu = () => {
           ))}
         </div>
       </div>
+
+      <fieldset className="px-3 py-2">
+        <legend className="text-xs text-gray-500 dark:text-gray-400">{t("settings.radius")}</legend>
+        <div className="grid grid-cols-3 gap-2">
+          {RADIUS_STYLES.map((value) => (
+            <SettingButton key={value} isActive={settings.radiusStyle === value} onClick={() => updateSettings({ radiusStyle: value })} className="w-full flex items-center justify-center gap-1">
+              {t(`settings.radius_${value}`)}
+            </SettingButton>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="px-3 py-2">
+        <legend className="text-xs text-gray-500 dark:text-gray-400">{t("settings.color")}</legend>
+        <div className="grid grid-cols-3 gap-2">
+          {COLOR_STYLES.map((value) => (
+            <SettingButton key={value} isActive={settings.colorStyle === value} onClick={() => updateSettings({ colorStyle: value })} className="w-full flex items-center justify-center gap-1">
+              <span aria-hidden="true" className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: { default: "#3b82f6", violet: "#8b5cf6", emerald: "#10b981", rose: "#f43f5e", amber: "#f59e0b" }[value] }} />
+              {t(`settings.color_${value}`)}
+            </SettingButton>
+          ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="px-3 py-2">
+        <legend className="text-xs text-gray-500 dark:text-gray-400">{t("settings.font")}</legend>
+        <div className="grid grid-cols-3 gap-2">
+          {FONT_STYLES.map((value) => (
+            <SettingButton key={value} isActive={settings.fontStyle === value} onClick={() => updateSettings({ fontStyle: value })} className="w-full flex items-center justify-center gap-1">
+              {t(`settings.font_${value}`)}
+            </SettingButton>
+          ))}
+        </div>
+      </fieldset>
 
       <div className="px-3 py-2">
         <div className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t("settings.interfaceComponents")}</div>
@@ -252,7 +287,7 @@ const SettingsMenu = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
+        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent-400 dark:focus:ring-accent-500 p-1 rounded-control-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         aria-label={t("settings.title")}
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -278,14 +313,14 @@ const SettingsMenu = () => {
               damping: 30,
               duration: 0.2,
             }}
-            className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#1a1a1a] rounded-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50"
+            className="absolute right-0 mt-2 w-72 max-w-[calc(100vw-2rem)] bg-white dark:bg-[#1a1a1a] rounded-panel-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50"
           >
             {/* 选项卡切换 */}
             <div className="flex border-b border-gray-200 dark:border-gray-700 relative">
               <button
                 onClick={() => setActiveTab("appearance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
-                  activeTab === "appearance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  activeTab === "appearance" ? "text-accent-600 dark:text-accent-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
                 {t("settings.appearance")}
@@ -293,14 +328,14 @@ const SettingsMenu = () => {
               <button
                 onClick={() => setActiveTab("performance")}
                 className={`flex-1 px-4 py-2 text-sm font-medium text-center transition-colors duration-200 relative z-10 ${
-                  activeTab === "performance" ? "text-blue-600 dark:text-blue-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  activeTab === "performance" ? "text-accent-600 dark:text-accent-400" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }`}
               >
                 {t("settings.performance")}
               </button>
               {/* 活动选项卡指示器 */}
               <motion.div
-                className="absolute bottom-0 h-0.5 bg-blue-500 dark:bg-blue-400"
+                className="absolute bottom-0 h-0.5 bg-accent-500 dark:bg-accent-400"
                 initial={false}
                 animate={{
                   x: activeTab === "appearance" ? "0%" : "100%",
@@ -319,7 +354,7 @@ const SettingsMenu = () => {
             </div>
 
             {/* 选项卡内容 */}
-            <div role="tabpanel" className="relative overflow-hidden">
+            <div role="tabpanel" className="relative max-h-[calc(100dvh-10rem)] overflow-y-auto overscroll-contain">
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={activeTab}

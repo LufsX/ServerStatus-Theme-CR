@@ -2,9 +2,150 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Semantic colors resolve at the element so html palette changes also work in dark mode. */
+@theme inline {
+  --color-accent-50: var(--accent-50);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+  --color-accent-800: var(--accent-800);
+  --color-accent-900: var(--accent-900);
+  --color-accent-950: var(--accent-950);
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --appearance-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+:root, html[data-color="default"] {
+  --accent-50: var(--color-blue-50);
+  --accent-100: var(--color-blue-100);
+  --accent-200: var(--color-blue-200);
+  --accent-300: var(--color-blue-300);
+  --accent-400: var(--color-blue-400);
+  --accent-500: var(--color-blue-500);
+  --accent-600: var(--color-blue-600);
+  --accent-700: var(--color-blue-700);
+  --accent-800: var(--color-blue-800);
+  --accent-900: var(--color-blue-900);
+  --accent-950: var(--color-blue-950);
+}
+
+html[data-color="violet"] {
+  --accent-50: var(--color-violet-50);
+  --accent-100: var(--color-violet-100);
+  --accent-200: var(--color-violet-200);
+  --accent-300: var(--color-violet-300);
+  --accent-400: var(--color-violet-400);
+  --accent-500: var(--color-violet-500);
+  --accent-600: var(--color-violet-600);
+  --accent-700: var(--color-violet-700);
+  --accent-800: var(--color-violet-800);
+  --accent-900: var(--color-violet-900);
+  --accent-950: var(--color-violet-950);
+}
+
+html[data-color="emerald"] {
+  --accent-50: var(--color-emerald-50);
+  --accent-100: var(--color-emerald-100);
+  --accent-200: var(--color-emerald-200);
+  --accent-300: var(--color-emerald-300);
+  --accent-400: var(--color-emerald-400);
+  --accent-500: var(--color-emerald-500);
+  --accent-600: var(--color-emerald-600);
+  --accent-700: var(--color-emerald-700);
+  --accent-800: var(--color-emerald-800);
+  --accent-900: var(--color-emerald-900);
+  --accent-950: var(--color-emerald-950);
+}
+
+html[data-color="rose"] {
+  --accent-50: var(--color-rose-50);
+  --accent-100: var(--color-rose-100);
+  --accent-200: var(--color-rose-200);
+  --accent-300: var(--color-rose-300);
+  --accent-400: var(--color-rose-400);
+  --accent-500: var(--color-rose-500);
+  --accent-600: var(--color-rose-600);
+  --accent-700: var(--color-rose-700);
+  --accent-800: var(--color-rose-800);
+  --accent-900: var(--color-rose-900);
+  --accent-950: var(--color-rose-950);
+}
+
+html[data-color="amber"] {
+  --accent-50: var(--color-amber-50);
+  --accent-100: var(--color-amber-100);
+  --accent-200: var(--color-amber-200);
+  --accent-300: var(--color-amber-300);
+  --accent-400: var(--color-amber-400);
+  --accent-500: var(--color-amber-500);
+  --accent-600: var(--color-amber-600);
+  --accent-700: var(--color-amber-700);
+  --accent-800: var(--color-amber-800);
+  --accent-900: var(--color-amber-900);
+  --accent-950: var(--color-amber-950);
+}
+
+/* Small preserves the original Tailwind radii at each call site. */
+:root, html[data-radius="small"] {
+  --radius-control: 0.25rem;
+  --radius-control-sm: 0.125rem;
+  --radius-control-md: 0.375rem;
+  --radius-control-full: 9999px;
+  --radius-badge: 0.25rem;
+  --radius-badge-sm: 0.125rem;
+  --radius-badge-full: 9999px;
+  --radius-panel: 0.5rem;
+  --radius-panel-md: 0.375rem;
+  --radius-track: 9999px;
+}
+
+html[data-radius="none"] {
+  --radius-control: 0px;
+  --radius-control-sm: 0px;
+  --radius-control-md: 0px;
+  --radius-control-full: 0px;
+  --radius-badge: 0px;
+  --radius-badge-sm: 0px;
+  --radius-badge-full: 0px;
+  --radius-panel: 0px;
+  --radius-panel-md: 0px;
+  --radius-track: 0px;
+}
+
+html[data-radius="large"] {
+  --radius-control: 9999px;
+  --radius-control-sm: 9999px;
+  --radius-control-md: 9999px;
+  --radius-control-full: 9999px;
+  --radius-badge: 9999px;
+  --radius-badge-sm: 9999px;
+  --radius-badge-full: 9999px;
+  --radius-panel: 24px;
+  --radius-panel-md: 24px;
+  --radius-track: 9999px;
+}
+
+@utility rounded-control { border-radius: var(--radius-control); }
+@utility rounded-control-sm { border-radius: var(--radius-control-sm); }
+@utility rounded-control-md { border-radius: var(--radius-control-md); }
+@utility rounded-control-full { border-radius: var(--radius-control-full); }
+@utility rounded-badge { border-radius: var(--radius-badge); }
+@utility rounded-badge-sm { border-radius: var(--radius-badge-sm); }
+@utility rounded-badge-full { border-radius: var(--radius-badge-full); }
+@utility rounded-panel { border-radius: var(--radius-panel); }
+@utility rounded-panel-md { border-radius: var(--radius-panel-md); }
+@utility rounded-track { border-radius: var(--radius-track); }
+
+html[data-font="serif"] {
+  --appearance-font: "Noto Serif CJK SC", "Noto Serif SC", "Source Han Serif SC", "Songti SC", SimSun, Georgia, "Times New Roman", serif;
 }
 
 .dark {
@@ -15,7 +156,7 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--appearance-font);
 }
 
 /* 隐藏滚动条 */
@@ -60,4 +201,17 @@ body {
   .container {
     max-width: 1536px;
   }
+}
+
+/* Auto preserves component-specific fonts; explicit modes cover all text,
+   including code, form controls, and font-mono utility classes. */
+html[data-font="standard"] body,
+html[data-font="standard"] body *,
+html[data-font="standard"] body *::before,
+html[data-font="standard"] body *::after,
+html[data-font="serif"] body,
+html[data-font="serif"] body *,
+html[data-font="serif"] body *::before,
+html[data-font="serif"] body *::after {
+  font-family: var(--appearance-font) !important;
 }

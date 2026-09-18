@@ -85,7 +85,7 @@ export const ServerCard = memo(function ServerCard({ server, onClick, className 
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md transition-colors motion-reduce:transition-none ${
+      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-panel shadow-md transition-colors motion-reduce:transition-none ${
         settings.compactMode ? "p-3" : "p-4"
       } ${onClick ? "cursor-pointer hover:shadow-lg" : ""} ${className}`}
     >
@@ -96,7 +96,7 @@ export const ServerCard = memo(function ServerCard({ server, onClick, className 
           <div>
             <h3 className="font-medium text-lg">
               {server.host ? server.name : server.alias || server.name}
-              {server.type && <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded-sm">{server.type.toUpperCase()}</span>}
+              {server.type && <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded-badge-sm">{server.type.toUpperCase()}</span>}
             </h3>
           </div>
         </div>

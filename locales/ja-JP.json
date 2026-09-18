@@ -33,7 +33,21 @@
     "chinese": "簡体中文",
     "traditionalChinese": "繁体中文",
     "english": "English",
-    "japanese": "日本語"
+    "japanese": "日本語",
+    "radius": "角の丸み",
+    "radius_none": "角丸なし",
+    "radius_small": "小さい",
+    "radius_large": "カプセル",
+    "color": "テーマカラー",
+    "color_default": "標準ブルー",
+    "color_violet": "バイオレット",
+    "color_emerald": "エメラルド",
+    "color_rose": "ローズ",
+    "color_amber": "アンバー",
+    "font": "フォント",
+    "font_standard": "標準",
+    "font_serif": "明朝体",
+    "font_auto": "自動"
   },
   "dashboard": {
     "title": "サーバー状態",

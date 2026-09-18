@@ -37,7 +37,21 @@
     "chinese": "简体中文",
     "traditionalChinese": "繁體中文",
     "english": "English",
-    "japanese": "日本語"
+    "japanese": "日本語",
+    "radius": "圆角大小",
+    "radius_none": "无圆角",
+    "radius_small": "小圆角",
+    "radius_large": "大圆角",
+    "color": "主题色彩",
+    "color_default": "默认蓝",
+    "color_violet": "紫罗兰",
+    "color_emerald": "翡翠绿",
+    "color_rose": "玫瑰红",
+    "color_amber": "琥珀橙",
+    "font": "字体",
+    "font_standard": "正常",
+    "font_serif": "衬线字体",
+    "font_auto": "自动"
   },
   "dashboard": {
     "title": "服务器状态",

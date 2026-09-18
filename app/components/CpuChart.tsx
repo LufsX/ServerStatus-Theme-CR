@@ -4,6 +4,8 @@ import { memo, useMemo } from "react";
 import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip, Filler, ChartData, ChartOptions } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { CpuDataPoint } from "@/lib/cpuHistory";
+import { useSettings } from "@/app/setting/settings";
+import { APPEARANCE_FONTS } from "@/lib/appearance";
 import { useI18n } from "@/lib/i18n/hooks";
 
 // 注册 Chart.js 组件
@@ -36,6 +38,8 @@ const getLineColor = (cpu: number): string => {
 
 export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChartProps) {
   const { t } = useI18n();
+  const { settings } = useSettings();
+  const fontFamily = settings.fontStyle === "auto" ? ChartJS.defaults.font.family : APPEARANCE_FONTS[settings.fontStyle];
 
   // 计算数据指标
   const { currentCpu, maxCpu } = useMemo(() => {
@@ -103,6 +107,9 @@ export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChar
         legend: { display: false },
         tooltip: {
           displayColors: false,
+          titleFont: { family: fontFamily },
+          bodyFont: { family: fontFamily },
+          footerFont: { family: fontFamily },
           callbacks: {
             title: (items) => items.length ? formatTime(items[0].parsed.x ?? 0) : "",
             label: (item) => `CPU: ${(item.parsed.y ?? 0).toFixed(1)}%`,
@@ -118,10 +125,10 @@ export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChar
           grid: { display: false },
         },
         // 由 Chart.js 根据真实数据计算刻度，保留顶部留白而非硬编码上限。
-        y: { beginAtZero: true, grace: "10%", ticks: { maxTicksLimit: 4, callback: (value) => `${value}%`, font: { size: 10 } }, border: { display: false } },
+        y: { beginAtZero: true, grace: "10%", ticks: { maxTicksLimit: 4, callback: (value) => `${value}%`, font: { size: 10, family: fontFamily } }, border: { display: false } },
       },
     }),
-    [data]
+    [data, fontFamily]
   );
 
   if (!data || data.length < 2) {
@@ -139,7 +146,7 @@ export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChar
       </div>
 
       {/* 最大 CPU 值 */}
-      <div className="absolute top-1 right-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 hover:dark:text-gray-100 bg-white dark:bg-gray-800 px-1 py-0.5 rounded shadow-sm opacity-75 hover:opacity-100 border border-gray-200 dark:border-gray-700 duration-200">
+      <div className="absolute top-1 right-1 text-xs text-gray-500 hover:text-gray-800 dark:text-gray-400 hover:dark:text-gray-100 bg-white dark:bg-gray-800 px-1 py-0.5 rounded-badge shadow-sm opacity-75 hover:opacity-100 border border-gray-200 dark:border-gray-700 duration-200">
         {t("dashboard.max")}: {maxCpu.toFixed(1)}%
       </div>
     </div>

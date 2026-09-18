@@ -236,7 +236,7 @@ export default function OneClickModal(): React.ReactElement | null {
         aria-expanded={isOpen}
         aria-controls={isOpen ? "one-click-dropdown" : undefined}
         onClick={() => setIsOpen((s) => !s)}
-        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
+        className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-accent-400 dark:focus:ring-accent-500 p-1 rounded-control-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         transition={{ duration: 0.15 }}
       >
         {mounted && (
@@ -250,7 +250,7 @@ export default function OneClickModal(): React.ReactElement | null {
         {isOpen && (
           <motion.div
             id="one-click-dropdown"
-            className="absolute right-0 mt-2 w-75 sm:w-95 max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50 p-3 sm:p-4"
+            className="absolute right-0 mt-2 w-75 sm:w-95 max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-panel-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50 p-3 sm:p-4"
             initial={{ opacity: 0, y: -12, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -12, scale: 0.95 }}
@@ -301,7 +301,7 @@ export default function OneClickModal(): React.ReactElement | null {
                         aria-label={label}
                         placeholder={placeholder}
                         type={type}
-                        className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                        className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                         value={form[key as keyof OneClickForm] as string}
                         onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                       />
@@ -315,7 +315,7 @@ export default function OneClickModal(): React.ReactElement | null {
                     onClick={() => setShowAdvanced((previous) => !previous)}
                     aria-expanded={showAdvanced}
                     aria-controls={showAdvanced ? "one-click-advanced" : undefined}
-                    className="w-full flex items-center justify-between text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 pb-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                    className="w-full flex items-center justify-between text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 pb-1 hover:text-accent-600 dark:hover:text-accent-400 transition-colors duration-200"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.25, duration: 0.15 }}
@@ -349,7 +349,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.interval")}
                               value={form.interval}
                               onChange={(e) => updateField("interval", Number(e.target.value))}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
 
@@ -365,7 +365,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.vnstatMr")}
                               value={form.vnstatMr || ""}
                               onChange={(e) => updateField("vnstatMr", Number(e.target.value) || 1)}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
 
@@ -377,7 +377,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               aria-label={t("oneClick.ipSource")}
                               value={form.ipSource}
                               onChange={(e) => updateField("ipSource", e.target.value)}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             >
                               <option value="ip-api.com">ip-api.com ({t("oneClick.ipSource")})</option>
                               <option value="ip.sb">ip.sb</option>
@@ -400,7 +400,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                 aria-label={label}
                                 placeholder={placeholder}
                                 type={type}
-                                className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                                className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                                 value={form[key as keyof OneClickForm] as string}
                                 onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                               />
@@ -416,7 +416,7 @@ export default function OneClickModal(): React.ReactElement | null {
                               placeholder={t("oneClick.weight")}
                               value={form.weight || ""}
                               onChange={(e) => updateField("weight", Number(e.target.value) || 0)}
-                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                              className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                             />
                           </div>
                         </div>
@@ -439,7 +439,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                 aria-label={label}
                                 placeholder={placeholder}
                                 type="text"
-                                className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
+                                className="flex-1 bg-gray-100 border border-gray-300 text-base md:text-sm rounded-control px-2 py-1.5 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 focus:outline-none focus:border-gray-400 dark:focus:border-gray-600 transition-all duration-200"
                                 value={form[key as keyof OneClickForm] as string}
                                 onChange={(e) => updateField(key as keyof OneClickForm, e.target.value)}
                               />
@@ -468,7 +468,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                     aria-label={label}
                                     checked={form[key as keyof OneClickForm] as boolean}
                                     onChange={(e) => updateField(key as keyof OneClickForm, e.target.checked)}
-                                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
+                                    className="w-4 h-4 rounded-control border-gray-300 text-accent-600 focus:outline-none"
                                   />
                                   {t("oneClick.enable")}
                                 </label>
@@ -489,7 +489,7 @@ export default function OneClickModal(): React.ReactElement | null {
                                   aria-label={t("oneClick.cn")}
                                   checked={form.cn}
                                   onChange={(e) => updateField("cn", e.target.checked)}
-                                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
+                                  className="w-4 h-4 rounded-control border-gray-300 text-accent-600 focus:outline-none"
                                 />
                                 {t("oneClick.cn")}
                               </label>
@@ -527,7 +527,7 @@ export default function OneClickModal(): React.ReactElement | null {
                           aria-label="Use curl"
                           checked={useCurl}
                           onChange={() => setUseCurl(true)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 focus:outline-none"
+                          className="w-4 h-4 text-accent-600 border-gray-300 focus:outline-none"
                         />
                         <span className="font-mono">curl</span>
                       </label>
@@ -538,7 +538,7 @@ export default function OneClickModal(): React.ReactElement | null {
                           aria-label="Use wget"
                           checked={!useCurl}
                           onChange={() => setUseCurl(false)}
-                          className="w-4 h-4 text-blue-600 border-gray-300 focus:outline-none"
+                          className="w-4 h-4 text-accent-600 border-gray-300 focus:outline-none"
                         />
                         <span className="font-mono">wget</span>
                       </label>
@@ -558,7 +558,7 @@ export default function OneClickModal(): React.ReactElement | null {
                         aria-label={t("oneClick.sudo")}
                         checked={useSudo}
                         onChange={(e) => setUseSudo(e.target.checked)}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:outline-none"
+                        className="w-4 h-4 rounded-control border-gray-300 text-accent-600 focus:outline-none"
                       />
                       <span className="font-mono">sudo</span>
                     </label>
@@ -570,7 +570,7 @@ export default function OneClickModal(): React.ReactElement | null {
                 {isValid() ? (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.05, duration: 0.15 }}>
                     <motion.pre
-                      className="block w-full mb-2 bg-gray-900 dark:bg-black dark:border dark:border-gray-800 text-gray-200 font-mono text-sm whitespace-pre-wrap break-all select-all rounded-lg p-3"
+                      className="block w-full mb-2 bg-gray-900 dark:bg-black dark:border dark:border-gray-800 text-gray-200 font-mono text-sm whitespace-pre-wrap break-all select-all rounded-panel p-3"
                       initial={{ scale: 0.98, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       transition={{ delay: 0.08, duration: 0.12 }}
@@ -582,7 +582,7 @@ export default function OneClickModal(): React.ReactElement | null {
                       <div className="flex items-center gap-2">
                         <button
                           onClick={copyToClipboard}
-                          className="px-3 py-1 text-sm rounded bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 relative overflow-hidden"
+                          className="px-3 py-1 text-sm rounded-control bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 relative overflow-hidden"
                         >
                           <AnimatePresence mode="wait">
                             {showCopySuccess ? (
@@ -605,7 +605,7 @@ export default function OneClickModal(): React.ReactElement | null {
                             )}
                           </AnimatePresence>
                         </button>
-                        <button onClick={closeModal} className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
+                        <button onClick={closeModal} className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-control bg-accent-600 text-white hover:bg-accent-700 transition-colors duration-200">
                           <X size={14} aria-hidden="true" />
                           {t("oneClick.close")}
                         </button>
