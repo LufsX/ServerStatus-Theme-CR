@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { memo, useMemo } from "react";
 import Image from "next/image";
+import { OSIcon } from "../components/OSIcon";
 import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
@@ -11,7 +12,7 @@ import { CpuChart } from "../components/CpuChart";
 import { formatCPU, formatMemory, formatDisk, formatLoad, getFormattedNetworkSpeed, formatBytes, formatAllLatencies, formatPacketLoss } from "@/lib/formatters";
 import { StatusIndicator } from "../components/StatusIndicator";
 import { useSettings } from "../setting/settings";
-import { getCpuHistoryManager } from "@/lib/cpuHistory";
+import { getCpuHistoryManager, getServerId } from "@/lib/cpuHistory";
 import { SpecIcon, HostIcon, CalendarIcon, TagIcon } from "../components/LabelIcons";
 
 interface ServerCardProps {
@@ -21,7 +22,8 @@ interface ServerCardProps {
   fetchTime: number;
 }
 
-export function ServerCard({ server, onClick, className = "", fetchTime }: ServerCardProps) {
+// fetchTime 仍参与 memo 的浅比较，保证新采样到达时读取最新历史。
+export const ServerCard = memo(function ServerCard({ server, onClick, className = "" }: ServerCardProps) {
   const { t } = useI18n();
   const { settings } = useSettings();
   const online = isOnline(server);
@@ -29,15 +31,9 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
 
   // CPU 历史数据管理
   const cpuHistoryManager = getCpuHistoryManager();
-  const serverId = `${server.name}-${server.alias}`;
+  const serverId = getServerId(server);
 
-  // 记录 CPU 数据点
-  useEffect(() => {
-    if (online) {
-      cpuHistoryManager.addDataPoint(serverId, server.cpu, fetchTime);
-    }
-  }, [server.cpu, online, serverId, cpuHistoryManager, fetchTime]);
-
+  // API 在发布响应前统一采样，卡片只读，避免挂载/筛选时重复写入。
   // 获取CPU历史数据
   const cpuHistory = settings.showCpuChart ? cpuHistoryManager.getHistory(serverId, settings.cpuChartDuration) : [];
 
@@ -54,7 +50,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   const diskPercentage = calculatePercentage(server.hdd_used, server.hdd_total);
 
   // 获取标签信息
-  const labels = parseLabels(server.labels);
+  const labels = useMemo(() => parseLabels(server.labels), [server.labels]);
   const os = labels.os ? labels.os.toLowerCase() : "";
   const expiryDate = labels.ndd || "";
   const spec = labels.spec || "";
@@ -65,20 +61,6 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
     return uptime.replace(/天/g, t("server.day"));
   };
 
-  // 只有这些有对应的 SVG 图标
-  const osIcons: Record<string, string> = {
-    android: "android",
-    arch: "arch",
-    archlinux: "archlinux",
-    centos: "centos",
-    debian: "debian",
-    linux: "linux",
-    macos: "macos",
-    raspberry: "raspberry",
-    ubuntu: "ubuntu",
-    windows: "windows",
-  };
-  const osIcon = osIcons[os] || "linux";
 
   // 标签图标映射
   const getIconForLabel = (key: string) => {
@@ -103,7 +85,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
   return (
     <div
       onClick={onClick}
-      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md transition-all ${
+      className={`flex flex-col h-auto bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg shadow-md transition-colors motion-reduce:transition-none ${
         settings.compactMode ? "p-3" : "p-4"
       } ${onClick ? "cursor-pointer hover:shadow-lg" : ""} ${className}`}
     >
@@ -255,7 +237,7 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
             {/* 操作系统标签 */}
             {os && (
               <Badge variant="default" className="flex items-center space-x-1">
-                {osIcon && <Image src={`/image/os/${osIcon}.svg`} alt={os} width={12} height={12} className="w-3 h-3 rounded-full" />}
+                <OSIcon os={os} size={12} />
                 <span>{os.charAt(0).toUpperCase() + os.slice(1)}</span>
               </Badge>
             )}
@@ -303,4 +285,4 @@ export function ServerCard({ server, onClick, className = "", fetchTime }: Serve
       )}
     </div>
   );
-}
+});

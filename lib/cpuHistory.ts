@@ -1,6 +1,11 @@
 "use client";
 
-import { CpuChartDuration } from "@/app/setting/settings";
+import type { CpuChartDuration } from "@/app/setting/settings";
+
+/** API 写入和卡片读取必须使用同一标识，元组编码避免连字符拼接冲突。 */
+export function getServerId(server: { name: string; alias?: string; host?: string }): string {
+  return JSON.stringify([server.name, server.alias || server.host || ""]);
+}
 
 export interface CpuDataPoint {
   timestamp: number;
@@ -15,7 +20,7 @@ export interface ServerCpuHistory {
  * CPU 历史
  */
 class CpuHistoryManager {
-  private history: ServerCpuHistory = {};
+  private history: ServerCpuHistory = Object.create(null);
   private maxDataPoints: { [duration: number]: number } = {
     1: 60,
     3: 180,
@@ -29,13 +34,26 @@ class CpuHistoryManager {
    * @param timestamp 可选时间戳，默认使用当前时间
    */
   addDataPoint(serverId: string, cpu: number, timestamp?: number): void {
-    const dataTimestamp = timestamp || Date.now();
+    const dataTimestamp = timestamp ?? Date.now();
+    if (!Number.isFinite(cpu) || cpu < 0 || cpu > 100 ||
+        !Number.isFinite(dataTimestamp) || dataTimestamp <= 0 || dataTimestamp > 8.64e15) return;
 
     if (!this.history[serverId]) {
       this.history[serverId] = [];
     }
 
-    this.history[serverId].push({ timestamp: dataTimestamp, cpu });
+    const points = this.history[serverId];
+    // 二分定位：乱序响应有序插入，同一采样时间只保留最新值。
+    let left = 0;
+    let right = points.length;
+    while (left < right) {
+      const middle = (left + right) >>> 1;
+      if (points[middle].timestamp < dataTimestamp) left = middle + 1;
+      else right = middle;
+    }
+    const point = { timestamp: dataTimestamp, cpu };
+    if (points[left]?.timestamp === dataTimestamp) points[left] = point;
+    else points.splice(left, 0, point);
 
     // 清理过期数据
     this.cleanupOldData(serverId);
@@ -85,7 +103,7 @@ class CpuHistoryManager {
    * 清理所有历史数据
    */
   clearHistory(): void {
-    this.history = {};
+    this.history = Object.create(null);
   }
 
   /**

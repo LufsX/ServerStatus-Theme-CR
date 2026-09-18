@@ -66,7 +66,11 @@ class SettingsManager {
    */
   private saveSettings(): void {
     if (typeof window !== "undefined") {
-      localStorage.setItem("appSettings", JSON.stringify(this.settings));
+      try {
+        localStorage.setItem("appSettings", JSON.stringify(this.settings));
+      } catch (error) {
+        console.error("保存设置失败:", error);
+      }
       // 触发自定义事件通知组件设置已更改
       window.dispatchEvent(new CustomEvent(SETTINGS_CHANGE_EVENT));
     }
@@ -76,7 +80,12 @@ class SettingsManager {
    * 获取当前设置
    */
   getSettings(): Settings {
-    return { ...this.settings };
+    return this.settings;
+  }
+
+  /** Reload settings so changes made in another tab are visible. */
+  reloadSettings(): void {
+    this.settings = this.loadSettings();
   }
 
   /**
@@ -109,33 +118,63 @@ export function getSettingsManager(): SettingsManager {
   return settingsManagerInstance;
 }
 
+export function hasStoredSettings(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return localStorage.getItem("appSettings") !== null;
+  } catch {
+    return false;
+  }
+}
+
 /**
  * React Hook 用于在组件中使用设置
  */
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
+
+const noopSubscribe = () => () => {};
+const settingsSubscribers = new Set<() => void>();
+let settingsEventsAttached = false;
+
+function notifySettingsSubscribers(): void {
+  settingsSubscribers.forEach((subscriber) => subscriber());
+}
+
+function attachSettingsEvents(): void {
+  if (settingsEventsAttached || typeof window === "undefined") return;
+  settingsEventsAttached = true;
+  window.addEventListener(SETTINGS_CHANGE_EVENT, notifySettingsSubscribers);
+  window.addEventListener("storage", (event) => {
+    if (event.key === "appSettings" || event.key === null) {
+      getSettingsManager().reloadSettings();
+      notifySettingsSubscribers();
+    }
+  });
+}
+
+export function subscribeToSettings(onStoreChange: () => void): () => void {
+  if (typeof window === "undefined") return noopSubscribe();
+  attachSettingsEvents();
+  settingsSubscribers.add(onStoreChange);
+  return () => settingsSubscribers.delete(onStoreChange);
+}
+
+/** Hydration state shared by client-only UI which must not differ from SSR. */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(noopSubscribe, () => true, () => false);
+}
+
+function getSettingsSnapshot(): Settings {
+  return getSettingsManager().getSettings();
+}
+
+function getServerSettingsSnapshot(): Settings {
+  return DEFAULT_SETTINGS;
+}
 
 export function useSettings() {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const settings = useSyncExternalStore(subscribeToSettings, getSettingsSnapshot, getServerSettingsSnapshot);
 
-  useEffect(() => {
-    // 组件挂载时获取设置
-    const manager = getSettingsManager();
-    setSettings(manager.getSettings());
-
-    // 监听设置变更事件
-    const handleSettingsChange = () => {
-      setSettings(manager.getSettings());
-    };
-
-    window.addEventListener(SETTINGS_CHANGE_EVENT, handleSettingsChange);
-
-    // 清理事件监听
-    return () => {
-      window.removeEventListener(SETTINGS_CHANGE_EVENT, handleSettingsChange);
-    };
-  }, []);
-
-  // 返回设置和更新函数
   return {
     settings,
     updateSettings: (newSettings: Partial<Settings>) => {

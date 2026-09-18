@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { getCpuHistoryManager, getServerId } from "./cpuHistory";
+import { isOnline } from "./utils";
 import { useSettings } from "../app/setting/settings";
 
 // API 基础路径
@@ -60,10 +62,11 @@ export interface ApiResponse {
  * 获取服务器状态数据
  * @returns Promise<ApiResponse> 服务器状态数据
  */
-export async function fetchServerStatus(): Promise<ApiResponse> {
+export async function fetchServerStatus(signal?: AbortSignal): Promise<ApiResponse> {
   try {
     const response = await fetch(`${API_BASE_URL}/json/stats.json`, {
       cache: "no-store",
+      signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(15000)]) : AbortSignal.timeout(15000),
     });
 
     if (!response.ok) {
@@ -71,6 +74,7 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
     }
 
     const data = await response.json();
+    if (!data || !Array.isArray(data.servers)) throw new Error("Invalid server status response");
 
     // 处理 alias 和 host 字段的兼容性
     // 兼容 cppla/ServerStatus 的数据格式
@@ -85,14 +89,15 @@ export async function fetchServerStatus(): Promise<ApiResponse> {
     }
 
     // fetchTime 优先使用获取到的数据的 updated 字段，如果不存在则使用当前时间戳
-    const fetchTime = data.updated ? data.updated * 1000 : Date.now();
+    const updatedMs = data.updated * 1000;
+    const fetchTime = Number.isFinite(updatedMs) && updatedMs > 0 ? updatedMs : Date.now();
 
     return {
       ...data,
       fetchTime,
     };
   } catch (error) {
-    console.error(error);
+    if (!signal?.aborted) console.error(error);
     throw error;
   }
 }
@@ -107,42 +112,54 @@ export function useServerStatus(customRefreshInterval?: number) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const latestFetchTime = useRef(-Infinity);
 
   // 使用自定义刷新间隔或设置中的刷新间隔
-  const refreshInterval = customRefreshInterval || settings.refreshInterval;
+  const requestedInterval = customRefreshInterval ?? settings.refreshInterval;
+  const refreshInterval = Number.isFinite(requestedInterval) && requestedInterval > 0 ? requestedInterval : 1000;
 
   useEffect(() => {
+    const controller = new AbortController();
+    let disposed = false;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
     async function loadServerStatus() {
       try {
-        // 如果不是初次加载，则不显示 loading 状态
-        if (isInitialLoading) {
-          setLoading(true);
+        const result = await fetchServerStatus(controller.signal);
+        // 即使底层请求未响应 abort，旧 effect 的结果也不能提交。
+        if (disposed) return;
+        if (result.fetchTime < latestFetchTime.current) return;
+        latestFetchTime.current = result.fetchTime;
+        // 在发布数据前写入全部在线服务器，不受卡片筛选或挂载状态影响。
+        const history = getCpuHistoryManager();
+        // 同一批响应共用采样时间；服务端 updated 仍单独用于拒绝过期响应。
+        const sampledAt = Date.now();
+        for (const server of result.servers) {
+          if (isOnline(server)) history.addDataPoint(getServerId(server), server.cpu, sampledAt);
         }
-        const result = await fetchServerStatus();
         setData(result);
         setError(null);
-        setIsInitialLoading(false);
       } catch (err: unknown) {
-        const errorObj = err instanceof Error ? err : new Error(String(err));
-        setError(errorObj);
-        if (isInitialLoading) {
-          setIsInitialLoading(false);
-        }
+        if (disposed || controller.signal.aborted) return;
+        setError(err instanceof Error ? err : new Error(String(err)));
       } finally {
-        if (isInitialLoading) {
+        if (!disposed) {
           setLoading(false);
+          setIsInitialLoading(false);
+          // 请求完成后才安排下一次，慢请求不会造成轮询重叠。
+          timeoutId = setTimeout(loadServerStatus, refreshInterval);
         }
       }
     }
 
-    // 初始加载
-    loadServerStatus();
+    void loadServerStatus();
 
-    // 设置定时刷新
-    const intervalId = setInterval(loadServerStatus, refreshInterval);
-
-    return () => clearInterval(intervalId);
-  }, [refreshInterval, isInitialLoading]);
+    return () => {
+      disposed = true;
+      controller.abort();
+      clearTimeout(timeoutId);
+    };
+  }, [refreshInterval]);
 
   return { data, loading, error, isInitialLoading };
 }

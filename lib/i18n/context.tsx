@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { getSettingsManager, DEFAULT_SETTINGS, type Locale } from "@/app/setting/settings";
+import { createContext, useContext, useEffect, useSyncExternalStore, ReactNode } from "react";
+import { getSettingsManager, hasStoredSettings, subscribeToSettings, DEFAULT_SETTINGS, type Locale } from "@/app/setting/settings";
 import zhCNMessages from "../../locales/zh-CN.json";
 import zhTWMessages from "../../locales/zh-TW.json";
 import enUSMessages from "../../locales/en-US.json";
@@ -10,7 +10,7 @@ import jaJPMessages from "../../locales/ja-JP.json";
 export { type Locale } from "@/app/setting/settings";
 
 // 语言列表和映射
-const LOCALES: Locale[] = ["zh-CN", "zh-TW", "en-US"];
+const LOCALES: Locale[] = ["zh-CN", "zh-TW", "en-US", "ja-JP"];
 const MESSAGES_MAP: Record<Locale, Record<string, unknown>> = {
   "zh-CN": zhCNMessages,
   "zh-TW": zhTWMessages,
@@ -33,36 +33,25 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
+function getBrowserLocale(): Locale {
+  if (typeof window === "undefined") return DEFAULT_SETTINGS.locale;
+  const browserLang = navigator.language || navigator.languages?.[0];
+  return LOCALES.find((locale) => browserLang === locale || browserLang?.startsWith(locale.split("-")[0])) || DEFAULT_SETTINGS.locale;
+}
+
+function getLocaleSnapshot(): Locale {
+  if (!hasStoredSettings()) return getBrowserLocale();
+  const savedLocale = getSettingsManager().getSettings().locale;
+  return LOCALES.includes(savedLocale) ? savedLocale : DEFAULT_SETTINGS.locale;
+}
+
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(DEFAULT_SETTINGS.locale);
+  const locale = useSyncExternalStore(subscribeToSettings, getLocaleSnapshot, () => DEFAULT_SETTINGS.locale);
 
+  // Persist the browser language on first visit without driving React state from an effect.
   useEffect(() => {
-    const getBrowserLocale = (): Locale => {
-      if (typeof window === "undefined") return DEFAULT_SETTINGS.locale;
-
-      const browserLang = navigator.language || navigator.languages?.[0];
-      // 完全匹配或前缀匹配
-      return LOCALES.find((locale) => browserLang === locale || browserLang?.startsWith(locale.split("-")[0])) || DEFAULT_SETTINGS.locale;
-    };
-
-    const hasSavedSettings = typeof window !== "undefined" && localStorage.getItem("appSettings") !== null;
-
-    // 有设置用设置，无设置用浏览器语言
-    const targetLocale = hasSavedSettings ? getSettingsManager().getSettings().locale : getBrowserLocale();
-
-    // 首次访问时保存浏览器语言到设置
-    if (!hasSavedSettings) {
-      getSettingsManager().updateSettings({ locale: targetLocale });
-    }
-
-    setLocale(targetLocale);
-    // 监听设置变更
-    const handleSettingsChange = () => {
-      setLocale(getSettingsManager().getSettings().locale);
-    };
-    if (typeof window !== "undefined") {
-      window.addEventListener("settingsChange", handleSettingsChange);
-      return () => window.removeEventListener("settingsChange", handleSettingsChange);
+    if (!hasStoredSettings()) {
+      getSettingsManager().updateSettings({ locale: getBrowserLocale() });
     }
   }, []);
 

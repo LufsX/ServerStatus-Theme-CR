@@ -3,10 +3,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
-import { useSettings } from "./settings";
+import { useHydrated, useSettings } from "./settings";
 import { SettingButton } from "./SettingButton";
 import { useI18n } from "@/lib/i18n/hooks";
 import Image from "next/image";
+import { Grid2X2, List, Settings } from "lucide-react";
 
 const SettingsMenu = () => {
   const { t } = useI18n();
@@ -15,11 +16,7 @@ const SettingsMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"appearance" | "performance">("appearance");
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   // 处理点击外部和 ESC 键关闭下拉框
   useEffect(() => {
@@ -49,90 +46,61 @@ const SettingsMenu = () => {
   // 切换语言
   const handleLocaleChange = (locale: "zh-CN" | "zh-TW" | "en-US" | "ja-JP") => {
     updateSettings({ locale });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换单位类型
   const handleUnitTypeChange = (unitType: "binary" | "decimal") => {
     updateSettings({ unitType });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换刷新间隔
   const handleRefreshIntervalChange = (refreshInterval: 1000 | 2000 | 5000 | 10000) => {
     updateSettings({ refreshInterval });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换显示模式
   const handleDisplayModeChange = (displayMode: "card" | "row") => {
     updateSettings({ displayMode });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换摘要显示
   const handleShowSummaryChange = (showSummary: boolean) => {
     updateSettings({ showSummary });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换筛选器显示
   const handleShowFiltersChange = (showFilters: boolean) => {
     updateSettings({ showFilters });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换精简模式
   const handleCompactModeChange = (compactMode: boolean) => {
     updateSettings({ compactMode });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换 CPU 图表显示
   const handleShowCpuChartChange = (showCpuChart: boolean) => {
     updateSettings({ showCpuChart });
-    window.dispatchEvent(new Event("storage"));
   };
 
   // 切换 CPU 图表时长
   const handleCpuChartDurationChange = (cpuChartDuration: 1 | 3 | 5) => {
     updateSettings({ cpuChartDuration });
-    window.dispatchEvent(new Event("storage"));
   };
 
   if (!mounted) {
     return <div className="w-8 h-8"></div>;
   }
 
-  // 渲染设置图标
   const renderSettingsIcon = () => (
-    <motion.svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <motion.div
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 1, rotate: isOpen ? 90 : 0 }}
       exit={{ opacity: 0, rotate: 0 }}
       transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 25 }}
-      aria-hidden="true"
     >
-      <path
-        d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </motion.svg>
+      <Settings size={20} aria-hidden="true" />
+    </motion.div>
   );
 
   const renderAppearanceTab = () => (
@@ -174,25 +142,12 @@ const SettingsMenu = () => {
             {
               value: "card",
               label: t("settings.card"),
-              icon: (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                  <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2" />
-                  <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2" />
-                  <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2" />
-                  <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2" />
-                </svg>
-              ),
+              icon: <Grid2X2 size={12} className="mr-1" aria-hidden="true" />,
             },
             {
               value: "row",
               label: t("settings.row"),
-              icon: (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="mr-1">
-                  <rect x="3" y="4" width="18" height="2" rx="1" stroke="currentColor" strokeWidth="2" />
-                  <rect x="3" y="11" width="18" height="2" rx="1" stroke="currentColor" strokeWidth="2" />
-                  <rect x="3" y="18" width="18" height="2" rx="1" stroke="currentColor" strokeWidth="2" />
-                </svg>
-              ),
+              icon: <List size={12} className="mr-1" aria-hidden="true" />,
             },
           ].map(({ value, label, icon }) => (
             <SettingButton key={value} isActive={settings.displayMode === value} onClick={() => handleDisplayModeChange(value as "card" | "row")} className="w-full flex items-center justify-center">
@@ -300,6 +255,8 @@ const SettingsMenu = () => {
         className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         aria-label={t("settings.title")}
         aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? "settings-dropdown" : undefined}
       >
         {mounted && (
           <AnimatePresence mode="wait" initial={false}>

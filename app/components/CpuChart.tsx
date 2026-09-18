@@ -1,14 +1,13 @@
 "use client";
 
-import { useMemo, useEffect, useRef } from "react";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Filler, TooltipItem } from "chart.js";
+import { memo, useMemo } from "react";
+import { Chart as ChartJS, LinearScale, PointElement, LineElement, Tooltip, Filler, ChartData, ChartOptions } from "chart.js";
 import { Line } from "react-chartjs-2";
-import "chartjs-adapter-date-fns";
 import { CpuDataPoint } from "@/lib/cpuHistory";
 import { useI18n } from "@/lib/i18n/hooks";
 
 // 注册 Chart.js 组件
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale, Filler);
+ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Filler);
 
 // 常量定义
 const COLORS = {
@@ -16,8 +15,6 @@ const COLORS = {
   medium: "#f59e0b", // amber-500
   low: "#10b981", // emerald-500
 } as const;
-
-const Y_AXIS_THRESHOLDS = [5, 10, 20, 40, 60, 80, 100] as const;
 
 interface CpuChartProps {
   data: CpuDataPoint[];
@@ -37,40 +34,35 @@ const getLineColor = (cpu: number): string => {
   return COLORS.low;
 };
 
-const calculateYAxisMax = (maxCpu: number): number => {
-  return Y_AXIS_THRESHOLDS.find((threshold) => maxCpu < threshold) || 100;
-};
-
-export function CpuChart({ data, className = "" }: CpuChartProps) {
-  const chartRef = useRef<ChartJS<"line">>(null);
+export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChartProps) {
   const { t } = useI18n();
 
   // 计算数据指标
-  const { currentCpu, maxCpu, yMax } = useMemo(() => {
-    if (!data || data.length === 0) return { currentCpu: 0, maxCpu: 0, yMax: 100 };
+  const { currentCpu, maxCpu } = useMemo(() => {
+    if (!data || data.length === 0) return { currentCpu: 0, maxCpu: 0 };
 
     const cpuValues = data.map((d) => d.cpu);
     const currentCpu = cpuValues[cpuValues.length - 1] || 0;
     const maxCpu = Math.max(...cpuValues);
-    const yMax = calculateYAxisMax(maxCpu);
 
-    return { currentCpu, maxCpu, yMax };
+    return { currentCpu, maxCpu };
   }, [data]);
 
   const lineColor = useMemo(() => getLineColor(currentCpu), [currentCpu]);
 
   // 准备图表数据
-  const chartData = useMemo(() => {
+  const chartData = useMemo<ChartData<"line", { x: number; y: number }[]>>(() => {
     if (!data || data.length < 2) {
       return { labels: [], datasets: [] };
     }
 
     return {
-      labels: data.map((point) => new Date(point.timestamp)),
       datasets: [
         {
           label: t("server.cpuUsage"),
-          data: data.map((point) => point.cpu),
+          data: data.map((point) => ({ x: point.timestamp, y: point.cpu })),
+          parsing: false,
+          normalized: true,
           borderColor: lineColor,
           backgroundColor: lineColor + "20",
           borderWidth: 2,
@@ -87,82 +79,50 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
   }, [data, lineColor, t]);
 
   // 图表配置选项
-  const chartOptions = useMemo(
+  const chartOptions = useMemo<ChartOptions<"line">>(
     () => ({
       responsive: true,
       maintainAspectRatio: false,
+      animation: {
+        duration: 450,
+        easing: "easeOutCubic",
+      },
+      transitions: {
+        active: {
+          animation: { duration: 180 },
+        },
+        resize: {
+          animation: { duration: 180 },
+        },
+      },
+      parsing: false,
+      normalized: true,
+      resizeDelay: 100,
+      interaction: { mode: "nearest", axis: "x", intersect: false },
       plugins: {
         legend: { display: false },
         tooltip: {
-          mode: "index" as const,
-          intersect: false,
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          titleColor: "#ffffff",
-          bodyColor: "#ffffff",
-          borderColor: lineColor,
-          borderWidth: 1,
           displayColors: false,
           callbacks: {
-            title: (context: TooltipItem<"line">[]) => {
-              const x = context[0]?.parsed?.x;
-              return x !== null && x !== undefined ? formatTime(x) : "";
-            },
-            label: (context: TooltipItem<"line">) => {
-              const y = context.parsed?.y;
-              return y !== null && y !== undefined ? `CPU: ${y.toFixed(1)}%` : "";
-            },
+            title: (items) => items.length ? formatTime(items[0].parsed.x ?? 0) : "",
+            label: (item) => `CPU: ${(item.parsed.y ?? 0).toFixed(1)}%`,
           },
         },
       },
       scales: {
         x: {
-          type: "time" as const,
-          time: {
-            displayFormats: {
-              minute: "HH:mm",
-              second: "HH:mm:ss",
-            },
-          },
-          grid: { display: false },
+          type: "linear",
+          min: data[0]?.timestamp,
+          max: data[data.length - 1]?.timestamp,
           ticks: { display: false },
-          border: { display: true },
+          grid: { display: false },
         },
-        y: {
-          min: 0,
-          max: yMax,
-          grid: {
-            color: "rgba(156, 163, 175, 0.3)",
-            lineWidth: 1,
-          },
-          ticks: {
-            display: true,
-            color: "rgba(107, 114, 128, 0.8)",
-            font: { size: 10 },
-            callback: (value: number | string) => `${value}%`,
-            maxTicksLimit: 4,
-          },
-          border: { display: false },
-        },
-      },
-      interaction: {
-        mode: "nearest" as const,
-        axis: "x" as const,
-        intersect: false,
-      },
-      animation: { duration: 300 },
-      elements: {
-        point: { hoverRadius: 6 },
+        // 由 Chart.js 根据真实数据计算刻度，保留顶部留白而非硬编码上限。
+        y: { beginAtZero: true, grace: "10%", ticks: { maxTicksLimit: 4, callback: (value) => `${value}%`, font: { size: 10 } }, border: { display: false } },
       },
     }),
-    [lineColor, yMax]
+    [data]
   );
-
-  // 当数据更新时，更新图表
-  useEffect(() => {
-    if (chartRef.current && data.length >= 2) {
-      chartRef.current.update("none");
-    }
-  }, [data]);
 
   if (!data || data.length < 2) {
     return (
@@ -175,7 +135,7 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
   return (
     <div className={`relative w-full h-26 ${className}`}>
       <div className="w-full h-full">
-        <Line ref={chartRef} data={chartData} options={chartOptions} />
+        <Line data={chartData} options={chartOptions} updateMode="default" />
       </div>
 
       {/* 最大 CPU 值 */}
@@ -184,4 +144,4 @@ export function CpuChart({ data, className = "" }: CpuChartProps) {
       </div>
     </div>
   );
-}
+});

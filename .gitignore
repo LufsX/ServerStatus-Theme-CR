@@ -44,3 +44,7 @@ test*
 
 # Visual Studio Code
 .vscode/
+
+# Regression tests
+!tests/
+!tests/**

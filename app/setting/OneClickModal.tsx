@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useHydrated } from "./settings";
 import { motion, AnimatePresence } from "framer-motion";
 import { useI18n } from "@/lib/i18n/hooks";
+import { Check, ChevronDown, CodeXml, Copy, X } from "lucide-react";
 
 interface OneClickForm {
   uid: string;
@@ -61,23 +63,37 @@ export default function OneClickModal(): React.ReactElement | null {
   const [useCurl, setUseCurl] = useState(true);
   const [form, setForm] = useState<OneClickForm>(serverDefaults);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useHydrated();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const copyRequestRef = useRef(0);
 
-  // 处理点击外部和 ESC 键关闭模态框
+  // Invalidate pending clipboard writes when closing/unmounting.
   useEffect(() => {
-    setMounted(true);
+    return () => {
+      copyRequestRef.current += 1;
+      if (copyTimeoutRef.current !== null) {
+        clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, [isOpen]);
+
+  const closeModal = useCallback(() => {
+    setIsOpen(false);
+    setShowCopySuccess(false);
   }, []);
 
+  // 处理点击外部和 ESC 键关闭模态框
   useEffect(() => {
     if (!isOpen) return;
 
     const handleEvent = (e: MouseEvent | KeyboardEvent) => {
       if (e.type === "keydown" && (e as KeyboardEvent).key === "Escape") {
-        setIsOpen(false);
+        closeModal();
       } else if (e.type === "mousedown" && dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
+        closeModal();
       }
     };
 
@@ -87,7 +103,7 @@ export default function OneClickModal(): React.ReactElement | null {
       document.removeEventListener("mousedown", handleEvent);
       document.removeEventListener("keydown", handleEvent);
     };
-  }, [isOpen]);
+  }, [isOpen, closeModal]);
 
   // 验证表单是否有效
   const isValid = (): boolean => {
@@ -172,10 +188,16 @@ export default function OneClickModal(): React.ReactElement | null {
 
   // 复制到剪贴板
   const copyToClipboard = async () => {
+    const request = ++copyRequestRef.current;
     try {
       await navigator.clipboard.writeText(generateCommand());
+      if (request !== copyRequestRef.current) return;
+      if (copyTimeoutRef.current !== null) clearTimeout(copyTimeoutRef.current);
       setShowCopySuccess(true);
-      setTimeout(() => setShowCopySuccess(false), 2000);
+      copyTimeoutRef.current = setTimeout(() => {
+        setShowCopySuccess(false);
+        copyTimeoutRef.current = null;
+      }, 2000);
     } catch {
       // noop
     }
@@ -188,22 +210,15 @@ export default function OneClickModal(): React.ReactElement | null {
 
   // 渲染一键部署图标
   const renderOneClickIcon = () => (
-    <motion.svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+    <motion.div
       initial={{ opacity: 0, rotate: 0 }}
       animate={{ opacity: 1, rotate: isOpen ? 90 : 0 }}
       exit={{ opacity: 0, rotate: 0 }}
       transition={{ duration: 0.2, type: "spring", stiffness: 400, damping: 25 }}
       aria-hidden="true"
     >
-      <path d="M16 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M8 6L2 12l6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M14 4l-4 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </motion.svg>
+      <CodeXml size={20} aria-hidden="true" />
+    </motion.div>
   );
 
   if (hideOneClickDeploy) {
@@ -218,6 +233,8 @@ export default function OneClickModal(): React.ReactElement | null {
     <div className="relative" ref={dropdownRef}>
       <motion.button
         aria-label={t("oneClick.title")}
+        aria-expanded={isOpen}
+        aria-controls={isOpen ? "one-click-dropdown" : undefined}
         onClick={() => setIsOpen((s) => !s)}
         className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 w-8 h-8"
         transition={{ duration: 0.15 }}
@@ -232,6 +249,7 @@ export default function OneClickModal(): React.ReactElement | null {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id="one-click-dropdown"
             className="absolute right-0 mt-2 w-75 sm:w-95 max-w-[calc(100vw-2rem)] max-h-[80vh] overflow-y-auto bg-white dark:bg-[#1a1a1a] rounded-md shadow-md dark:shadow-gray-900/30 backdrop-blur-sm border border-gray-200 dark:border-gray-700 z-50 p-3 sm:p-4"
             initial={{ opacity: 0, y: -12, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -294,21 +312,24 @@ export default function OneClickModal(): React.ReactElement | null {
                 {/* 高级配置 */}
                 <motion.div className="space-y-2" initial={{ opacity: 0, x: -15 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.23, duration: 0.15 }}>
                   <motion.button
-                    onClick={() => setShowAdvanced(!showAdvanced)}
+                    onClick={() => setShowAdvanced((previous) => !previous)}
+                    aria-expanded={showAdvanced}
+                    aria-controls={showAdvanced ? "one-click-advanced" : undefined}
                     className="w-full flex items-center justify-between text-sm font-medium text-gray-900 dark:text-gray-100 border-b border-gray-200 dark:border-gray-700 pb-1 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.25, duration: 0.15 }}
                   >
                     <span>{t("oneClick.advancedConfig")}</span>
-                    <motion.svg width="16" height="16" viewBox="0 0 24 24" fill="none" animate={{ rotate: showAdvanced ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-gray-500">
-                      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </motion.svg>
+                    <motion.span animate={{ rotate: showAdvanced ? 180 : 0 }} transition={{ duration: 0.2 }} className="text-gray-500">
+                      <ChevronDown size={16} aria-hidden="true" />
+                    </motion.span>
                   </motion.button>
 
                   <AnimatePresence>
                     {showAdvanced && (
                       <motion.div
+                        id="one-click-advanced"
                         className="space-y-3 pl-2 border-l-2 border-gray-200 dark:border-gray-700"
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
@@ -571,18 +592,21 @@ export default function OneClickModal(): React.ReactElement | null {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.15 }}
-                                className="text-green-600 dark:text-green-400"
+                                className="inline-flex items-center gap-1 text-green-600 dark:text-green-400"
                               >
+                                <Check size={14} aria-hidden="true" />
                                 {t("oneClick.copied")}
                               </motion.span>
                             ) : (
-                              <motion.span key="copy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }}>
+                              <motion.span className="inline-flex items-center gap-1" key="copy" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.15 }}>
+                                <Copy size={14} aria-hidden="true" />
                                 {t("oneClick.copy")}
                               </motion.span>
                             )}
                           </AnimatePresence>
                         </button>
-                        <button onClick={() => setIsOpen(false)} className="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
+                        <button onClick={closeModal} className="inline-flex items-center gap-1 px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">
+                          <X size={14} aria-hidden="true" />
                           {t("oneClick.close")}
                         </button>
                       </div>

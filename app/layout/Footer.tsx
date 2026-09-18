@@ -1,17 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useHydrated } from "@/app/setting/settings";
 import nextjs from "@/public/next.svg";
 import nextjsDark from "@/public/next.dark.svg";
 
 export default function Footer() {
   const { theme, systemTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   if (!mounted) {
     return null;

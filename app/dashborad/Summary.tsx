@@ -1,4 +1,5 @@
 "use client";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 import { useMemo } from "react";
 import { useI18n } from "@/lib/i18n/hooks";
@@ -102,11 +103,11 @@ export function Summary({ servers, lastUpdated, selectedStatus, onStatusChange }
           <div className="mt-1 text-base font-medium text-gray-900 dark:text-gray-100">
             <div className="flex flex-col gap-0 md:gap-0 text-xs md:text-sm">
               <div className="flex items-baseline gap-1">
-                <span className="text-gray-500 dark:text-gray-400">↑</span>
+                <ArrowUp size={12} aria-hidden="true" className="text-gray-500 dark:text-gray-400" />
                 <span>{formatNetworkSpeed(totalTraffic.currentTx)}</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-gray-500 dark:text-gray-400">↓</span>
+                <ArrowDown size={12} aria-hidden="true" className="text-gray-500 dark:text-gray-400" />
                 <span>{formatNetworkSpeed(totalTraffic.currentRx)}</span>
               </div>
             </div>

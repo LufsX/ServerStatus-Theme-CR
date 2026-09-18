@@ -1,17 +1,13 @@
 "use client";
 
-import React from "react";
 import { useI18n } from "@/lib/i18n/hooks";
+import { useHydrated } from "@/app/setting/settings";
 import SettingsMenu from "../setting/SettingsMenu";
 import OneClickModal from "../setting/OneClickModal";
 
 export function Header() {
   const { t } = useI18n();
-  const [mounted, setMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   return (
     <header className="pt-6">

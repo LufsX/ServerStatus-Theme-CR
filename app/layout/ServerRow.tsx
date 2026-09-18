@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { ArrowDown, ArrowUp } from "lucide-react";
+import { OSIcon } from "../components/OSIcon";
 import { useI18n } from "@/lib/i18n/hooks";
 import { ServerData } from "@/lib/api";
 import { isOnline, isCountryFlagEmoji, calculatePercentage, parseLabels } from "@/lib/utils";
@@ -16,224 +18,139 @@ interface ServerRowProps {
   className?: string;
 }
 
+interface ResourceMetricProps {
+  label: string;
+  value: number;
+  displayValue: string;
+  compact: boolean;
+}
+
+function ResourceMetric({ label, value, displayValue, compact }: ResourceMetricProps) {
+  return (
+    <div className="min-w-0">
+      <div className={`flex flex-wrap items-center justify-between gap-x-1 ${compact ? "mb-0.5 text-xs" : "mb-1 text-sm"}`}>
+        <span className="min-w-0 break-words font-medium">{label}</span>
+        <span className="text-xs text-gray-500 dark:text-gray-400">{displayValue}</span>
+      </div>
+      <ProgressBar value={value} size={compact ? "sm" : "md"} />
+    </div>
+  );
+}
+
 export function ServerRow({ server, onClick, className = "" }: ServerRowProps) {
   const { t } = useI18n();
   const { settings } = useSettings();
+  const compact = settings.compactMode;
   const online = isOnline(server);
   const { downloadSpeed, uploadSpeed } = getFormattedNetworkSpeed(server);
-
   const loadDisplay = formatLoad(server.load_1, server.load_5, server.load_15);
 
-  // 格式化流量数据
   const totalDownload = formatBytes(server.network_in);
   const monthlyDownload = server.network_in ? formatBytes(server.network_in - server.last_network_in) : server.last_network_in ? formatBytes(server.last_network_in) : "0 B";
   const totalUpload = formatBytes(server.network_out);
   const monthlyUpload = server.network_out ? formatBytes(server.network_out - server.last_network_out) : server.last_network_out ? formatBytes(server.last_network_out) : "0 B";
 
-  // 格式化运行时间
-  const formatUptime = (uptime: string) => {
-    return uptime.replace(/天/g, t("server.day"));
-  };
-
-  // 计算百分比
   const cpuPercentage = server.cpu;
   const memoryPercentage = calculatePercentage(server.memory_used, server.memory_total);
   const diskPercentage = calculatePercentage(server.hdd_used, server.hdd_total);
-
-  // 获取操作系统信息
   const labels = parseLabels(server.labels);
   const os = labels.os ? labels.os.toLowerCase() : "";
-  const osIcons: Record<string, string> = {
-    // 只有这些有对应的 SVG 图标
-    android: "android",
-    arch: "arch",
-    archlinux: "archlinux",
-    centos: "centos",
-    debian: "debian",
-    linux: "linux",
-    macos: "macos",
-    raspberry: "raspberry",
-    ubuntu: "ubuntu",
-    windows: "windows",
-  };
-  const osIcon = osIcons[os] || "linux";
+  const name = server.host ? server.name : server.alias || server.name;
 
   return (
     <div
       onClick={onClick}
-      className={`bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
-        settings.compactMode ? "p-2" : "p-3"
+      className={`@container/server-row min-w-0 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:bg-white hover:dark:bg-black hover:border-gray-400 hover:dark:border-gray-600 rounded-lg hover:shadow-md dark:hover:shadow-gray-900/30 transition-all cursor-pointer ${
+        compact ? "p-2" : "p-3"
       } ${className}`}
     >
-      {/* 小屏幕布局 */}
-      <div className="block md:hidden">
-        <div className={settings.compactMode ? "space-y-1.5" : "space-y-2"}>
-          {/* 第一行：基本信息 */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 min-w-0 flex-1">
-              {/* 状态指示 */}
-              <StatusIndicator status={online ? "online" : "offline"} className="mr-2" />
-
-              {/* 地区和名称 */}
-              <div className="flex items-center space-x-1 min-w-0 flex-1">
-                {server.location &&
-                  (isCountryFlagEmoji(server.location) ? (
-                    <span className="text-sm shrink-0">{server.location}</span>
-                  ) : (
-                    <div className="relative h4.5 w-4.5 items-center overflow-hidden shrink-0">
-                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={18} height={18} className="object-bottom" />
-                    </div>
-                  ))}
-                <h3 className="font-medium text-sm truncate">{server.host ? server.name : server.alias || server.name}</h3>
-                {server.type && <span className="bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] shrink-0">{server.type.toUpperCase()}</span>}
-              </div>
-            </div>
-            {/* 系统图标 */}
-            {os && <Image src={`/image/os/${osIcon}.svg`} alt={os} width={16} height={16} className="w-4 h-4 rounded-full shrink-0" />}
+      {/* 窄屏使用精简布局，避免同时展示过多诊断信息。 */}
+      <div className="grid min-w-0 grid-cols-1 gap-2 @min-[36rem]/server-row:hidden">
+        <div className="flex min-w-0 items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2">
+            <StatusIndicator status={online ? "online" : "offline"} />
+            {server.location &&
+              (isCountryFlagEmoji(server.location) ? (
+                <span className="shrink-0 text-sm">{server.location}</span>
+              ) : (
+                <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={18} height={18} className="shrink-0 object-contain" />
+              ))}
+            <h3 title={name} className="min-w-0 truncate text-sm font-medium">{name}</h3>
+            {server.type && <span title={server.type} className="max-w-16 shrink-0 truncate rounded bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
           </div>
+          {os && <OSIcon os={os} size={16} className="shrink-0" />}
+        </div>
 
-          {/* 第二行：资源使用情况 */}
-          <div className="grid grid-cols-3 gap-2 text-xs">
-            <div className="text-center">
-              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">CPU</div>
-              <div className="font-semibold">{formatCPU(cpuPercentage)}</div>
+        <div className="grid grid-cols-3 gap-2 text-center text-xs">
+          {[
+            { label: "CPU", value: formatCPU(cpuPercentage) },
+            { label: t("server.memory"), value: `${memoryPercentage.toFixed(0)}%` },
+            { label: t("server.disk"), value: `${diskPercentage.toFixed(0)}%` },
+          ].map(({ label, value }) => (
+            <div key={label} className="min-w-0">
+              <div className="text-[10px] font-medium text-gray-600 dark:text-gray-400">{label}</div>
+              <div className="font-semibold tabular-nums">{value}</div>
             </div>
-            <div className="text-center">
-              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">{t("server.memory")}</div>
-              <div className="font-semibold">{memoryPercentage.toFixed(0)}%</div>
-            </div>
-            <div className="text-center">
-              <div className="font-medium text-[10px] text-gray-600 dark:text-gray-400">{t("server.disk")}</div>
-              <div className="font-semibold">{diskPercentage.toFixed(0)}%</div>
-            </div>
-          </div>
+          ))}
+        </div>
 
-          {/* 第三行：网络信息 */}
-          <div className="flex items-center justify-center space-x-4 text-xs">
-            <div className="flex items-center space-x-1">
-              <span className="text-green-600 dark:text-green-400 font-medium">↓</span>
-              <span className="font-medium">{downloadSpeed}</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <span className="text-blue-600 dark:text-blue-400 font-medium">↑</span>
-              <span className="font-medium">{uploadSpeed}</span>
-            </div>
-          </div>
+        <div className="flex items-center justify-center gap-5 text-xs">
+          <span className="flex items-center gap-1 font-medium">
+            <ArrowDown size={12} className="text-green-600 dark:text-green-400" aria-hidden="true" />
+            {downloadSpeed}
+          </span>
+          <span className="flex items-center gap-1 font-medium">
+            <ArrowUp size={12} className="text-blue-600 dark:text-blue-400" aria-hidden="true" />
+            {uploadSpeed}
+          </span>
         </div>
       </div>
 
-      {/* 大屏幕布局 */}
-      <div className="hidden md:block">
-        <div className={`grid grid-cols-24 items-center text-sm ${settings.compactMode ? "gap-2" : "gap-3"}`}>
-          {/* IPv4/IPv6 状态 */}
-          <div className="col-span-1 ml-3">
-            {settings.compactMode ? (
-              <div className="flex flex-col gap-1 items-center">
-                <StatusIndicator status={online ? "online" : "offline"} />
-              </div>
-            ) : (
-              <div className="flex flex-col gap-0.5 items-center">
-                <Badge variant={server.online4 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
-                  IPv4
-                </Badge>
-                <Badge variant={server.online6 ? "success" : "danger"} className="text-[0.6em] px-1 py-1 leading-none w-fit min-w-0">
-                  IPv6
-                </Badge>
-              </div>
-            )}
+      {/* 宽度足够时展示完整诊断信息。 */}
+      <div className={`hidden min-w-0 items-center @min-[36rem]/server-row:grid @min-[36rem]/server-row:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] @min-[72rem]/server-row:grid-cols-[minmax(0,4fr)_minmax(0,5fr)_minmax(0,3fr)] ${compact ? "gap-2" : "gap-3"}`}>
+        <div className="min-w-0 @min-[36rem]/server-row:col-span-2 @min-[72rem]/server-row:col-span-1">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="flex shrink-0"><StatusIndicator status={online ? "online" : "offline"} /></span>
+            {os && <OSIcon os={os} size={compact ? 20 : 24} className="shrink-0" />}
+            {server.location &&
+              (isCountryFlagEmoji(server.location) ? (
+                <span className="shrink-0 text-base">{server.location}</span>
+              ) : (
+                <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={20} className="shrink-0 object-contain" />
+              ))}
+            <h3 title={name} className={`min-w-0 flex-1 truncate font-medium ${compact ? "text-sm" : "text-base"}`}>{name}</h3>
+            {server.type && <span title={server.type} className="max-w-20 truncate rounded bg-gray-100 px-1 py-0.5 text-[8px] dark:bg-gray-700">{server.type.toUpperCase()}</span>}
           </div>
-
-          {/* 系统图标 */}
-          {os && (
-            <div className={`flex justify-center ${settings.compactMode ? "col-span-1" : "col-span-2"}`}>
-              <Image src={`/image/os/${osIcon}.svg`} alt={os} width={20} height={20} className={settings.compactMode ? "w-6 h-6 rounded-sm" : "w-9 h-9 rounded-sm"} />
+          <div className={`flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500 dark:text-gray-400 ${compact ? "mt-1" : "mt-1.5"}`}>
+            <div className="flex shrink-0 gap-1">
+              <Badge variant={server.online4 ? "success" : "danger"} className="min-w-0 px-1 py-0.5 text-[10px] leading-none">IPv4</Badge>
+              <Badge variant={server.online6 ? "success" : "danger"} className="min-w-0 px-1 py-0.5 text-[10px] leading-none">IPv6</Badge>
             </div>
-          )}
-
-          {/* 基本信息 */}
-          <div className={os ? (settings.compactMode ? "col-span-10" : "col-span-7") : settings.compactMode ? "col-span-8" : "col-span-6"}>
-            <div className="min-w-0">
-              <div className="flex items-center space-x-1">
-                {server.location &&
-                  (isCountryFlagEmoji(server.location) ? (
-                    <span className={settings.compactMode ? "text-base shrink-0" : "text-lg shrink-0"}>{server.location}</span>
-                  ) : (
-                    <div className={`relative items-center overflow-hidden shrink-0 ${settings.compactMode ? "w-5" : "w-6"}`}>
-                      <Image src={`/image/flags/${server.location.toLowerCase()}.svg`} alt={`${server.location} flag`} width={20} height={20} className="object-cover" />
-                    </div>
-                  ))}
-                <h3 className={`font-medium truncate ${settings.compactMode ? "text-base" : "text-lg"}`}>{server.host ? server.name : server.alias || server.name}</h3>
-                {server.type && <span className="ml-1 bg-gray-100 dark:bg-gray-700 px-1 py-0.5 rounded text-[8px] shrink-0">{server.type.toUpperCase()}</span>}
-              </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">
-                <span>{online ? formatUptime(server.uptime) : <span className="text-red-500">{t("server.offline")}</span>}</span>
-                {!settings.compactMode && (
-                  <>
-                    <span className="mx-1 text-gray-300 dark:text-gray-600">•</span>
-                    <span>
-                      {t("server.load")}: {loadDisplay}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
+            <span className="min-w-0 break-words">{online ? server.uptime.replace(/天/g, t("server.day")) : <span className="text-red-500">{t("server.offline")}</span>}</span>
+            <span className="min-w-0 break-words">{t("server.load")}: {loadDisplay}</span>
           </div>
+        </div>
 
-          {/* CPU */}
-          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
-            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
-              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>CPU</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{formatCPU(cpuPercentage)}</div>
-            </div>
-            <ProgressBar value={cpuPercentage} />
+        <div className={`grid min-w-0 grid-cols-3 ${compact ? "gap-2" : "gap-3"}`}>
+          <ResourceMetric label="CPU" value={cpuPercentage} displayValue={formatCPU(cpuPercentage)} compact={compact} />
+          <ResourceMetric label={t("server.memory")} value={memoryPercentage} displayValue={`${memoryPercentage.toFixed(1)}%`} compact={compact} />
+          <ResourceMetric label={t("server.disk")} value={diskPercentage} displayValue={`${diskPercentage.toFixed(1)}%`} compact={compact} />
+        </div>
+
+        <div className="min-w-0 space-y-0.5 text-xs">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5">
+            <span className="flex min-w-0 items-center gap-1">
+              <ArrowDown size={12} className="shrink-0 text-green-600 dark:text-green-400" aria-hidden="true" />
+              <span className="min-w-0 break-words font-medium">{downloadSpeed}</span>
+            </span>
+            {!compact && <span className="min-w-0 break-words text-[10px] text-gray-600 dark:text-gray-300">{monthlyDownload}/{totalDownload}</span>}
           </div>
-
-          {/* 内存 */}
-          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
-            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
-              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>{t("server.memory")}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{memoryPercentage.toFixed(1)}%</div>
-            </div>
-            <ProgressBar value={memoryPercentage} />
-          </div>
-
-          {/* 存储 */}
-          <div className={settings.compactMode ? "col-span-3" : "col-span-3"}>
-            <div className={`flex items-center justify-between ${settings.compactMode ? "mb-0.5" : "mb-1"}`}>
-              <div className={`font-medium ${settings.compactMode ? "text-xs" : "text-sm"}`}>{t("server.disk")}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">{diskPercentage.toFixed(1)}%</div>
-            </div>
-            <ProgressBar value={diskPercentage} />
-          </div>
-
-          {/* 网络速度和流量 */}
-          <div className={settings.compactMode ? "col-span-3" : "col-span-5"}>
-            <div className="space-y-0.5">
-              <div className={`grid ${settings.compactMode ? "grid-cols-[12px_auto]" : "grid-cols-[12px_auto_auto_1fr]"} gap-1 items-center text-xs min-w-0`}>
-                <span className="text-green-600 dark:text-green-400 font-medium">↓</span>
-                <span className="font-medium whitespace-nowrap">{downloadSpeed}</span>
-                {!settings.compactMode && (
-                  <>
-                    <span className="text-gray-300 dark:text-gray-600">•</span>
-                    <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                      {monthlyDownload}/{totalDownload}
-                    </span>
-                  </>
-                )}
-              </div>
-              <div className={`grid ${settings.compactMode ? "grid-cols-[12px_auto]" : "grid-cols-[12px_auto_auto_1fr]"} gap-1 items-center text-xs min-w-0`}>
-                <span className="text-blue-600 dark:text-blue-400 font-medium">↑</span>
-                <span className="font-medium whitespace-nowrap">{uploadSpeed}</span>
-                {!settings.compactMode && (
-                  <>
-                    <span className="text-gray-300 dark:text-gray-600">•</span>
-                    <span className="text-gray-600 dark:text-gray-300 text-[10px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap">
-                      {monthlyUpload}/{totalUpload}
-                    </span>
-                  </>
-                )}
-              </div>
-            </div>
+          <div className="flex min-w-0 flex-wrap items-center gap-x-1 gap-y-0.5">
+            <span className="flex min-w-0 items-center gap-1">
+              <ArrowUp size={12} className="shrink-0 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+              <span className="min-w-0 break-words font-medium">{uploadSpeed}</span>
+            </span>
+            {!compact && <span className="min-w-0 break-words text-[10px] text-gray-600 dark:text-gray-300">{monthlyUpload}/{totalUpload}</span>}
           </div>
         </div>
       </div>
