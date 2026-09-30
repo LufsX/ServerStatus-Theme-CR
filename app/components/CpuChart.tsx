@@ -124,11 +124,10 @@ export const CpuChart = memo(function CpuChart({ data, className = "" }: CpuChar
           ticks: { display: false },
           grid: { display: false },
         },
-        // 由 Chart.js 根据真实数据计算刻度，保留顶部留白而非硬编码上限。
-        y: { beginAtZero: true, grace: "10%", ticks: { maxTicksLimit: 4, callback: (value) => `${value}%`, font: { size: 10, family: fontFamily } }, border: { display: false } },
+        y: { beginAtZero: true, max: maxCpu <= 100 ? 100 : undefined, grace: "10%", ticks: { maxTicksLimit: 4, callback: (value) => `${value}%`, font: { size: 10, family: fontFamily } }, border: { display: false } },
       },
     }),
-    [data, fontFamily]
+    [data, fontFamily, maxCpu]
   );
 
   if (!data || data.length < 2) {
