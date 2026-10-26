@@ -9,26 +9,26 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fortawesome/free-brands-svg-icons": "^7.3.1",
-    "chart.js": "4.5.1",
-    "framer-motion": "13.4.0",
-    "lucide-react": "1.47.0",
-    "next": "16.3.8",
-    "next-intl": "4.14.5",
+    "@fortawesome/free-brands-svg-icons": "7.3.1",
+    "chart.js": "4.6.1",
+    "framer-motion": "14.6.0",
+    "lucide-react": "1.61.0",
+    "next": "16.4.3",
+    "next-intl": "4.14.9",
     "next-themes": "0.4.6",
-    "react": "19.3.0",
+    "react": "19.3.1",
     "react-chartjs-2": "5.3.1",
-    "react-dom": "19.3.0",
-    "simple-icons": "^16.31.0"
+    "react-dom": "19.3.1",
+    "simple-icons": "16.35.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.3",
-    "@types/node": "26.6.1",
+    "@types/node": "26.6.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "baseline-browser-mapping": "2.11.24",
-    "eslint": "9.39.5",
-    "eslint-config-next": "16.3.5",
+    "baseline-browser-mapping": "2.11.32",
+    "eslint": "10.13.0",
+    "eslint-config-next": "16.4.3",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3"
   }
